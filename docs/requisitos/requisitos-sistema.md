@@ -16,10 +16,10 @@ O sistema deve permitir ao aluno escolher fases ou desafios disponíveis.
 O sistema deve disponibilizar uma interface para montagem de algoritmos utilizando blocos visuais.
 
 ## RF06
-O sistema deve executar o algoritmo criado pelo aluno.
+O sistema deve analisar a solução construída pelo aluno utilizando blocos de programação.
 
 ## RF07
-O sistema deve verificar automaticamente se a solução proposta está correta.
+O sistema deve informar automaticamente se a solução proposta está correta.
 
 ## RF08
 O sistema deve registrar pontos obtidos pelo aluno.
