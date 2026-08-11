@@ -21,6 +21,7 @@ CREATE TABLE atividade (
     titulo VARCHAR(150) NOT NULL,
     descricao TEXT NOT NULL,
     nivel VARCHAR(50) NOT NULL,
+    resposta_esperada VARCHAR(255),
     id_ano INTEGER NOT NULL,
 
     CONSTRAINT fk_atividade_ano
@@ -32,6 +33,7 @@ CREATE TABLE tentativa (
     id_tentativa SERIAL PRIMARY KEY,
     data_tentativa TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     tempo_gasto INTEGER,
+    resposta_aluno VARCHAR(255),
     status VARCHAR(30) NOT NULL,
     id_usuario INTEGER NOT NULL,
     id_atividade INTEGER NOT NULL,
