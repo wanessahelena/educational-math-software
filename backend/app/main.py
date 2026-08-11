@@ -3,6 +3,8 @@ from sqlalchemy import text
 
 from app.database import engine
 
+from app.routes.anos_escolares import router as anos_escolares_router
+
 
 app = FastAPI(
     title="Educational Math Software API",
@@ -10,6 +12,7 @@ app = FastAPI(
     version="0.1.0"
 )
 
+app.include_router(anos_escolares_router)
 
 @app.get("/")
 def root():
