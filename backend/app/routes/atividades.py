@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -25,24 +25,39 @@ def listar_atividades_por_ano(
     id_ano: int,
     db: Session = Depends(get_db)
 ):
-    return (
+    atividades = (
         db.query(Atividade)
         .filter(Atividade.id_ano == id_ano)
         .order_by(Atividade.id_atividade)
         .all()
     )
 
+    if not atividades:
+        raise HTTPException(
+            status_code=404,
+            detail="Nenhuma atividade encontrada para este ano escolar."
+        )
+
+    return atividades
 
 @router.get("/{id_atividade}")
 def buscar_atividade(
     id_atividade: int,
     db: Session = Depends(get_db)
 ):
-    return (
+    atividade = (
         db.query(Atividade)
         .filter(Atividade.id_atividade == id_atividade)
         .first()
     )
+
+    if not atividade:
+        raise HTTPException(
+            status_code=404,
+            detail="Atividade não encontrada."
+        )
+
+    return atividade
 
 
 @router.post("/")
