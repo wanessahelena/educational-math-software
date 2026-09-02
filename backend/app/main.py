@@ -4,6 +4,9 @@ from sqlalchemy import text
 from app.database import engine
 
 from app.routes.anos_escolares import router as anos_escolares_router
+from app.routes.atividades import router as atividades_router
+
+
 
 
 app = FastAPI(
@@ -13,6 +16,7 @@ app = FastAPI(
 )
 
 app.include_router(anos_escolares_router)
+app.include_router(atividades_router)
 
 @app.get("/")
 def root():
