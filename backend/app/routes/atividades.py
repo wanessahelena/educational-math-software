@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models.atividade import Atividade
+from app.models.ano_escolar import AnoEscolar
 
 
 router = APIRouter(
@@ -40,6 +41,43 @@ def listar_atividades_por_ano(
 
     return atividades
 
+
+@router.post("/")
+def cadastrar_atividade(
+    titulo: str,
+    descricao: str,
+    nivel: str,
+    resposta_esperada: str,
+    id_ano: int,
+    db: Session = Depends(get_db)
+):
+    ano_escolar = (
+        db.query(AnoEscolar)
+        .filter(AnoEscolar.id_ano == id_ano)
+        .first()
+    )
+
+    if not ano_escolar:
+        raise HTTPException(
+            status_code=404,
+            detail="Ano escolar não encontrado."
+        )
+
+    nova_atividade = Atividade(
+        titulo=titulo,
+        descricao=descricao,
+        nivel=nivel,
+        resposta_esperada=resposta_esperada,
+        id_ano=id_ano
+    )
+
+    db.add(nova_atividade)
+    db.commit()
+    db.refresh(nova_atividade)
+
+    return nova_atividade
+
+
 @router.get("/{id_atividade}")
 def buscar_atividade(
     id_atividade: int,
@@ -58,27 +96,3 @@ def buscar_atividade(
         )
 
     return atividade
-
-
-@router.post("/")
-def cadastrar_atividade(
-    titulo: str,
-    descricao: str,
-    nivel: str,
-    resposta_esperada: str,
-    id_ano: int,
-    db: Session = Depends(get_db)
-):
-    nova_atividade = Atividade(
-        titulo=titulo,
-        descricao=descricao,
-        nivel=nivel,
-        resposta_esperada=resposta_esperada,
-        id_ano=id_ano
-    )
-
-    db.add(nova_atividade)
-    db.commit()
-    db.refresh(nova_atividade)
-
-    return nova_atividade
