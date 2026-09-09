@@ -129,6 +129,18 @@ def consultar_resumo_progresso(
         {tentativa.id_atividade for tentativa in tentativas}
     )
     
+    total_atividades = (
+        db.query(Atividade)
+        .filter(Atividade.id_ano == usuario.id_ano)
+        .count()
+    )
+    
+    percentual_conclusao = (
+        (atividades_realizadas / total_atividades) * 100
+        if total_atividades > 0
+        else 0
+    )
+    
     total_corretas = sum(
         1 for tentativa in tentativas
         if tentativa.status == "correta"
@@ -148,6 +160,8 @@ def consultar_resumo_progresso(
         "id_usuario": usuario.id_usuario,
         "total_tentativas": total_tentativas,
         "atividades_realizadas": atividades_realizadas,
+        "total_atividades": total_atividades,
+        "percentual_conclusao": round(percentual_conclusao, 2),
         "total_corretas": total_corretas,
         "total_incorretas": total_incorretas,
         "percentual_acerto": round(percentual_acerto, 2)
