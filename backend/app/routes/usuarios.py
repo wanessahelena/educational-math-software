@@ -5,10 +5,12 @@ from app.database import get_db
 from app.models.usuario import Usuario
 from app.models.ano_escolar import AnoEscolar
 
+
 router = APIRouter(
     prefix="/usuarios",
     tags=["Usuários"]
 )
+
 
 @router.post("/")
 def cadastrar_usuario(
@@ -73,4 +75,9 @@ def buscar_usuario(
             detail="Usuário não encontrado."
         )
 
-    return usuario
+    return {
+    "id_usuario": usuario.id_usuario,
+    "nome": usuario.nome,
+    "email": usuario.email,
+    "id_ano": usuario.id_ano
+}
