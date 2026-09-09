@@ -99,6 +99,124 @@ def consultar_progresso(
         }
         for tentativa, atividade in tentativas
     ]
+    
+@router.get("/{id_usuario}/progresso/resumo")
+def consultar_resumo_progresso(
+    id_usuario: int,
+    db: Session = Depends(get_db)
+):
+    usuario = (
+        db.query(Usuario)
+        .filter(Usuario.id_usuario == id_usuario)
+        .first()
+    )
+
+    if not usuario:
+        raise HTTPException(
+            status_code=404,
+            detail="Usuário não encontrado."
+        )
+
+    tentativas = (
+        db.query(Tentativa)
+        .filter(Tentativa.id_usuario == id_usuario)
+        .all()
+    )
+
+    total_tentativas = len(tentativas)
+    
+    atividades_realizadas = len(
+        {tentativa.id_atividade for tentativa in tentativas}
+    )
+    
+    total_atividades = (
+        db.query(Atividade)
+        .filter(Atividade.id_ano == usuario.id_ano)
+        .count()
+    )
+    
+    percentual_conclusao = (
+        (atividades_realizadas / total_atividades) * 100
+        if total_atividades > 0
+        else 0
+    )
+    
+    total_corretas = sum(
+        1 for tentativa in tentativas
+        if tentativa.status == "correta"
+    )
+    total_incorretas = sum(
+        1 for tentativa in tentativas
+        if tentativa.status == "incorreta"
+    )
+
+    percentual_acerto = (
+        (total_corretas / total_tentativas) * 100
+        if total_tentativas > 0
+        else 0
+    )
+
+    return {
+        "id_usuario": usuario.id_usuario,
+        "total_tentativas": total_tentativas,
+        "atividades_realizadas": atividades_realizadas,
+        "total_atividades": total_atividades,
+        "percentual_conclusao": round(percentual_conclusao, 2),
+        "total_corretas": total_corretas,
+        "total_incorretas": total_incorretas,
+        "percentual_acerto": round(percentual_acerto, 2)
+    }
+    
+    
+@router.get("/{id_usuario}/progresso/atividades")
+def consultar_desempenho_atividades(
+    id_usuario: int,
+    db: Session = Depends(get_db)
+):
+    usuario = (
+        db.query(Usuario)
+        .filter(Usuario.id_usuario == id_usuario)
+        .first()
+    )
+
+    if not usuario:
+        raise HTTPException(
+            status_code=404,
+            detail="Usuário não encontrado."
+        )
+
+    tentativas = (
+        db.query(Tentativa, Atividade)
+        .join(
+            Atividade,
+            Tentativa.id_atividade == Atividade.id_atividade
+        )
+        .filter(Tentativa.id_usuario == id_usuario)
+        .all()
+    )
+
+    desempenho = {}
+
+    for tentativa, atividade in tentativas:
+        if atividade.id_atividade not in desempenho:
+            desempenho[atividade.id_atividade] = {
+                "id_atividade": atividade.id_atividade,
+                "titulo": atividade.titulo,
+                "total_tentativas": 0,
+                "total_corretas": 0,
+                "total_incorretas": 0
+            }
+
+        item = desempenho[atividade.id_atividade]
+
+        item["total_tentativas"] += 1
+
+        if tentativa.status == "correta":
+            item["total_corretas"] += 1
+        elif tentativa.status == "incorreta":
+            item["total_incorretas"] += 1
+
+    return list(desempenho.values())
 
 @router.get("/{id_usuario}")
 def buscar_usuario(
