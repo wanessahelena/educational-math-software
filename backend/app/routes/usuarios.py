@@ -124,6 +124,11 @@ def consultar_resumo_progresso(
     )
 
     total_tentativas = len(tentativas)
+    
+    atividades_realizadas = len(
+        {tentativa.id_atividade for tentativa in tentativas}
+    )
+    
     total_corretas = sum(
         1 for tentativa in tentativas
         if tentativa.status == "correta"
@@ -142,6 +147,7 @@ def consultar_resumo_progresso(
     return {
         "id_usuario": usuario.id_usuario,
         "total_tentativas": total_tentativas,
+        "atividades_realizadas": atividades_realizadas,
         "total_corretas": total_corretas,
         "total_incorretas": total_incorretas,
         "percentual_acerto": round(percentual_acerto, 2)
