@@ -8,10 +8,6 @@ from app.routes.atividades import router as atividades_router
 from app.routes.usuarios import router as usuarios_router
 from app.routes.tentativas import router as tentativas_router
 
-
-
-
-
 app = FastAPI(
     title="Educational Math Software API",
     description="API da ferramenta educacional de Matemática",

@@ -65,3 +65,29 @@ def registrar_tentativa(
     db.refresh(nova_tentativa)
 
     return nova_tentativa
+
+@router.get("/usuario/{id_usuario}")
+def listar_tentativas_usuario(
+    id_usuario: int,
+    db: Session = Depends(get_db)
+):
+    usuario = (
+        db.query(Usuario)
+        .filter(Usuario.id_usuario == id_usuario)
+        .first()
+    )
+
+    if not usuario:
+        raise HTTPException(
+            status_code=404,
+            detail="Usuário não encontrado."
+        )
+
+    tentativas = (
+        db.query(Tentativa)
+        .filter(Tentativa.id_usuario == id_usuario)
+        .order_by(Tentativa.data_tentativa.desc())
+        .all()
+    )
+
+    return tentativas
