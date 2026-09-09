@@ -99,6 +99,53 @@ def consultar_progresso(
         }
         for tentativa, atividade in tentativas
     ]
+    
+@router.get("/{id_usuario}/progresso/resumo")
+def consultar_resumo_progresso(
+    id_usuario: int,
+    db: Session = Depends(get_db)
+):
+    usuario = (
+        db.query(Usuario)
+        .filter(Usuario.id_usuario == id_usuario)
+        .first()
+    )
+
+    if not usuario:
+        raise HTTPException(
+            status_code=404,
+            detail="Usuário não encontrado."
+        )
+
+    tentativas = (
+        db.query(Tentativa)
+        .filter(Tentativa.id_usuario == id_usuario)
+        .all()
+    )
+
+    total_tentativas = len(tentativas)
+    total_corretas = sum(
+        1 for tentativa in tentativas
+        if tentativa.status == "correta"
+    )
+    total_incorretas = sum(
+        1 for tentativa in tentativas
+        if tentativa.status == "incorreta"
+    )
+
+    percentual_acerto = (
+        (total_corretas / total_tentativas) * 100
+        if total_tentativas > 0
+        else 0
+    )
+
+    return {
+        "id_usuario": usuario.id_usuario,
+        "total_tentativas": total_tentativas,
+        "total_corretas": total_corretas,
+        "total_incorretas": total_incorretas,
+        "percentual_acerto": round(percentual_acerto, 2)
+    }
 
 @router.get("/{id_usuario}")
 def buscar_usuario(
