@@ -4,6 +4,8 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.usuario import Usuario
 from app.models.ano_escolar import AnoEscolar
+from app.models.tentativa import Tentativa
+from app.models.atividade import Atividade
 
 
 router = APIRouter(
@@ -57,6 +59,46 @@ def cadastrar_usuario(
 
     return novo_usuario
 
+@router.get("/{id_usuario}/progresso")
+def consultar_progresso(
+    id_usuario: int,
+    db: Session = Depends(get_db)
+):
+    usuario = (
+        db.query(Usuario)
+        .filter(Usuario.id_usuario == id_usuario)
+        .first()
+    )
+
+    if not usuario:
+        raise HTTPException(
+            status_code=404,
+            detail="Usuário não encontrado."
+        )
+
+    tentativas = (
+        db.query(Tentativa, Atividade)
+        .join(
+            Atividade,
+            Tentativa.id_atividade == Atividade.id_atividade
+        )
+        .filter(Tentativa.id_usuario == id_usuario)
+        .order_by(Tentativa.data_tentativa.desc())
+        .all()
+    )
+
+    return [
+        {
+            "id_tentativa": tentativa.id_tentativa,
+            "id_atividade": atividade.id_atividade,
+            "titulo_atividade": atividade.titulo,
+            "data_tentativa": tentativa.data_tentativa,
+            "tempo_gasto": tentativa.tempo_gasto,
+            "resposta_aluno": tentativa.resposta_aluno,
+            "status": tentativa.status
+        }
+        for tentativa, atividade in tentativas
+    ]
 
 @router.get("/{id_usuario}")
 def buscar_usuario(
