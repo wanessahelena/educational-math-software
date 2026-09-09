@@ -75,9 +75,16 @@ def buscar_usuario(
             detail="Usuário não encontrado."
         )
 
+    ano_escolar = (
+        db.query(AnoEscolar)
+        .filter(AnoEscolar.id_ano == usuario.id_ano)
+        .first()
+    )
+
     return {
-    "id_usuario": usuario.id_usuario,
-    "nome": usuario.nome,
-    "email": usuario.email,
-    "id_ano": usuario.id_ano
-}
+        "id_usuario": usuario.id_usuario,
+        "nome": usuario.nome,
+        "email": usuario.email,
+        "id_ano": usuario.id_ano,
+        "ano_escolar": ano_escolar.nome if ano_escolar else None
+    }
