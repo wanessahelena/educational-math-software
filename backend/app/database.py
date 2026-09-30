@@ -12,7 +12,10 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:
     raise ValueError("DATABASE_URL não foi definida.")
 
-engine = create_engine(DATABASE_URL)
+engine = create_engine(
+    DATABASE_URL,
+    connect_args={"client_encoding": "utf8"}
+)
 
 SessionLocal = sessionmaker(
     autocommit=False,
