@@ -1,26 +1,28 @@
-import { useEffect, useState } from "react";
-import { buscarAnosEscolares } from "../services/api";
 
-
-function Home({ onCadastro }) {
+function Home({ onLogin, onCadastro }) {
     return (
         <main className="conteudo">
-        <section className="boas-vindas">
-            <h2>Bem-vindo!</h2>
+            <section className="boas-vindas">
+                <h2>Bem-vindo!</h2>
 
-            <p>
-            Aprenda matemática de forma interativa,
-            por meio de desafios e atividades.
-            </p>
+                <p>
+                    Aprenda matemática de forma interativa,
+                    por meio de desafios e atividades.
+                </p>
 
-            <p>
-            Para começar, crie seu cadastro.
-            </p>
+                <p>
+                    Entre na sua conta ou crie seu cadastro
+                    para começar.
+                </p>
 
-            <button onClick={onCadastro}>
-            Criar cadastro
-            </button>
-        </section>
+                <button onClick={onLogin}>
+                    Entrar
+                </button>
+
+                <button onClick={onCadastro}>
+                    Criar cadastro
+                </button>
+            </section>
         </main>
     );
 }
