@@ -56,3 +56,160 @@ body {
   cursor: pointer;
   font-size: 16px;
 }
+
+.pagina-autenticacao {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+}
+
+.cartao-autenticacao {
+    width: 100%;
+    max-width: 420px;
+    padding: 32px;
+    border-radius: 16px;
+    background: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.cartao-autenticacao h1 {
+    margin-bottom: 8px;
+}
+
+.cartao-autenticacao form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.cartao-autenticacao input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.cartao-autenticacao form button {
+    margin-top: 12px;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #2563eb;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.cartao-autenticacao button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.botao-voltar,
+.texto-cadastro button {
+    border: none;
+    background: none;
+    color: #2563eb;
+    cursor: pointer;
+}
+
+.botao-voltar {
+    margin-bottom: 20px;
+}
+
+.texto-cadastro {
+    margin-top: 24px;
+    text-align: center;
+}
+
+.mensagem-erro {
+    color: #dc2626;
+    font-size: 14px;
+}
+
+.progresso-resumo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+}
+
+.progresso-card {
+    padding: 20px;
+    border-radius: 12px;
+    background: #eff6ff;
+    text-align: center;
+}
+
+.progresso-card h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.progresso-card p {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2563eb;
+}
+
+.lista-progresso {
+    display: grid;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.progresso-atividade {
+    padding: 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    text-align: left;
+}
+
+.progresso-atividade h4 {
+    margin-bottom: 10px;
+}
+
+.progresso-atividade p {
+    margin: 5px 0;
+}
+
+.menu-aluno {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px;
+    margin: 0 auto;
+}
+
+.menu-aluno button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    background: #2563eb;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.menu-aluno button:hover {
+    background: #1d4ed8;
+}
+
+@media (max-width: 480px) {
+    .menu-aluno {
+        gap: 8px;
+        padding: 12px;
+    }
+
+    .menu-aluno button {
+        flex: 1 1 40%;
+        padding: 10px;
+    }
+}
