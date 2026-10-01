@@ -1,5 +1,13 @@
 const API_URL = "http://127.0.0.1:8000";
 
+function obterCabecalhoAutenticacao() {
+    const token = localStorage.getItem("token");
+
+    return token
+        ? { Authorization: `Bearer ${token}` }
+        : {};
+}
+
 export async function buscarAnosEscolares() {
     const resposta = await fetch(`${API_URL}/anos-escolares/`);
 
@@ -55,33 +63,36 @@ export async function registrarTentativa(
     idAtividade,
     respostaAluno,
     tempoGasto
-    ) {
-        const parametros = new URLSearchParams({
-            id_usuario: idUsuario,
-            id_atividade: idAtividade,
-            resposta_aluno: respostaAluno,
-        });
+) {
+    const parametros = new URLSearchParams({
+        id_usuario: idUsuario,
+        id_atividade: idAtividade,
+        resposta_aluno: respostaAluno,
+    });
 
-        if (tempoGasto !== null && tempoGasto !== undefined) {
-            parametros.append("tempo_gasto", tempoGasto);
-        }
+    if (tempoGasto !== null && tempoGasto !== undefined) {
+        parametros.append("tempo_gasto", tempoGasto);
+    }
 
-        const resposta = await fetch(
-            `${API_URL}/tentativas/?${parametros.toString()}`,
-            {
+    const resposta = await fetch(
+        `${API_URL}/tentativas/?${parametros.toString()}`,
+        {
             method: "POST",
-            }
-        );
-
-        const dados = await resposta.json();
-
-        if (!resposta.ok) {
-            throw new Error(
-            dados.detail || "Erro ao registrar tentativa."
-            );
+            headers: {
+                ...obterCabecalhoAutenticacao(),
+            },
         }
+    );
 
-        return dados;
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+        throw new Error(
+            dados.detail || "Erro ao registrar tentativa."
+        );
+    }
+
+    return dados;
 }
 
 export async function realizarLogin(email, senha) {
@@ -90,10 +101,7 @@ export async function realizarLogin(email, senha) {
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-            email,
-            senha,
-        }),
+        body: JSON.stringify({ email, senha }),
     });
 
     const dados = await resposta.json();
@@ -104,14 +112,22 @@ export async function realizarLogin(email, senha) {
         );
     }
 
-    return dados;
+    localStorage.setItem("token", dados.access_token);
+
+    return dados.usuario;
 }
 
 
 export async function buscarResumoProgresso(idUsuario) {
     const resposta = await fetch(
-        `${API_URL}/usuarios/${idUsuario}/progresso/resumo`
+        `${API_URL}/usuarios/${idUsuario}/progresso/resumo`,
+        {
+            headers: {
+                ...obterCabecalhoAutenticacao(),
+            },
+        }
     );
+
     const dados = await resposta.json();
 
     if (!resposta.ok) {
@@ -125,13 +141,20 @@ export async function buscarResumoProgresso(idUsuario) {
 
 export async function buscarDesempenhoAtividades(idUsuario) {
     const resposta = await fetch(
-        `${API_URL}/usuarios/${idUsuario}/progresso/atividades`
+        `${API_URL}/usuarios/${idUsuario}/progresso/atividades`,
+        {
+            headers: {
+                ...obterCabecalhoAutenticacao(),
+            },
+        }
     );
+
     const dados = await resposta.json();
 
     if (!resposta.ok) {
         throw new Error(
-            dados.detail || "Erro ao buscar desempenho das atividades."
+            dados.detail ||
+            "Erro ao buscar desempenho das atividades."
         );
     }
 

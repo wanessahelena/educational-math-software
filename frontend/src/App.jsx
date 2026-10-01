@@ -60,6 +60,9 @@ function App() {
     }
 
     function sair() {
+        localStorage.removeItem("token");
+        localStorage.removeItem("usuario");
+
         setUsuario(null);
         setAtividadeSelecionada(null);
         setPagina("home");
