@@ -1,38 +1,46 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { registrarTentativa } from "../services/api";
+import BlocklyWorkspace from "../components/BlocklyWorkspace";
 
-function ResolverAtividade({ usuario, atividade, onVoltar }) {
+function ResolverAtividade({ usuario, atividade, onVoltar }){
+
     const [resposta, setResposta] = useState("");
     const [resultado, setResultado] = useState(null);
     const [erro, setErro] = useState("");
 
     const [inicio] = useState(Date.now());
 
-    async function handleSubmit(event) {
+    const atualizarRespostaBlockly = useCallback((valor) => {
+        setResposta(valor);
+        setResultado(null);
+        setErro("");
+    }, []);
+
+    async function handleSubmit(event){
         event.preventDefault();
 
         setResultado(null);
         setErro("");
 
-        if (!resposta.trim()) {
-        setErro("Digite uma resposta.");
-        return;
+        if (!resposta.trim()){
+            setErro("Adicione um único bloco de resposta e informe a resposta final.");
+            return;
         }
 
         const tempoGasto = Math.floor(
-        (Date.now() - inicio) / 1000
+            (Date.now() - inicio) / 1000
         );
 
-        try {
-        const tentativa = await registrarTentativa(
-            usuario.id_usuario,
-            atividade.id_atividade,
-            resposta,
-            tempoGasto
-        );
+        try{
+            const tentativa = await registrarTentativa(
+                usuario.id_usuario,
+                atividade.id_atividade,
+                resposta,
+                tempoGasto
+            );
 
-        setResultado(tentativa);
-        } catch (error) {
+            setResultado(tentativa);
+        }catch (error) {
         setErro(error.message);
         }
     }
@@ -48,25 +56,16 @@ function ResolverAtividade({ usuario, atividade, onVoltar }) {
             Nível: {atividade.nivel}
             </p>
 
-            <form onSubmit={handleSubmit}>
-            <label>
-                Sua resposta:
-            </label>
-
-            <br />
-
-            <input
-                type="text"
-                value={resposta}
-                onChange={(event) => setResposta(event.target.value)}
+            <BlocklyWorkspace
+                onRespostaChange={atualizarRespostaBlockly}
             />
 
-            <br />
-            <br />
+            <form onSubmit={handleSubmit}>
 
-            <button type="submit">
-                Enviar resposta
-            </button>
+                <button type="submit">
+                    Verificar resolução
+                </button>
+
             </form>
 
             {erro && <p>{erro}</p>}
@@ -74,7 +73,7 @@ function ResolverAtividade({ usuario, atividade, onVoltar }) {
             {resultado && (
             <div>
                 {resultado.status === "correta" ? (
-                <p>Parabéns! Você acertou! 🎉</p>
+                <p>Parabéns! Você acertou!</p>
                 ) : (
                 <p>Resposta incorreta. Tente novamente!</p>
                 )}
