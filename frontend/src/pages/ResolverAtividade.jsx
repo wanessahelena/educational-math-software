@@ -47,47 +47,96 @@ function ResolverAtividade({ usuario, atividade, onVoltar }){
 
     return (
         <main className="conteudo">
-        <section className="boas-vindas">
-            <h2>{atividade.titulo}</h2>
+            <section className="atividade-resolucao">
+                <h2 className="atividade-titulo">
+                    {atividade.titulo}
+                </h2>
 
-            <p>{atividade.descricao}</p>
+                <div className="atividade-layout">
+                    <div className="atividade-lateral">
+                        <div className="atividade-card">
+                            <h3>Desafio</h3>
 
-            <p>
-            Nível: {atividade.nivel}
-            </p>
+                            <p className="atividade-enunciado">
+                                {atividade.descricao}
+                            </p>
 
-            <BlocklyWorkspace
-                onRespostaChange={atualizarRespostaBlockly}
-            />
+                            <span className="atividade-nivel">
+                                Nível: {atividade.nivel}
+                            </span>
+                        </div>
 
-            <form onSubmit={handleSubmit}>
+                        <div
+                            className={`atividade-card feedback-card ${
+                                resultado
+                                    ? resultado.status === "correta"
+                                        ? "feedback-correto"
+                                        : "feedback-incorreto"
+                                    : erro
+                                        ? "feedback-incorreto"
+                                        : ""
+                            }`}
+                        >
+                            <h3>Feedback</h3>
 
-                <button type="submit">
-                    Verificar resolução
-                </button>
+                            {!resultado && !erro && (
+                                <p>
+                                    Monte sua resolução utilizando
+                                    os blocos ao lado.
+                                </p>
+                            )}
 
-            </form>
+                            {erro && (
+                                <p>{erro}</p>
+                            )}
 
-            {erro && <p>{erro}</p>}
+                            {resultado && (
+                                <>
+                                    {resultado.status === "correta" ? (
+                                        <p className="feedback-mensagem">
+                                            ✓ Parabéns! Sua resolução está correta!
+                                        </p>
+                                    ) : (
+                                        <p className="feedback-mensagem">
+                                            ✕ Ainda não está correto. Tente novamente!
+                                        </p>
+                                    )}
 
-            {resultado && (
-            <div>
-                {resultado.status === "correta" ? (
-                <p>Parabéns! Você acertou!</p>
-                ) : (
-                <p>Resposta incorreta. Tente novamente!</p>
-                )}
+                                    <p className="feedback-tempo">
+                                        Tempo gasto: {resultado.tempo_gasto} segundos
+                                    </p>
+                                </>
+                            )}
+                        </div>
 
-                <p>
-                Tempo gasto: {resultado.tempo_gasto} segundos
-                </p>
+                            <button
+                                type="button"
+                                className="botao-voltar"
+                                onClick={onVoltar}
+                            >
+                                Voltar para atividades
+                            </button>
 
-                <button onClick={onVoltar}>
-                Voltar para atividades
-                </button>
-            </div>
-            )}
-        </section>
+                    </div>
+
+                    <div className="atividade-blocos">
+                        <BlocklyWorkspace
+                            onRespostaChange={
+                                atualizarRespostaBlockly
+                            }
+                        />
+
+                        <form onSubmit={handleSubmit}>
+                            <button
+                                type="submit"
+                                className="botao-verificar"
+                            >
+                                Verificar resolução
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </section>
         </main>
     );
 }

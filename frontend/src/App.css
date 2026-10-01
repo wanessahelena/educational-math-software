@@ -1,60 +1,60 @@
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
 }
 
 .app {
-  min-height: 100vh;
+    min-height: 100vh;
 }
 
 .cabecalho {
-  padding: 30px;
-  text-align: center;
-  background-color: #ffffff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    text-align: center;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .cabecalho h1 {
-  margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 .conteudo {
-  display: flex;
-  justify-content: center;
-  padding: 60px 20px;
+    display: flex;
+    justify-content: center;
+    padding: 60px 20px;
 }
 
 .boas-vindas {
-  width: 100%;
-  max-width: 700px;
-  padding: 40px;
-  text-align: center;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 700px;
+    padding: 40px;
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .boas-vindas h2 {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .boas-vindas p {
-  margin-bottom: 30px;
-  line-height: 1.6;
+    margin-bottom: 30px;
+    line-height: 1.6;
 }
 
 .boas-vindas button {
-  padding: 12px 30px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
 }
 
 .pagina-autenticacao {
@@ -212,4 +212,165 @@ body {
         flex: 1 1 40%;
         padding: 10px;
     }
+}
+
+/* ========================================
+RESOLUÇÃO DE ATIVIDADES
+======================================== */
+
+.atividade-resolucao {
+    width: 100%;
+}
+
+.atividade-titulo {
+    margin-bottom: 24px;
+}
+
+.atividade-layout {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.atividade-lateral {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.atividade-card {
+    padding: 20px;
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+.atividade-card h3 {
+    font-size: 1.3rem;
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+.atividade-card p {
+    line-height: 1;
+}
+
+.atividade-nivel {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 0.5rem;
+}
+
+.atividade-blocos {
+    min-width: 0;
+    padding: 20px;
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+.atividade-blocos h3 {
+    margin-top: 0;
+}
+
+.atividade-blocos form {
+    margin-top: 12px;
+}
+
+/* Responsividade */
+@media (max-width: 800px) {
+    .atividade-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.atividade-titulo {
+    font-size: 2rem;
+    line-height: 1.2;
+}
+
+.atividade-card {
+    padding: 24px;
+}
+
+.atividade-card h3 {
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+.atividade-card p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+.atividade-nivel {
+    font-size: 1.05rem;
+}
+
+.atividade-blocos > div > h3 {
+    font-size: 1.5rem;
+}
+
+.atividade-blocos > div > p {
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+.blocklyText {
+    font-size: 14px !important;
+}
+
+.botao-verificar,
+.botao-secundario,
+.botao-voltar {
+    min-height: 40px;
+    padding: 8px 16px;
+    border-radius: 7px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.botao-secundario {
+    margin-top: 12px;
+}
+
+.botao-verificar {
+    margin-top: 8px;
+}
+
+.botao-voltar {
+    width: 100%;
+}
+
+.atividade-enunciado {
+    font-size: 1.3rem !important;
+    font-weight: 500;
+    line-height: 1.6;
+    margin: 16px 0;
+}
+
+.feedback-card {
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.feedback-correto {
+    border: 2px solid #2e9d50;
+    background-color: #f0faf3;
+}
+
+.feedback-incorreto {
+    border: 2px solid #d9534f;
+    background-color: #fff5f5;
+}
+
+.feedback-mensagem {
+    font-weight: 600;
+}
+
+.feedback-tempo {
+    font-size: 0.9rem !important;
+    margin-bottom: 0;
 }

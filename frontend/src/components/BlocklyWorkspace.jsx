@@ -190,13 +190,12 @@ function BlocklyWorkspace({ onRespostaChange }) {
                     drag: true,
                     wheel: true,
                 },
-
                 zoom: {
                     controls: true,
                     wheel: true,
-                    startScale: 1,
-                    maxScale: 1.5,
-                    minScale: 0.6,
+                    startScale: 1.25,
+                    maxScale: 1.8,
+                    minScale: 0.8,
                     scaleSpeed: 1.1,
                 },
             }
@@ -255,7 +254,7 @@ function BlocklyWorkspace({ onRespostaChange }) {
 
     return (
         <div>
-            <h3>Monte sua resolução</h3>
+            <h3>Área de Blocos</h3>
 
             <p>
                 Arraste os blocos e preencha os valores
@@ -264,9 +263,11 @@ function BlocklyWorkspace({ onRespostaChange }) {
 
             <div
                 ref={blocklyDiv}
+                className="blockly-container"
                 style={{
-                    height: "450px",
                     width: "100%",
+                    height: "600px",
+                    minHeight: "600px",
                 }}
             />
 
@@ -274,6 +275,7 @@ function BlocklyWorkspace({ onRespostaChange }) {
 
             <button
                 type="button"
+                className="botao-secundario"
                 onClick={limparBlocos}
             >
                 Limpar blocos
