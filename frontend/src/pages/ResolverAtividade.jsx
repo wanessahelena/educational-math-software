@@ -10,6 +10,8 @@ function ResolverAtividade({ usuario, atividade, onVoltar }){
 
     const [inicio] = useState(Date.now());
 
+    const [enviando, setEnviando] = useState(false);
+
     const atualizarRespostaBlockly = useCallback((valor) => {
         setResposta(valor);
         setResultado(null);
@@ -32,6 +34,7 @@ function ResolverAtividade({ usuario, atividade, onVoltar }){
         );
 
         try{
+            setEnviando(true);
             const tentativa = await registrarTentativa(
                 usuario.id_usuario,
                 atividade.id_atividade,
@@ -41,7 +44,9 @@ function ResolverAtividade({ usuario, atividade, onVoltar }){
 
             setResultado(tentativa);
         }catch (error) {
-        setErro(error.message);
+            setErro(error.message);
+        }finally {
+            setEnviando(false);
         }
     }
 
@@ -126,14 +131,20 @@ function ResolverAtividade({ usuario, atividade, onVoltar }){
                             }
                         />
 
-                        <form onSubmit={handleSubmit}>
-                            <button
-                                type="submit"
-                                className="botao-verificar"
-                            >
-                                Verificar resolução
-                            </button>
-                        </form>
+                        {resultado?.status !== "correta" && (
+                            <form onSubmit={handleSubmit}>
+                                <button
+                                    type="submit"
+                                    className="botao-verificar"
+                                    disabled={enviando}
+                                >
+                                    {enviando
+                                        ? "Verificando..."
+                                        : "Verificar resolução"}
+                                </button>
+                            </form>
+                        )}
+
                     </div>
                 </div>
             </section>
