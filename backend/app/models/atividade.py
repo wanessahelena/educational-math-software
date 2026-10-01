@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey, Integer, String, Text
+from sqlalchemy import ForeignKey, Integer, JSON, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database import Base
@@ -30,6 +30,12 @@ class Atividade(Base):
     resposta_esperada: Mapped[str | None] = mapped_column(
         String(255),
         nullable=True
+    )
+    
+    blocos_permitidos: Mapped[list[str]] = mapped_column(
+        JSON,
+        nullable=False,
+        default=list
     )
 
     id_ano: Mapped[int] = mapped_column(

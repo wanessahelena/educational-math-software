@@ -142,7 +142,10 @@ function registrarBlocosMatematicos() {
 }
 
 
-function BlocklyWorkspace({ onRespostaChange }) {
+function BlocklyWorkspace({
+    blocosPermitidos,
+    onRespostaChange,
+}) {
     const blocklyDiv = useRef(null);
     const workspaceRef = useRef(null);
 
@@ -153,34 +156,35 @@ function BlocklyWorkspace({ onRespostaChange }) {
             return;
         }
 
+        const mapaBlocos = {
+            soma: "bloco_soma",
+            subtracao: "bloco_subtracao",
+            multiplicacao: "bloco_multiplicacao",
+            divisao: "bloco_divisao",
+        };
+
+        const blocosToolbox = (blocosPermitidos || [])
+            .filter((bloco) => mapaBlocos[bloco])
+            .map((bloco) => ({
+                kind: "block",
+                type: mapaBlocos[bloco],
+            }));
+
+        const toolbox = {
+            kind: "flyoutToolbox",
+            contents: [
+                ...blocosToolbox,
+                {
+                    kind: "block",
+                    type: "bloco_resposta",
+                },
+            ],
+        };
+
         workspaceRef.current = Blockly.inject(
             blocklyDiv.current,
             {
-                toolbox: {
-                    kind: "flyoutToolbox",
-                    contents: [
-                        {
-                            kind: "block",
-                            type: "bloco_soma",
-                        },
-                        {
-                            kind: "block",
-                            type: "bloco_subtracao",
-                        },
-                        {
-                            kind: "block",
-                            type: "bloco_multiplicacao",
-                        },
-                        {
-                            kind: "block",
-                            type: "bloco_divisao",
-                        },
-                        {
-                            kind: "block",
-                            type: "bloco_resposta",
-                        },
-                    ],
-                },
+                toolbox: toolbox,
 
                 trashcan: true,
                 scrollbars: true,
@@ -190,6 +194,7 @@ function BlocklyWorkspace({ onRespostaChange }) {
                     drag: true,
                     wheel: true,
                 },
+
                 zoom: {
                     controls: true,
                     wheel: true,
@@ -243,7 +248,7 @@ function BlocklyWorkspace({ onRespostaChange }) {
 
             workspaceRef.current?.dispose();
         };
-    }, [onRespostaChange]);
+    }, [blocosPermitidos, onRespostaChange]);
 
     function limparBlocos() {
         if (workspaceRef.current) {

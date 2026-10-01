@@ -125,7 +125,9 @@ function ResolverAtividade({ usuario, atividade, onVoltar }){
                     </div>
 
                     <div className="atividade-blocos">
+                    
                         <BlocklyWorkspace
+                            blocosPermitidos={atividade.blocos_permitidos}
                             onRespostaChange={
                                 atualizarRespostaBlockly
                             }
