@@ -1,94 +1,153 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { registrarTentativa } from "../services/api";
+import BlocklyWorkspace from "../components/BlocklyWorkspace";
 
-function ResolverAtividade({ usuario, atividade, onVoltar }) {
+function ResolverAtividade({ usuario, atividade, onVoltar }){
+
     const [resposta, setResposta] = useState("");
     const [resultado, setResultado] = useState(null);
     const [erro, setErro] = useState("");
 
     const [inicio] = useState(Date.now());
 
-    async function handleSubmit(event) {
+    const [enviando, setEnviando] = useState(false);
+
+    const atualizarRespostaBlockly = useCallback((valor) => {
+        setResposta(valor);
+        setResultado(null);
+        setErro("");
+    }, []);
+
+    async function handleSubmit(event){
         event.preventDefault();
 
         setResultado(null);
         setErro("");
 
-        if (!resposta.trim()) {
-        setErro("Digite uma resposta.");
-        return;
+        if (!resposta.trim()){
+            setErro("Adicione um único bloco de resposta e informe a resposta final.");
+            return;
         }
 
         const tempoGasto = Math.floor(
-        (Date.now() - inicio) / 1000
+            (Date.now() - inicio) / 1000
         );
 
-        try {
-        const tentativa = await registrarTentativa(
-            usuario.id_usuario,
-            atividade.id_atividade,
-            resposta,
-            tempoGasto
-        );
+        try{
+            setEnviando(true);
+            const tentativa = await registrarTentativa(
+                usuario.id_usuario,
+                atividade.id_atividade,
+                resposta,
+                tempoGasto
+            );
 
-        setResultado(tentativa);
-        } catch (error) {
-        setErro(error.message);
+            setResultado(tentativa);
+        }catch (error) {
+            setErro(error.message);
+        }finally {
+            setEnviando(false);
         }
     }
 
     return (
         <main className="conteudo">
-        <section className="boas-vindas">
-            <h2>{atividade.titulo}</h2>
+            <section className="atividade-resolucao">
+                <h2 className="atividade-titulo">
+                    {atividade.titulo}
+                </h2>
 
-            <p>{atividade.descricao}</p>
+                <div className="atividade-layout">
+                    <div className="atividade-lateral">
+                        <div className="atividade-card">
+                            <h3>Desafio</h3>
 
-            <p>
-            Nível: {atividade.nivel}
-            </p>
+                            <p className="atividade-enunciado">
+                                {atividade.descricao}
+                            </p>
 
-            <form onSubmit={handleSubmit}>
-            <label>
-                Sua resposta:
-            </label>
+                            <span className="atividade-nivel">
+                                Nível: {atividade.nivel}
+                            </span>
+                        </div>
 
-            <br />
+                        <div
+                            className={`atividade-card feedback-card ${
+                                resultado
+                                    ? resultado.status === "correta"
+                                        ? "feedback-correto"
+                                        : "feedback-incorreto"
+                                    : erro
+                                        ? "feedback-incorreto"
+                                        : ""
+                            }`}
+                        >
+                            <h3>Feedback</h3>
 
-            <input
-                type="text"
-                value={resposta}
-                onChange={(event) => setResposta(event.target.value)}
-            />
+                            {!resultado && !erro && (
+                                <p>
+                                    Monte sua resolução utilizando
+                                    os blocos ao lado.
+                                </p>
+                            )}
 
-            <br />
-            <br />
+                            {erro && (
+                                <p>{erro}</p>
+                            )}
 
-            <button type="submit">
-                Enviar resposta
-            </button>
-            </form>
+                            {resultado && (
+                                <>
+                                    {resultado.status === "correta" ? (
+                                        <p className="feedback-mensagem">
+                                            ✓ Parabéns! Sua resolução está correta!
+                                        </p>
+                                    ) : (
+                                        <p className="feedback-mensagem">
+                                            ✕ Ainda não está correto. Tente novamente!
+                                        </p>
+                                    )}
 
-            {erro && <p>{erro}</p>}
+                                    <p className="feedback-tempo">
+                                        Tempo gasto: {resultado.tempo_gasto} segundos
+                                    </p>
+                                </>
+                            )}
+                        </div>
 
-            {resultado && (
-            <div>
-                {resultado.status === "correta" ? (
-                <p>Parabéns! Você acertou! 🎉</p>
-                ) : (
-                <p>Resposta incorreta. Tente novamente!</p>
-                )}
+                            <button
+                                type="button"
+                                className="botao-voltar"
+                                onClick={onVoltar}
+                            >
+                                Voltar para atividades
+                            </button>
 
-                <p>
-                Tempo gasto: {resultado.tempo_gasto} segundos
-                </p>
+                    </div>
 
-                <button onClick={onVoltar}>
-                Voltar para atividades
-                </button>
-            </div>
-            )}
-        </section>
+                    <div className="atividade-blocos">
+                        <BlocklyWorkspace
+                            onRespostaChange={
+                                atualizarRespostaBlockly
+                            }
+                        />
+
+                        {resultado?.status !== "correta" && (
+                            <form onSubmit={handleSubmit}>
+                                <button
+                                    type="submit"
+                                    className="botao-verificar"
+                                    disabled={enviando}
+                                >
+                                    {enviando
+                                        ? "Verificando..."
+                                        : "Verificar resolução"}
+                                </button>
+                            </form>
+                        )}
+
+                    </div>
+                </div>
+            </section>
         </main>
     );
 }
