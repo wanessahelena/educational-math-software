@@ -8,6 +8,19 @@ function obterCabecalhoAutenticacao() {
         : {};
 }
 
+function verificarSessaoExpirada(resposta) {
+    if (resposta.status === 401) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("usuario");
+
+        window.dispatchEvent(new Event("sessao-expirada"));
+
+        throw new Error(
+            "Sua sessão expirou. Faça login novamente."
+        );
+    }
+}
+
 export async function buscarAnosEscolares() {
     const resposta = await fetch(`${API_URL}/anos-escolares/`);
 
@@ -84,6 +97,7 @@ export async function registrarTentativa(
         }
     );
 
+    verificarSessaoExpirada(resposta);
     const dados = await resposta.json();
 
     if (!resposta.ok) {
@@ -128,6 +142,7 @@ export async function buscarResumoProgresso(idUsuario) {
         }
     );
 
+    verificarSessaoExpirada(resposta);
     const dados = await resposta.json();
 
     if (!resposta.ok) {
@@ -149,6 +164,7 @@ export async function buscarDesempenhoAtividades(idUsuario) {
         }
     );
 
+    verificarSessaoExpirada(resposta);
     const dados = await resposta.json();
 
     if (!resposta.ok) {
