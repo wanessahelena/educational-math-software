@@ -44,6 +44,26 @@ function App() {
             }
     }, [usuario]);
 
+    useEffect(() => {
+    function tratarSessaoExpirada() {
+        setUsuario(null);
+        setAtividadeSelecionada(null);
+        setPagina("login");
+    }
+
+    window.addEventListener(
+        "sessao-expirada",
+        tratarSessaoExpirada
+    );
+
+    return () => {
+        window.removeEventListener(
+            "sessao-expirada",
+            tratarSessaoExpirada
+        );
+    };
+}, []);
+
     function finalizarCadastro(novoUsuario) {
         setUsuario(novoUsuario);
         setPagina("aluno");
