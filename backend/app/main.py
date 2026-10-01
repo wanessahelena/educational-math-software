@@ -1,5 +1,3 @@
-
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
@@ -8,8 +6,10 @@ from app.database import engine
 
 from app.routes.anos_escolares import router as anos_escolares_router
 from app.routes.atividades import router as atividades_router
+from app.routes.conteudos import router as conteudos_router
 from app.routes.usuarios import router as usuarios_router
 from app.routes.tentativas import router as tentativas_router
+
 
 app = FastAPI(
     title="Educational Math Software API",
@@ -27,8 +27,10 @@ app.add_middleware(
 
 app.include_router(anos_escolares_router)
 app.include_router(atividades_router)
+app.include_router(conteudos_router)
 app.include_router(usuarios_router)
 app.include_router(tentativas_router)
+
 
 @app.get("/")
 def root():
