@@ -24,6 +24,23 @@ CREATE TABLE conteudo_matematico (
     descricao TEXT
 );
 
+CREATE TABLE ano_conteudo (
+    id_ano INTEGER NOT NULL,
+    id_conteudo INTEGER NOT NULL,
+
+    PRIMARY KEY (id_ano, id_conteudo),
+
+    CONSTRAINT fk_ano_conteudo_ano
+        FOREIGN KEY (id_ano)
+        REFERENCES ano_escolar(id_ano)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_ano_conteudo_conteudo
+        FOREIGN KEY (id_conteudo)
+        REFERENCES conteudo_matematico(id_conteudo)
+        ON DELETE CASCADE
+);
+
 
 CREATE TABLE atividade (
     id_atividade SERIAL PRIMARY KEY,
@@ -148,3 +165,44 @@ VALUES
         'Educação financeira',
         'Situações envolvendo dinheiro e conceitos iniciais de educação financeira.'
     );
+
+INSERT INTO ano_conteudo (id_ano, id_conteudo)
+VALUES
+    -- 1º ano
+    (1, 1),
+    (1, 2),
+    (1, 5),
+
+    -- 2º ano
+    (2, 1),
+    (2, 2),
+    (2, 5),
+
+    -- 3º ano
+    (3, 1),
+    (3, 2),
+    (3, 3),
+    (3, 4),
+    (3, 6),
+    (3, 10),
+
+    -- 4º ano
+    (4, 1),
+    (4, 2),
+    (4, 3),
+    (4, 4),
+    (4, 6),
+    (4, 7),
+    (4, 8),
+    (4, 9),
+
+    -- 5º ano
+    (5, 1),
+    (5, 2),
+    (5, 3),
+    (5, 4),
+    (5, 6),
+    (5, 7),
+    (5, 10),
+    (5, 11),
+    (5, 12);

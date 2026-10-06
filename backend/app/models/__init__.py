@@ -1,4 +1,5 @@
 from app.models.ano_escolar import AnoEscolar
+from app.models.ano_conteudo import ano_conteudo
 from app.models.usuario import Usuario
 from app.models.conteudo_matematico import ConteudoMatematico
 from app.models.atividade_conteudo import atividade_conteudo
