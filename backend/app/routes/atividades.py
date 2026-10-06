@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -6,7 +6,7 @@ from app.models.atividade import Atividade
 from app.models.ano_escolar import AnoEscolar
 from app.models.conteudo_matematico import ConteudoMatematico
 
-from app.schemas.atividade import AtividadeResponse
+from app.schemas.atividade import AtividadeCreate, AtividadeResponse
 
 router = APIRouter(
     prefix="/atividades",
@@ -52,20 +52,18 @@ def listar_atividades_por_ano(
     return atividades
 
 
-@router.post("/")
+@router.post(
+    "/",
+    response_model=AtividadeResponse,
+    status_code=201
+)
 def cadastrar_atividade(
-    titulo: str,
-    descricao: str,
-    nivel: str,
-    resposta_esperada: str,
-    id_ano: int,
-    blocos_permitidos: list[str] = Query(default=[]),
-    ids_conteudos: list[int] = Query(default=[]),
+    dados: AtividadeCreate,
     db: Session = Depends(get_db)
 ):
     ano_escolar = (
         db.query(AnoEscolar)
-        .filter(AnoEscolar.id_ano == id_ano)
+        .filter(AnoEscolar.id_ano == dados.id_ano)
         .first()
     )
 
@@ -77,12 +75,12 @@ def cadastrar_atividade(
 
     conteudos = []
 
-    if ids_conteudos:
+    if dados.ids_conteudos:
         conteudos = (
             db.query(ConteudoMatematico)
             .filter(
                 ConteudoMatematico.id_conteudo.in_(
-                    ids_conteudos
+                    dados.ids_conteudos
                 )
             )
             .all()
@@ -94,7 +92,8 @@ def cadastrar_atividade(
         }
 
         ids_inexistentes = (
-            set(ids_conteudos) - ids_encontrados
+            set(dados.ids_conteudos)
+            - ids_encontrados
         )
 
         if ids_inexistentes:
@@ -108,12 +107,12 @@ def cadastrar_atividade(
             )
 
     nova_atividade = Atividade(
-        titulo=titulo,
-        descricao=descricao,
-        nivel=nivel,
-        resposta_esperada=resposta_esperada,
-        id_ano=id_ano,
-        blocos_permitidos=blocos_permitidos
+        titulo=dados.titulo,
+        descricao=dados.descricao,
+        nivel=dados.nivel,
+        resposta_esperada=dados.resposta_esperada,
+        id_ano=dados.id_ano,
+        blocos_permitidos=dados.blocos_permitidos
     )
 
     nova_atividade.conteudos = conteudos
