@@ -121,6 +121,66 @@ function registrarBlocosMatematicos() {
         };
     }
 
+    if (!Blockly.Blocks["bloco_sequencia"]) {
+    Blockly.Blocks["bloco_sequencia"] = {
+        init: function () {
+            this.appendDummyInput()
+                .appendField("Sequência:")
+                .appendField(
+                    new Blockly.FieldNumber(0),
+                    "VALOR_1"
+                )
+                .appendField(",")
+                .appendField(
+                    new Blockly.FieldNumber(0),
+                    "VALOR_2"
+                )
+                .appendField(",")
+                .appendField(
+                    new Blockly.FieldNumber(0),
+                    "VALOR_3"
+                )
+                .appendField(",")
+                .appendField(
+                    new Blockly.FieldNumber(0),
+                    "PROXIMO"
+                );
+
+            this.setPreviousStatement(true, null);
+            this.setNextStatement(true, null);
+            this.setColour(180);
+            this.setTooltip(
+                "Representa uma sequência numérica."
+            );
+        },
+    };
+}
+
+if (!Blockly.Blocks["bloco_fracao"]) {
+    Blockly.Blocks["bloco_fracao"] = {
+        init: function () {
+            this.appendDummyInput()
+                .appendField("Fração:")
+                .appendField(
+                    new Blockly.FieldNumber(0, 0),
+                    "NUMERADOR"
+                )
+                .appendField("/")
+                .appendField(
+                    new Blockly.FieldNumber(0, 0),
+                    "DENOMINADOR"
+                );
+
+            this.setPreviousStatement(true, null);
+            this.setNextStatement(true, null);
+            this.setColour(60);
+            this.setTooltip(
+                "Representa uma fração por meio de numerador e denominador."
+            );
+        },
+    };
+}
+
     if (!Blockly.Blocks["bloco_resposta"]) {
         Blockly.Blocks["bloco_resposta"] = {
             init: function () {
@@ -161,6 +221,8 @@ function BlocklyWorkspace({
             subtracao: "bloco_subtracao",
             multiplicacao: "bloco_multiplicacao",
             divisao: "bloco_divisao",
+            sequencia: "bloco_sequencia",
+            fracao: "bloco_fracao",
         };
 
         const blocosToolbox = (blocosPermitidos || [])
@@ -266,15 +328,15 @@ function BlocklyWorkspace({
                 para representar sua resolução.
             </p>
 
-            <div
-                ref={blocklyDiv}
-                className="blockly-container"
-                style={{
-                    width: "100%",
-                    height: "600px",
-                    minHeight: "600px",
-                }}
-            />
+        <div
+            ref={blocklyDiv}
+            className="blockly-container"
+            style={{
+                width: "100%",
+                height: "400px",
+                minHeight: "400px",
+            }}
+        />
 
             <br />
 
