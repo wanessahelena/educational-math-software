@@ -1,5 +1,6 @@
 
 import { useEffect, useState } from "react";
+import { Sparkles } from "lucide-react";
 import {
     buscarAnosEscolares,
     cadastrarUsuario,
@@ -64,8 +65,9 @@ function Cadastro({ onCadastro }) {
             <section className="cartao-autenticacao">
                 <div className="autenticacao-topo">
                     <span className="autenticacao-icone" aria-hidden="true">
-                        ✦
+                        <Sparkles size={26} strokeWidth={2.5} />
                     </span>
+
                     <span className="autenticacao-marca">
                         Mate<span>lógica</span>
                     </span>

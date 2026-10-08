@@ -1,4 +1,13 @@
 
+import {
+    Sparkles,
+    House,
+    BookOpen,
+    ChartNoAxesColumn,
+    UserRound,
+    LogOut
+} from "lucide-react";
+
 function MenuAluno({
     pagina,
     onInicio,
@@ -12,20 +21,24 @@ function MenuAluno({
             <div className="menu-matelogica-container">
                 <div className="menu-matelogica-marca">
                     <span className="menu-matelogica-logo" aria-hidden="true">
-                        ✦
+                        <Sparkles size={26} strokeWidth={2.5} />
                     </span>
                     <span>
                         Mate<span className="menu-matelogica-verde">lógica</span>
                     </span>
                 </div>
 
-                <nav className="menu-matelogica-links" aria-label="Navegação do aluno">
+                <nav
+                    className="menu-matelogica-links"
+                    aria-label="Navegação do aluno"
+                >
                     <button
                         type="button"
                         className={pagina === "aluno" ? "menu-link-ativo" : ""}
                         onClick={onInicio}
                         aria-current={pagina === "aluno" ? "page" : undefined}
                     >
+                        <House size={18} aria-hidden="true" />
                         Início
                     </button>
 
@@ -43,6 +56,7 @@ function MenuAluno({
                                 : undefined
                         }
                     >
+                        <BookOpen size={18} aria-hidden="true" />
                         Atividades
                     </button>
 
@@ -52,6 +66,7 @@ function MenuAluno({
                         onClick={onProgresso}
                         aria-current={pagina === "progresso" ? "page" : undefined}
                     >
+                        <ChartNoAxesColumn size={18} aria-hidden="true" />
                         Meu progresso
                     </button>
 
@@ -61,6 +76,7 @@ function MenuAluno({
                         onClick={onPerfil}
                         aria-current={pagina === "perfil" ? "page" : undefined}
                     >
+                        <UserRound size={18} aria-hidden="true" />
                         Meu perfil
                     </button>
 
@@ -69,6 +85,7 @@ function MenuAluno({
                         className="menu-matelogica-sair"
                         onClick={onSair}
                     >
+                        <LogOut size={18} aria-hidden="true" />
                         Sair
                     </button>
                 </nav>

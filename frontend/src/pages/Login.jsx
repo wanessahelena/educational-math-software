@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { Sparkles, ArrowLeft } from "lucide-react";
 import { realizarLogin } from "../services/api";
 
 function Login({ onLogin, onCadastro, onVoltar }) {
@@ -28,7 +29,7 @@ function Login({ onLogin, onCadastro, onVoltar }) {
             <section className="cartao-autenticacao">
                 <div className="autenticacao-topo">
                     <span className="autenticacao-icone" aria-hidden="true">
-                        ✦
+                        <Sparkles size={26} strokeWidth={2.5} />
                     </span>
                     <span className="autenticacao-marca">
                         Mate<span>lógica</span>
@@ -36,7 +37,6 @@ function Login({ onLogin, onCadastro, onVoltar }) {
                 </div>
 
                 <div className="autenticacao-apresentacao">
-
                     <h1>Bem-vindo de volta!</h1>
                     <p>
                         Entre na sua conta para continuar
@@ -98,7 +98,8 @@ function Login({ onLogin, onCadastro, onVoltar }) {
                     className="autenticacao-voltar"
                     onClick={onVoltar}
                 >
-                    ← Voltar ao início
+                    <ArrowLeft size={17} aria-hidden="true" />
+                    Voltar ao início
                 </button>
             </section>
         </main>

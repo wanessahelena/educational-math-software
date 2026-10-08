@@ -1,5 +1,19 @@
 
 import { useEffect, useState } from "react";
+
+
+import {
+    ArrowLeft,
+    BookOpen,
+    Flag,
+    Puzzle,
+    CircleCheck,
+    RotateCcw,
+    Target,
+    Sprout
+} from "lucide-react";
+
+
 import {
     buscarResumoProgresso,
     buscarDesempenhoAtividades,
@@ -47,46 +61,48 @@ function Progresso({ usuario, onVoltar }) {
         };
     }, [usuario.id_usuario]);
 
+
     const indicadores = resumo
         ? [
-              {
-                  titulo: "Atividades realizadas",
-                  valor: `${resumo.atividades_realizadas} / ${resumo.total_atividades}`,
-                  icone: "📚",
-                  cor: "azul",
-              },
-              {
-                  titulo: "Conclusão",
-                  valor: `${resumo.percentual_conclusao}%`,
-                  icone: "🏁",
-                  cor: "verde",
-              },
-              {
-                  titulo: "Total de tentativas",
-                  valor: resumo.total_tentativas,
-                  icone: "🧩",
-                  cor: "amarelo",
-              },
-              {
-                  titulo: "Respostas corretas",
-                  valor: resumo.total_corretas,
-                  icone: "✓",
-                  cor: "verde",
-              },
-              {
-                  titulo: "Respostas incorretas",
-                  valor: resumo.total_incorretas,
-                  icone: "↻",
-                  cor: "coral",
-              },
-              {
-                  titulo: "Precisão",
-                  valor: `${resumo.percentual_acerto}%`,
-                  icone: "🎯",
-                  cor: "azul",
-              },
-          ]
+            {
+                titulo: "Atividades realizadas",
+                valor: `${resumo.atividades_realizadas} / ${resumo.total_atividades}`,
+                icone: BookOpen,
+                cor: "azul",
+            },
+            {
+                titulo: "Conclusão",
+                valor: `${resumo.percentual_conclusao}%`,
+                icone: Flag,
+                cor: "verde",
+            },
+            {
+                titulo: "Total de tentativas",
+                valor: resumo.total_tentativas,
+                icone: Puzzle,
+                cor: "amarelo",
+            },
+            {
+                titulo: "Respostas corretas",
+                valor: resumo.total_corretas,
+                icone: CircleCheck,
+                cor: "verde",
+            },
+            {
+                titulo: "Respostas incorretas",
+                valor: resumo.total_incorretas,
+                icone: RotateCcw,
+                cor: "coral",
+            },
+            {
+                titulo: "Precisão",
+                valor: `${resumo.percentual_acerto}%`,
+                icone: Target,
+                cor: "azul",
+            },
+        ]
         : [];
+
 
     return (
         <main className="pagina-progresso">
@@ -96,7 +112,8 @@ function Progresso({ usuario, onVoltar }) {
                     className="progresso-voltar"
                     onClick={onVoltar}
                 >
-                    ← Voltar ao início
+                    <ArrowLeft size={18} aria-hidden="true" />
+                    Voltar ao início
                 </button>
 
                 <div className="progresso-cabecalho">
@@ -134,7 +151,7 @@ function Progresso({ usuario, onVoltar }) {
                                                 className={`progresso-indicador-icone progresso-cor-${indicador.cor}`}
                                                 aria-hidden="true"
                                             >
-                                                {indicador.icone}
+                                                <indicador.icone size={26} strokeWidth={2} />
                                             </span>
 
                                             <h3>{indicador.titulo}</h3>
@@ -159,7 +176,9 @@ function Progresso({ usuario, onVoltar }) {
 
                             {atividades.length === 0 ? (
                                 <div className="progresso-vazio">
-                                    <span aria-hidden="true">🌱</span>
+                                    <span aria-hidden="true">
+                                        <Sprout size={40} strokeWidth={1.8} />
+                                    </span>
                                     <h3>Sua jornada está começando!</h3>
                                     <p>
                                         Você ainda não realizou nenhuma atividade.
@@ -179,7 +198,7 @@ function Progresso({ usuario, onVoltar }) {
                                                     className="progresso-atividade-icone"
                                                     aria-hidden="true"
                                                 >
-                                                    🧩
+                                                    <Puzzle size={22} strokeWidth={2} />
                                                 </span>
 
                                                 <h3>{atividade.titulo}</h3>

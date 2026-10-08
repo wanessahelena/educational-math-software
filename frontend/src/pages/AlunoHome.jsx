@@ -1,16 +1,19 @@
 
+import {
+    BookOpen,
+    Puzzle,
+    ChartNoAxesCombined,
+    ArrowRight
+} from "lucide-react";
+
 function AlunoHome({ usuario, onAtividades, onProgresso }) {
     const primeiroNome = usuario.nome?.trim().split(/\s+/)[0] || "Estudante";
 
     return (
         <main className="painel-aluno">
             <div className="painel-container">
-
-
                 <section className="painel-boas-vindas">
                     <div className="painel-saudacao">
-
-
                         <h1>
                             Olá, <span>{primeiroNome}!</span>
                         </h1>
@@ -21,7 +24,7 @@ function AlunoHome({ usuario, onAtividades, onProgresso }) {
                         </p>
 
                         <div className="painel-ano">
-                            <span aria-hidden="true">📚</span>
+                            <BookOpen size={20} aria-hidden="true" />
                             <span>
                                 Você está no <strong>{usuario.id_ano}º ano</strong>
                             </span>
@@ -44,8 +47,11 @@ function AlunoHome({ usuario, onAtividades, onProgresso }) {
 
                     <div className="painel-cartoes">
                         <article className="painel-cartao painel-cartao-atividades">
-                            <div className="painel-cartao-icone painel-icone-azul" aria-hidden="true">
-                                🧩
+                            <div
+                                className="painel-cartao-icone painel-icone-azul"
+                                aria-hidden="true"
+                            >
+                                <Puzzle size={32} strokeWidth={2} />
                             </div>
 
                             <h3>Explorar atividades</h3>
@@ -60,13 +66,17 @@ function AlunoHome({ usuario, onAtividades, onProgresso }) {
                                 className="painel-botao painel-botao-azul"
                                 onClick={onAtividades}
                             >
-                                Ver atividades <span aria-hidden="true">→</span>
+                                Ver atividades
+                                <ArrowRight size={18} aria-hidden="true" />
                             </button>
                         </article>
 
                         <article className="painel-cartao painel-cartao-progresso">
-                            <div className="painel-cartao-icone painel-icone-verde" aria-hidden="true">
-                                📈
+                            <div
+                                className="painel-cartao-icone painel-icone-verde"
+                                aria-hidden="true"
+                            >
+                                <ChartNoAxesCombined size={32} strokeWidth={2} />
                             </div>
 
                             <h3>Meu progresso</h3>
@@ -81,7 +91,8 @@ function AlunoHome({ usuario, onAtividades, onProgresso }) {
                                 className="painel-botao painel-botao-verde"
                                 onClick={onProgresso}
                             >
-                                Ver meu progresso <span aria-hidden="true">→</span>
+                                Ver meu progresso
+                                <ArrowRight size={18} aria-hidden="true" />
                             </button>
                         </article>
                     </div>

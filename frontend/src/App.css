@@ -2163,7 +2163,7 @@ RESOLUÇÃO DE ATIVIDADES
 }
 
 .progresso-atividade-topo h3 {
-    font-size: 18px;
+    font-size: 20px;
     line-height: 1.4;
 }
 
@@ -2174,11 +2174,11 @@ RESOLUÇÃO DE ATIVIDADES
 }
 
 .progresso-atividade-dados span {
-    padding: 9px 12px;
+    padding: 11px 15px;
     border-radius: 10px;
     background: #f4f8fc;
     color: #62758c;
-    font-size: 13px;
+    font-size: 16px;
 }
 
 .progresso-atividade-dados strong {
@@ -2375,3 +2375,203 @@ RESOLUÇÃO DE ATIVIDADES
         font-size: 28px;
     }
 }
+
+
+/* Ícones Lucide - Home */
+
+.home-logo,
+.home-beneficio-icone {
+    display: grid;
+    place-items: center;
+}
+
+.home-ilustracao-rodape svg {
+    flex-shrink: 0;
+}
+
+
+/* ========================================
+   ÍCONES DO MENU - MATELÓGICA
+======================================== */
+
+.menu-matelogica-logo {
+    display: grid;
+    place-items: center;
+}
+
+.menu-matelogica-links button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.menu-matelogica-links button svg {
+    flex-shrink: 0;
+}
+
+
+/* ========================================
+   ÍCONES DO LOGIN - MATELÓGICA
+======================================== */
+
+.autenticacao-icone {
+    display: grid;
+    place-items: center;
+}
+
+.autenticacao-voltar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.autenticacao-voltar svg {
+    flex-shrink: 0;
+}
+
+
+/* ========================================
+   ÍCONES DA PÁGINA INICIAL DO ALUNO
+======================================== */
+
+.painel-ano {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.painel-cartao-icone {
+    display: grid;
+    place-items: center;
+}
+
+.painel-botao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.painel-botao svg,
+.painel-ano svg {
+    flex-shrink: 0;
+}
+
+
+/* ========================================
+   ÍCONES DA PÁGINA DE ATIVIDADES
+======================================== */
+
+.atividades-ano {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.atividades-icone {
+    display: grid;
+    place-items: center;
+}
+
+.atividades-botao,
+.atividades-voltar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.atividades-botao svg,
+.atividades-voltar svg,
+.atividades-ano svg {
+    flex-shrink: 0;
+}
+
+
+/* ========================================
+   ÍCONES DA RESOLUÇÃO DE ATIVIDADES
+======================================== */
+
+.resolucao-voltar,
+.resolucao-verificar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.resolucao-card-icone {
+    display: grid;
+    place-items: center;
+}
+
+.resolucao-feedback-mensagem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.resolucao-voltar svg,
+.resolucao-verificar svg,
+.resolucao-feedback-mensagem svg {
+    flex-shrink: 0;
+}
+
+
+/* ========================================
+   ÍCONES DA PÁGINA DE PROGRESSO
+======================================== */
+
+.progresso-voltar {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.progresso-indicador-icone,
+.progresso-atividade-icone {
+    display: grid;
+    place-items: center;
+}
+
+.progresso-vazio > span {
+    display: inline-grid;
+    place-items: center;
+}
+
+.progresso-voltar svg,
+.progresso-indicador-icone svg,
+.progresso-atividade-icone svg {
+    flex-shrink: 0;
+}
+
+
+/* ========================================
+   ÍCONES DA PÁGINA DE PERFIL
+======================================== */
+
+.perfil-formulario label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.perfil-formulario label svg {
+    flex-shrink: 0;
+    color: #338dce;
+}
+
+.perfil-formulario button[type="submit"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.perfil-formulario button[type="submit"] svg {
+    flex-shrink: 0;
+}
+
+

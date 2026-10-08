@@ -1,5 +1,15 @@
 
 import { useEffect, useState } from "react";
+
+
+import {
+    BookOpen,
+    ArrowRight,
+    ArrowLeft,
+    Ruler
+} from "lucide-react";
+
+
 import {
     buscarAtividadesPorAno,
     buscarConteudosPorAno,
@@ -12,7 +22,7 @@ const coresConteudos = [
     "coral",
 ];
 
-const iconesConteudos = ["+", "−", "×", "÷", "123", "½", "0,5", "📏", "◇", "▥", "%", "R$"];
+const iconesConteudos = ["+", "−", "×", "÷", "123", "½", "0,5", "regua", "◇", "▥", "%", "R$"];
 
 function Atividades({ usuario, onResolver }) {
     const [atividades, setAtividades] = useState([]);
@@ -87,8 +97,10 @@ function Atividades({ usuario, onResolver }) {
                     </p>
 
                     <span className="atividades-ano">
-                        📚 {usuario.ano_escolar || `${usuario.id_ano}º ano`}
+                        <BookOpen size={18} aria-hidden="true" />
+                        {usuario.ano_escolar || `${usuario.id_ano}º ano`}
                     </span>
+
                 </header>
 
                 {carregando && (
@@ -133,7 +145,7 @@ function Atividades({ usuario, onResolver }) {
                                                         className="atividades-icone"
                                                         aria-hidden="true"
                                                     >
-                                                        {icone}
+                                                        {icone === "regua" ? <Ruler size={28} strokeWidth={2} /> : icone}
                                                     </div>
 
                                                     <h3>{conteudo.nome}</h3>
@@ -153,7 +165,7 @@ function Atividades({ usuario, onResolver }) {
                                                         }
                                                     >
                                                         Ver atividades
-                                                        <span aria-hidden="true">→</span>
+                                                        <ArrowRight size={18} aria-hidden="true" />
                                                     </button>
                                                 </article>
                                             );
@@ -168,7 +180,8 @@ function Atividades({ usuario, onResolver }) {
                                     className="atividades-voltar"
                                     onClick={() => setConteudoSelecionado(null)}
                                 >
-                                    ← Voltar aos conteúdos
+                                    <ArrowLeft size={18} aria-hidden="true" />
+                                    Voltar aos conteúdos
                                 </button>
 
                                 <div className="atividades-secao-titulo">
@@ -212,7 +225,7 @@ function Atividades({ usuario, onResolver }) {
                                                         onClick={() => onResolver(atividade)}
                                                     >
                                                         Resolver atividade
-                                                        <span aria-hidden="true">→</span>
+                                                        <ArrowRight size={18} aria-hidden="true" />
                                                     </button>
                                                 </article>
                                             );
