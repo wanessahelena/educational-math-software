@@ -100,7 +100,7 @@ function App() {
 
     return (
         <div className="app">
-            <Header />
+            {pagina !== "home" && <Header />}
 
             {usuario && (
                 <nav className="menu-aluno">

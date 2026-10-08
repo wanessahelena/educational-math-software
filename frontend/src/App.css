@@ -480,3 +480,373 @@ RESOLUÇÃO DE ATIVIDADES
         width: 100%;
     }
 }
+
+
+/* ========================================
+   HOME - MATELÓGICA
+======================================== */
+
+.home {
+    min-height: 100vh;
+    padding: 0 24px 70px;
+    color: #20344f;
+    background-color: #f4fbff;
+    background-image: radial-gradient(#c9dff1 1px, transparent 1px);
+    background-size: 21px 21px;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+}
+
+.home-container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.home-cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 0;
+}
+
+.home-marca {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.7px;
+}
+
+.home-logo {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #348dd0;
+    color: #fff;
+    font-size: 26px;
+}
+
+.home-marca-verde {
+    color: #4da55f;
+}
+
+.home-entrar-topo {
+    padding: 12px 28px;
+    border: 2px solid #d7e6f1;
+    border-radius: 17px;
+    background: #fff;
+    color: #20344f;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.home-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 65px;
+    padding: 70px 0 55px;
+}
+
+.home-texto {
+    max-width: 520px;
+}
+
+.home-etiqueta {
+    display: inline-block;
+    margin-bottom: 24px;
+    padding: 9px 16px;
+    border-radius: 30px;
+    background: #fff0c7;
+    color: #704b16;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.home-texto h1 {
+    margin-bottom: 22px;
+    font-size: clamp(36px, 4vw, 54px);
+    line-height: 1.13;
+    letter-spacing: -1.8px;
+    font-weight: 800;
+}
+
+.home-texto h1 span {
+    color: #348dd0;
+}
+
+.home-texto > p {
+    max-width: 450px;
+    color: #62758c;
+    font-size: 18px;
+    line-height: 1.55;
+}
+
+.home .home-acoes {
+    display: flex;
+    justify-content: flex-start;
+    gap: 14px;
+    margin-top: 32px;
+}
+
+.home .home-botao {
+    min-height: 54px;
+    padding: 14px 26px;
+    border: 0;
+    border-radius: 17px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.2s;
+}
+
+.home .home-botao:hover,
+.home-entrar-topo:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.04);
+}
+
+.home .home-botao-azul {
+    background: #348dd0;
+    box-shadow: 0 4px 0 #1d669e;
+}
+
+.home .home-botao-verde {
+    background: #4da55f;
+    box-shadow: 0 4px 0 #307a42;
+}
+
+/* Ilustração matemática */
+
+.home-ilustracao {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 440px;
+    padding: 30px;
+    border: 2px solid #d5e5f1;
+    border-radius: 25px;
+    background: #fff;
+    box-shadow: 0 5px 0 #dce8f0;
+}
+
+.home-operacao {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.home-numero {
+    font-size: clamp(60px, 7vw, 100px);
+    line-height: 1.2;
+    font-weight: 900;
+    letter-spacing: -5px;
+}
+
+.home-numero-um {
+    color: #78b9f1;
+    transform: rotate(-8deg);
+}
+
+.home-numero-dois {
+    color: #ffcf49;
+    transform: rotate(6deg);
+}
+
+.home-numero-tres {
+    color: #66c8cc;
+    transform: rotate(-5deg);
+}
+
+.home-sinal {
+    font-size: clamp(40px, 5vw, 65px);
+    font-weight: 900;
+}
+
+.home-sinal-mais {
+    color: #80c77c;
+}
+
+.home-sinal-igual {
+    color: #ff957e;
+}
+
+.home-cubos {
+    display: flex;
+    gap: 14px;
+    margin-top: 30px;
+}
+
+.home-cubo {
+    display: grid;
+    place-items: center;
+    width: 70px;
+    height: 70px;
+    border-radius: 16px;
+    color: #fff;
+    font-size: 34px;
+    font-weight: 800;
+    box-shadow: inset -6px -7px 0 rgba(0, 0, 0, 0.08);
+}
+
+.home-cubo-azul {
+    background: #78b9f1;
+    transform: rotate(-8deg);
+}
+
+.home-cubo-verde {
+    background: #80c77c;
+    transform: rotate(5deg);
+}
+
+.home-cubo-amarelo {
+    background: #ffcf49;
+    transform: rotate(-5deg);
+}
+
+.home-ilustracao-rodape {
+    display: flex;
+    align-items: center;
+    gap: 35px;
+    margin-top: 35px;
+    color: #ff987f;
+    font-size: 38px;
+}
+
+/* Benefícios */
+
+.home-beneficios {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.home-beneficio {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 125px;
+    padding: 22px;
+    border: 2px solid #d7e6f1;
+    border-radius: 23px;
+    background: #fff;
+    box-shadow: 0 4px 0 #dce8f0;
+}
+
+.home-beneficio-icone {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    border-radius: 18px;
+    font-size: 27px;
+}
+
+.icone-azul {
+    background: #d8efff;
+}
+
+.icone-verde {
+    background: #def7e4;
+}
+
+.icone-amarelo {
+    background: #fff0c7;
+}
+
+.home-beneficio h2 {
+    margin-bottom: 7px;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.home-beneficio p {
+    color: #62758c;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Responsividade */
+
+@media (max-width: 900px) {
+    .home-hero {
+        grid-template-columns: 1fr;
+        gap: 35px;
+        padding-top: 45px;
+    }
+
+    .home-texto {
+        max-width: 100%;
+    }
+
+    .home-ilustracao {
+        min-height: 340px;
+    }
+
+    .home-beneficios {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .home {
+        padding: 0 18px 45px;
+    }
+
+    .home-marca {
+        font-size: 20px;
+    }
+
+    .home-entrar-topo {
+        padding: 10px 17px;
+    }
+
+    .home-texto h1 {
+        font-size: 38px;
+        letter-spacing: -1px;
+    }
+
+    .home-texto > p {
+        font-size: 16px;
+    }
+
+    .home .home-acoes {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .home .home-botao {
+        width: 100%;
+    }
+
+    .home-ilustracao {
+        min-height: 270px;
+        padding: 15px;
+    }
+
+    .home-numero {
+        font-size: 55px;
+    }
+
+    .home-sinal {
+        font-size: 35px;
+    }
+
+    .home-cubo {
+        width: 50px;
+        height: 50px;
+        font-size: 25px;
+    }
+
+    .home-beneficio {
+        padding: 18px;
+    }
+}
