@@ -319,37 +319,41 @@ function BlocklyWorkspace({
         }
     }
 
+    
     return (
-        <div>
-            <h3>Área de Blocos</h3>
+        <div className="blockly-painel">
+            <div className="blockly-instrucoes">
+                <h3>Área de blocos</h3>
 
-            <p>
-                Arraste os blocos e preencha os valores
-                para representar sua resolução.
-            </p>
+                <p>
+                    Arraste os blocos e preencha os valores
+                    para representar sua resolução.
+                </p>
+            </div>
 
-        <div
-            ref={blocklyDiv}
-            className="blockly-container"
-            style={{
-                width: "100%",
-                height: "400px",
-                minHeight: "400px",
-            }}
-        />
+            <div
+                ref={blocklyDiv}
+                className="blockly-container"
+                style={{
+                    width: "100%",
+                    height: "400px",
+                    minHeight: "400px",
+                }}
+            />
 
-            <br />
-
-            <button
-                type="button"
-                className="botao-secundario"
-                onClick={limparBlocos}
-            >
-                Limpar blocos
-            </button>
+            <div className="blockly-rodape">
+                <button
+                    type="button"
+                    className="blockly-limpar"
+                    onClick={limparBlocos}
+                >
+                    <span aria-hidden="true">↺</span>
+                    Limpar blocos
+                </button>
+            </div>
         </div>
     );
-}
 
+}
 
 export default BlocklyWorkspace;
