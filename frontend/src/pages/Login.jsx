@@ -36,9 +36,7 @@ function Login({ onLogin, onCadastro, onVoltar }) {
                 </div>
 
                 <div className="autenticacao-apresentacao">
-                    <span className="autenticacao-etiqueta">
-                        Que bom ter você aqui!
-                    </span>
+
                     <h1>Bem-vindo de volta!</h1>
                     <p>
                         Entre na sua conta para continuar

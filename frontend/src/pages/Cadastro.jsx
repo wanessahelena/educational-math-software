@@ -72,9 +72,6 @@ function Cadastro({ onCadastro }) {
                 </div>
 
                 <div className="autenticacao-apresentacao">
-                    <span className="autenticacao-etiqueta">
-                        Sua aventura começa aqui!
-                    </span>
                     <h1>Crie sua conta</h1>
                     <p>
                         Preencha seus dados e prepare-se para
