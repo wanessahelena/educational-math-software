@@ -1040,3 +1040,328 @@ RESOLUÇÃO DE ATIVIDADES
         font-size: 26px;
     }
 }
+
+
+/* ========================================
+   PAINEL DO ALUNO - MATELÓGICA
+======================================== */
+
+.painel-aluno {
+    min-height: 100vh;
+    padding: 0 24px 70px;
+    background-color: #f4fbff;
+    background-image: radial-gradient(#c9dff1 1px, transparent 1px);
+    background-size: 21px 21px;
+    color: #20344f;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+}
+
+.painel-container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.painel-cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 0;
+}
+
+.painel-marca {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.7px;
+}
+
+.painel-logo {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #348dd0;
+    color: white;
+    font-size: 26px;
+}
+
+.painel-marca-verde {
+    color: #4da55f;
+}
+
+.painel-sair {
+    padding: 12px 22px;
+    border: 2px solid #d7e6f1;
+    border-radius: 16px;
+    background: white;
+    color: #62758c;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.painel-sair:hover {
+    border-color: #348dd0;
+    color: #20344f;
+}
+
+/* Saudação */
+
+.painel-boas-vindas {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    min-height: 270px;
+    margin-top: 65px;
+    padding: 42px 50px;
+    border: 2px solid #d7e6f1;
+    border-radius: 26px;
+    background: #fff;
+    box-shadow: 0 5px 0 #dce8f0;
+}
+
+.painel-saudacao {
+    max-width: 600px;
+}
+
+.painel-etiqueta {
+    display: inline-block;
+    margin-bottom: 18px;
+    padding: 9px 16px;
+    border-radius: 30px;
+    background: #fff0c7;
+    color: #704b16;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.painel-saudacao h1 {
+    margin-bottom: 12px;
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 1.2;
+    font-weight: 800;
+}
+
+.painel-saudacao h1 span {
+    color: #348dd0;
+}
+
+.painel-saudacao > p {
+    color: #62758c;
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+.painel-ano {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 24px;
+    padding: 12px 18px;
+    border-radius: 14px;
+    background: #e8f5ff;
+    color: #245e8c;
+    font-size: 15px;
+}
+
+.painel-decoracao {
+    position: relative;
+    flex-shrink: 0;
+    width: 240px;
+    height: 180px;
+}
+
+.painel-simbolo {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    width: 75px;
+    height: 75px;
+    border-radius: 20px;
+    color: #fff;
+    font-size: 52px;
+    font-weight: 800;
+    box-shadow: inset -6px -7px 0 rgba(0, 0, 0, 0.08);
+}
+
+.painel-simbolo-um {
+    top: 5px;
+    left: 20px;
+    background: #78b9f1;
+    transform: rotate(-10deg);
+}
+
+.painel-simbolo-dois {
+    top: 20px;
+    right: 10px;
+    background: #ffcf49;
+    transform: rotate(10deg);
+}
+
+.painel-simbolo-tres {
+    bottom: 5px;
+    left: 55px;
+    background: #80c77c;
+    transform: rotate(8deg);
+}
+
+.painel-simbolo-quatro {
+    bottom: 0;
+    right: 0;
+    background: #ff957e;
+    transform: rotate(-8deg);
+}
+
+/* Opções */
+
+.painel-opcoes {
+    margin-top: 55px;
+}
+
+.painel-secao-titulo {
+    margin-bottom: 25px;
+}
+
+.painel-secao-titulo h2 {
+    margin-bottom: 8px;
+    font-size: 27px;
+    font-weight: 800;
+}
+
+.painel-secao-titulo p {
+    color: #62758c;
+    font-size: 16px;
+}
+
+.painel-cartoes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.painel-cartao {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 285px;
+    padding: 32px;
+    border: 2px solid #d7e6f1;
+    border-radius: 24px;
+    background: white;
+    box-shadow: 0 5px 0 #dce8f0;
+}
+
+.painel-cartao-icone {
+    display: grid;
+    place-items: center;
+    width: 65px;
+    height: 65px;
+    margin-bottom: 22px;
+    border-radius: 19px;
+    font-size: 32px;
+}
+
+.painel-icone-azul {
+    background: #d8efff;
+}
+
+.painel-icone-verde {
+    background: #def7e4;
+}
+
+.painel-cartao h3 {
+    margin-bottom: 12px;
+    font-size: 23px;
+    font-weight: 800;
+}
+
+.painel-cartao p {
+    max-width: 370px;
+    margin-bottom: 25px;
+    color: #62758c;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.painel-botao {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    min-height: 48px;
+    margin-top: auto;
+    padding: 12px 22px;
+    border: 0;
+    border-radius: 14px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.painel-botao:hover {
+    transform: translateY(-2px);
+}
+
+.painel-botao-azul {
+    background: #348dd0;
+    box-shadow: 0 4px 0 #1d669e;
+}
+
+.painel-botao-verde {
+    background: #4da55f;
+    box-shadow: 0 4px 0 #307a42;
+}
+
+/* Responsividade */
+
+@media (max-width: 800px) {
+    .painel-boas-vindas {
+        margin-top: 35px;
+        padding: 32px;
+    }
+
+    .painel-decoracao {
+        display: none;
+    }
+
+    .painel-cartoes {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .painel-aluno {
+        padding: 0 18px 45px;
+    }
+
+    .painel-marca {
+        font-size: 20px;
+    }
+
+    .painel-sair {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+
+    .painel-boas-vindas {
+        padding: 26px 22px;
+    }
+
+    .painel-saudacao h1 {
+        font-size: 32px;
+    }
+
+    .painel-cartao {
+        padding: 24px;
+    }
+
+    .painel-secao-titulo h2 {
+        font-size: 23px;
+    }
+}

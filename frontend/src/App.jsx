@@ -100,9 +100,9 @@ function App() {
 
     return (
         <div className="app">
-            {pagina !== "home" && <Header />}
+            {pagina !== "home" && pagina !== "aluno" && <Header />}
 
-            {usuario && (
+            {usuario && pagina !== "aluno" &&  (
                 <nav className="menu-aluno">
                     <button
                         onClick={() => {
