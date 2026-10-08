@@ -15,13 +15,16 @@ function Home({ onLogin, onCadastro }) {
                     para começar.
                 </p>
 
-                <button onClick={onLogin}>
-                    Entrar
-                </button>
+                <div className="home-acoes">
+                    <button type="button" onClick={onLogin}>
+                        Entrar
+                    </button>
 
-                <button onClick={onCadastro}>
-                    Criar cadastro
-                </button>
+                    <button type="button" onClick={onCadastro}>
+                        Criar cadastro
+                    </button>
+                </div>
+                
             </section>
         </main>
     );

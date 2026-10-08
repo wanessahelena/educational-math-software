@@ -22,12 +22,21 @@ import Progresso from "./pages/Progresso";
 function App() {
     const [usuario, setUsuario] = useState(() => {
         try {
-                const usuarioSalvo = localStorage.getItem("usuario");
-                return usuarioSalvo ? JSON.parse(usuarioSalvo) : null;
-            } catch {
+            const token = localStorage.getItem("token");
+            const usuarioSalvo = localStorage.getItem("usuario");
+
+            if (!token || !usuarioSalvo) {
+                localStorage.removeItem("token");
                 localStorage.removeItem("usuario");
                 return null;
             }
+
+            return JSON.parse(usuarioSalvo);
+        } catch {
+            localStorage.removeItem("token");
+            localStorage.removeItem("usuario");
+            return null;
+        }
     });
 
     const [pagina, setPagina] = useState(
@@ -64,9 +73,10 @@ function App() {
     };
 }, []);
 
-    function finalizarCadastro(novoUsuario) {
-        setUsuario(novoUsuario);
-        setPagina("aluno");
+    function finalizarCadastro() {
+        setUsuario(null);
+        setAtividadeSelecionada(null);
+        setPagina("login");
     }
 
     function finalizarLogin(usuarioAutenticado) {

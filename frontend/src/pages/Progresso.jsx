@@ -12,26 +12,39 @@ function Progresso({ usuario, onVoltar }) {
     const [erro, setErro] = useState("");
 
     useEffect(() => {
+        let ativo = true;
+
         async function carregarProgresso() {
             try {
                 setCarregando(true);
                 setErro("");
 
-                const [dadosResumo, dadosAtividades] = await Promise.all([
-                    buscarResumoProgresso(usuario.id_usuario),
-                    buscarDesempenhoAtividades(usuario.id_usuario),
-                ]);
+                const [dadosResumo, dadosAtividades] =
+                    await Promise.all([
+                        buscarResumoProgresso(usuario.id_usuario),
+                        buscarDesempenhoAtividades(usuario.id_usuario),
+                    ]);
 
-                setResumo(dadosResumo);
-                setAtividades(dadosAtividades);
+                if (ativo) {
+                    setResumo(dadosResumo);
+                    setAtividades(dadosAtividades);
+                }
             } catch (error) {
-                setErro(error.message);
+                if (ativo) {
+                    setErro(error.message);
+                }
             } finally {
-                setCarregando(false);
+                if (ativo) {
+                    setCarregando(false);
+                }
             }
         }
 
         carregarProgresso();
+
+        return () => {
+            ativo = false;
+        };
     }, [usuario.id_usuario]);
 
     if (carregando) {
@@ -101,7 +114,9 @@ function Progresso({ usuario, onVoltar }) {
 
                 {atividades.length === 0 ? (
                     <p>
-                        Você ainda não possui atividades realizadas.
+                        Você ainda não realizou nenhuma atividade.
+                        Quando começar a resolver os desafios,
+                        seu desempenho aparecerá aqui.
                     </p>
                 ) : (
                     <div className="lista-progresso">
