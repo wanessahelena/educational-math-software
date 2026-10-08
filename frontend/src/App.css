@@ -2242,3 +2242,136 @@ RESOLUÇÃO DE ATIVIDADES
         font-size: 27px;
     }
 }
+
+/* ========================================
+   PERFIL DO ALUNO - MATELÓGICA
+======================================== */
+
+/* Página Meu perfil - Matelógica */
+
+.perfil-pagina {
+    min-height: calc(100vh - 80px);
+    padding: 55px 24px 80px;
+    background-color: #f4fbff;
+    background-image: radial-gradient(#c9dff1 1px, transparent 1px);
+    background-size: 21px 21px;
+    color: #20344f;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+}
+
+.perfil-cartao {
+    width: 100%;
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 38px;
+    border: 2px solid #d7e6f1;
+    border-radius: 25px;
+    background: #fff;
+    box-shadow: 0 5px 0 #dce8f0;
+}
+
+.perfil-apresentacao {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.perfil-apresentacao h1 {
+    margin-bottom: 12px;
+    font-size: clamp(28px, 4vw, 36px);
+    font-weight: 800;
+}
+
+.perfil-apresentacao p {
+    color: #62758c;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.perfil-formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.perfil-formulario label {
+    margin-top: 10px;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.perfil-formulario input,
+.perfil-formulario select {
+    width: 100%;
+    min-height: 50px;
+    padding: 12px 15px;
+    border: 2px solid #d7e6f1;
+    border-radius: 13px;
+    background: #fbfdff;
+    color: #20344f;
+    font: inherit;
+    font-size: 16px;
+}
+
+.perfil-formulario input:focus,
+.perfil-formulario select:focus {
+    outline: 3px solid #b9e0fa;
+    border-color: #348dd0;
+}
+
+.perfil-formulario button[type="submit"] {
+    width: 100%;
+    min-height: 52px;
+    margin-top: 24px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 14px;
+    background: #348dd0;
+    box-shadow: 0 4px 0 #1d669e;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.perfil-formulario button[type="submit"]:hover:not(:disabled) {
+    background: #277cbd;
+    transform: translateY(-2px);
+}
+
+.perfil-formulario button[type="submit"]:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.perfil-formulario [role="status"],
+.perfil-formulario [role="alert"] {
+    padding: 13px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.perfil-formulario [role="status"] {
+    background: #def7e4;
+    color: #307a42;
+}
+
+.perfil-formulario [role="alert"] {
+    background: #fff1f1;
+    color: #b42318;
+}
+
+@media (max-width: 600px) {
+    .perfil-pagina {
+        padding: 30px 16px 55px;
+    }
+
+    .perfil-cartao {
+        padding: 26px 20px;
+    }
+
+    .perfil-apresentacao h1 {
+        font-size: 28px;
+    }
+}
