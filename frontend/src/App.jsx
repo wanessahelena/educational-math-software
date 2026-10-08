@@ -132,6 +132,42 @@ function App() {
         return usuarioAtualizado;
     }
 
+    async function alterarSenha(dadosSenha) {
+        const token = localStorage.getItem("token");
+
+        const resposta = await fetch(
+            `http://127.0.0.1:8000/usuarios/${usuario.id_usuario}/senha`,
+            {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify(dadosSenha)
+            }
+        );
+
+        if (!resposta.ok) {
+            const erro = await resposta.json().catch(() => ({}));
+
+            throw new Error(
+                typeof erro.detail === "string"
+                    ? erro.detail
+                    : "Não foi possível alterar a senha."
+            );
+        }
+
+        // A alteração invalida o token atual.
+        localStorage.removeItem("token");
+        localStorage.removeItem("usuario");
+
+        setUsuario(null);
+        setAtividadeSelecionada(null);
+        setPagina("login");
+
+        return resposta.json();
+    }
+
     return (
         <div className="app">
 
@@ -200,6 +236,7 @@ function App() {
                 <Perfil
                     usuario={usuario}
                     onSalvar={atualizarPerfil}
+                    onAlterarSenha={alterarSenha}
                 />
             )}
 

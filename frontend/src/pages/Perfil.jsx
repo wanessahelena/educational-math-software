@@ -1,15 +1,31 @@
 
 import { useState } from "react";
 
-import { UserRound, Mail, GraduationCap, Save } from "lucide-react";
+import {
+    UserRound,
+    Mail,
+    GraduationCap,
+    Save,
+    LockKeyhole,
+    Eye,
+    EyeOff
+} from "lucide-react";
 
-function Perfil({ usuario, onSalvar }) {
+function Perfil({ usuario, onSalvar, onAlterarSenha }) {
     const [nome, setNome] = useState(usuario.nome || "");
     const [email, setEmail] = useState(usuario.email || "");
     const [idAno, setIdAno] = useState(usuario.id_ano || 1);
     const [salvando, setSalvando] = useState(false);
     const [mensagem, setMensagem] = useState("");
     const [erro, setErro] = useState("");
+    const [senhaAtual, setSenhaAtual] = useState("");
+    const [novaSenha, setNovaSenha] = useState("");
+    const [confirmarSenha, setConfirmarSenha] = useState("");
+    const [alterandoSenha, setAlterandoSenha] = useState(false);
+    const [erroSenha, setErroSenha] = useState("");
+    const [mostrarSenhaAtual, setMostrarSenhaAtual] = useState(false);
+    const [mostrarNovaSenha, setMostrarNovaSenha] = useState(false);
+    const [mostrarConfirmacao, setMostrarConfirmacao] = useState(false);
 
     async function enviarFormulario(evento) {
         evento.preventDefault();
@@ -30,6 +46,34 @@ function Perfil({ usuario, onSalvar }) {
             setErro(erroAtualizacao.message);
         } finally {
             setSalvando(false);
+        }
+    }
+
+    async function enviarAlteracaoSenha(evento) {
+        evento.preventDefault();
+        setErroSenha("");
+
+        if (novaSenha !== confirmarSenha) {
+            setErroSenha("As novas senhas não coincidem.");
+            return;
+        }
+
+        if (novaSenha.length < 8) {
+            setErroSenha("A nova senha deve ter pelo menos 8 caracteres.");
+            return;
+        }
+
+        setAlterandoSenha(true);
+
+        try {
+            await onAlterarSenha({
+                senha_atual: senhaAtual,
+                nova_senha: novaSenha
+            });
+        } catch (erroAlteracao) {
+            setErroSenha(erroAlteracao.message);
+        } finally {
+            setAlterandoSenha(false);
         }
     }
 
@@ -116,6 +160,109 @@ function Perfil({ usuario, onSalvar }) {
 
                 </form>
             </section>
+
+            <section className="perfil-cartao">
+                <div className="perfil-apresentacao">
+                    <h2>Alterar senha</h2>
+                    <p>
+                        Para sua segurança, informe a senha atual
+                        e escolha uma nova senha.
+                    </p>
+                </div>
+
+                <form
+                    className="perfil-formulario"
+                    onSubmit={enviarAlteracaoSenha}
+                >
+                    <label htmlFor="senha-atual">
+                        <LockKeyhole size={18} aria-hidden="true" />
+                        Senha atual
+                    </label>
+
+                    <div className="campo-senha">
+
+                        <input
+                            id="senha-atual"
+                            type={mostrarSenhaAtual ? "text" : "password"}
+                            autoComplete="current-password"
+                            value={senhaAtual}
+                            onChange={(evento) => setSenhaAtual(evento.target.value)}
+                            required
+                        />
+                        <button
+                            type="button"
+                            className="botao-visualizar-senha"
+                            onClick={() => setMostrarSenhaAtual(!mostrarSenhaAtual)}
+                            aria-label={mostrarSenhaAtual ? "Ocultar senha atual" : "Mostrar senha atual"}
+                        >
+                            {mostrarSenhaAtual ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
+
+                    </div>
+
+                    <label htmlFor="nova-senha">
+                        <LockKeyhole size={18} aria-hidden="true" />
+                        Nova senha
+                    </label>
+
+                    <div className="campo-senha">
+
+                        <input
+                            id="nova-senha"
+                            type={mostrarNovaSenha ? "text" : "password"}
+                            autoComplete="new-password"
+                            minLength={8}
+                            value={novaSenha}
+                            onChange={(evento) => setNovaSenha(evento.target.value)}
+                            required
+                        />
+                        <button
+                            type="button"
+                            className="botao-visualizar-senha"
+                            onClick={() => setMostrarNovaSenha(!mostrarNovaSenha)}
+                            aria-label={mostrarNovaSenha ? "Ocultar nova senha" : "Mostrar nova senha"}
+                        >
+                            {mostrarNovaSenha ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
+
+                    </div>
+
+                    <label htmlFor="confirmar-senha">
+                        <LockKeyhole size={18} aria-hidden="true" />
+                        Confirmar nova senha
+                    </label>
+
+                    <div className="campo-senha">
+                        <input
+                            id="confirmar-senha"
+                            type={mostrarConfirmacao ? "text" : "password"}
+                            autoComplete="new-password"
+                            value={confirmarSenha}
+                            onChange={(evento) => setConfirmarSenha(evento.target.value)}
+                            required
+                        />
+                        <button
+                            type="button"
+                            className="botao-visualizar-senha"
+                            onClick={() => setMostrarConfirmacao(!mostrarConfirmacao)}
+                            aria-label={mostrarConfirmacao ? "Ocultar confirmação de senha" : "Mostrar confirmação de senha"}
+                        >
+                            {mostrarConfirmacao ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
+                        
+                    </div>
+
+                    {erroSenha && (
+                        <p role="alert">{erroSenha}</p>
+                    )}
+
+                    <button type="submit" disabled={alterandoSenha}>
+                        <LockKeyhole size={18} aria-hidden="true" />
+                        {alterandoSenha ? "Alterando..." : "Alterar senha"}
+                    </button>
+                </form>
+            </section>
+
         </main>
     );
 }

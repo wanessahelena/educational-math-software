@@ -29,6 +29,13 @@ class Usuario(Base):
         nullable = False
     )
     
+    versao_token: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+        default=0,
+        server_default="0"
+    )
+    
     id_ano: Mapped[int] = mapped_column(
         ForeignKey("ano_escolar.id_ano"),
         nullable = False

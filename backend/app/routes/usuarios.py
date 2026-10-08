@@ -38,6 +38,9 @@ class LoginRequest(BaseModel):
     email: str
     senha: str
 
+class AlterarSenhaRequest(BaseModel):
+    senha_atual: str
+    nova_senha: str
 
 def dados_publicos_usuario(usuario: Usuario, db: Session):
     ano_escolar = (
@@ -60,6 +63,12 @@ def cadastrar_usuario(
     dados: CadastroRequest,
     db: Session = Depends(get_db)
 ):
+    if len(dados.senha) < 8:
+        raise HTTPException(
+            status_code=422,
+            detail="A senha deve ter pelo menos 8 caracteres."
+        )
+    
     ano_escolar = (
         db.query(AnoEscolar)
         .filter(AnoEscolar.id_ano == dados.id_ano)
@@ -118,7 +127,10 @@ def login(
             detail="E-mail ou senha incorretos."
         )
 
-    token = criar_token_acesso(usuario.id_usuario)
+    token = criar_token_acesso(
+        usuario.id_usuario,
+        usuario.versao_token
+    )
 
     return {
         "access_token": token,
@@ -426,3 +438,47 @@ def atualizar_perfil(
     db.refresh(usuario)
 
     return dados_publicos_usuario(usuario, db)
+
+@router.patch("/{id_usuario}/senha")
+def alterar_senha(
+    id_usuario: int,
+    dados: AlterarSenhaRequest,
+    db: Session = Depends(get_db),
+    usuario_atual: Usuario = Depends(obter_usuario_atual)
+):
+    if usuario_atual.id_usuario != id_usuario:
+        raise HTTPException(
+            status_code=403,
+            detail="Você não tem permissão para alterar esta senha."
+        )
+
+    if not verificar_senha(
+        dados.senha_atual,
+        usuario_atual.senha_hash
+    ):
+        raise HTTPException(
+            status_code=400,
+            detail="Senha atual incorreta."
+        )
+
+    if len(dados.nova_senha) < 8:
+        raise HTTPException(
+            status_code=422,
+            detail="A nova senha deve ter pelo menos 8 caracteres."
+        )
+
+    if verificar_senha(
+        dados.nova_senha,
+        usuario_atual.senha_hash
+    ):
+        raise HTTPException(
+            status_code=422,
+            detail="A nova senha deve ser diferente da senha atual."
+        )
+
+    usuario_atual.senha_hash = gerar_hash_senha(dados.nova_senha)
+    usuario_atual.versao_token += 1
+
+    db.commit()
+
+    return {"mensagem": "Senha alterada com sucesso."}
