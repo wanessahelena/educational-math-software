@@ -29,7 +29,21 @@ export async function buscarAnosEscolares() {
     }
 
     return await resposta.json();
+}
+
+export async function buscarConteudosPorAno(idAno) {
+    const resposta = await fetch(
+        `${API_URL}/anos-escolares/${idAno}/conteudos`
+    );
+
+    if (!resposta.ok) {
+        throw new Error(
+            "Não foi possível carregar os conteúdos matemáticos."
+        );
     }
+
+    return await resposta.json();
+}
 
 
 export async function cadastrarUsuario(nome, email, senha, idAno) {
@@ -60,15 +74,15 @@ export async function buscarAtividadesPorAno(idAno) {
         `${API_URL}/atividades/ano/${idAno}`
     );
 
-    const dados = await resposta.json();
-
-    if (!resposta.ok) {
-        throw new Error(
-        dados.detail || "Erro ao buscar atividades."
-        );
+    if (resposta.status === 404) {
+        return [];
     }
 
-    return dados;
+    if (!resposta.ok) {
+        throw new Error("Erro ao buscar atividades.");
+    }
+
+    return await resposta.json();
 }
 
 export async function registrarTentativa(

@@ -3,30 +3,32 @@ function AlunoHome({ usuario, onAtividades, onProgresso, onSair }) {
     return (
         <main className="conteudo">
             <section className="boas-vindas">
-                <h2>Olá, {usuario.nome}!</h2>
+                <div className="aluno-apresentacao">
+                    <h2>Olá, {usuario.nome}!</h2>
 
-                <p>
-                    Seja bem-vindo ao Software Educacional Matemático.
-                </p>
+                    <p className="aluno-mensagem">
+                        Seja bem-vindo ao Software Educacional Matemático.
+                    </p>
 
-                <p>
-                    Você está cadastrado no{" "}
-                    <strong>{usuario.id_ano}° ano</strong>.
-                </p>
+                    <p className="aluno-ano">
+                        Você está cadastrado no{" "}
+                        <strong>{usuario.id_ano}º ano</strong>.
+                    </p>
+                </div>
 
-                <br />
+                <div className="aluno-acoes">
+                    <button type="button" onClick={onAtividades}>
+                        Ver atividades
+                    </button>
 
-                <button onClick={onAtividades}>
-                    Ver atividades
-                </button>
+                    <button type="button" onClick={onProgresso}>
+                        Ver meu progresso
+                    </button>
 
-                <button onClick={onProgresso}>
-                    Ver meu progresso
-                </button>
-
-                <button onClick={onSair}>
-                    Sair
-                </button>
+                    <button type="button" onClick={onSair}>
+                        Sair
+                    </button>
+                </div>
             </section>
         </main>
     );

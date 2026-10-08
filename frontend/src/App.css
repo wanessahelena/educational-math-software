@@ -374,3 +374,81 @@ RESOLUÇÃO DE ATIVIDADES
     font-size: 0.9rem !important;
     margin-bottom: 0;
 }
+
+/* Conteúdos matemáticos */
+
+.card-conteudo {
+    background-color: #f8f9fc;
+    border: 1px solid #e0e3e8;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 16px 0;
+    text-align: center;
+}
+
+.card-conteudo h3 {
+    margin: 0 0 10px;
+}
+
+.card-conteudo p {
+    margin: 0 0 16px;
+    line-height: 1.5;
+}
+
+.card-conteudo button {
+    margin: 0;
+}
+
+
+/* Tela inicial do aluno */
+
+.aluno-apresentacao {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+    text-align: center;
+}
+
+.aluno-apresentacao h2 {
+    margin: 0;
+}
+
+.aluno-mensagem {
+    margin: 0;
+    line-height: 1.6;
+}
+
+.aluno-ano {
+    margin: 8px 0 0;
+    padding: 10px 18px;
+    background-color: #f3f4f6;
+    border-radius: 8px;
+    line-height: 1.5;
+}
+
+.aluno-acoes {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.aluno-acoes button {
+    margin: 0;
+    min-height: 42px;
+    padding: 10px 18px;
+}
+
+@media (max-width: 480px) {
+    .aluno-acoes {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .aluno-acoes button {
+        width: 100%;
+    }
+}
