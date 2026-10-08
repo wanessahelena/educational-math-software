@@ -1,6 +1,8 @@
 
 import { useState } from "react";
 
+import { UserRound, Mail, GraduationCap, Save } from "lucide-react";
+
 function Perfil({ usuario, onSalvar }) {
     const [nome, setNome] = useState(usuario.nome || "");
     const [email, setEmail] = useState(usuario.email || "");
@@ -47,6 +49,7 @@ function Perfil({ usuario, onSalvar }) {
                     onSubmit={enviarFormulario}
                 >
                     <label htmlFor="perfil-nome">
+                        <UserRound size={18} aria-hidden="true" />
                         Nome
                     </label>
                     <input
@@ -60,8 +63,10 @@ function Perfil({ usuario, onSalvar }) {
                     />
 
                     <label htmlFor="perfil-email">
+                        <Mail size={18} aria-hidden="true" />
                         E-mail
                     </label>
+
                     <input
                         id="perfil-email"
                         type="email"
@@ -73,6 +78,7 @@ function Perfil({ usuario, onSalvar }) {
                     />
 
                     <label htmlFor="perfil-ano">
+                        <GraduationCap size={18} aria-hidden="true" />
                         Ano escolar
                     </label>
                     <select
@@ -97,9 +103,16 @@ function Perfil({ usuario, onSalvar }) {
                         <p role="alert">{erro}</p>
                     )}
 
-                    <button type="submit" disabled={salvando}>
-                        {salvando ? "Salvando..." : "Salvar alterações"}
-                    </button>
+                        <button type="submit" disabled={salvando}>
+                            {salvando ? (
+                                "Salvando..."
+                            ) : (
+                                <>
+                                    <Save size={18} aria-hidden="true" />
+                                    Salvar alterações
+                                </>
+                            )}
+                        </button>
 
                 </form>
             </section>

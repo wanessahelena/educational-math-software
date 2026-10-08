@@ -1,11 +1,22 @@
 
+import {
+    Sparkles,
+    Pencil,
+    Circle,
+    BrainCircuit,
+    GraduationCap,
+    Trophy
+} from "lucide-react";
+
 function Home({ onLogin, onCadastro }) {
     return (
         <main className="home">
             <div className="home-container">
                 <header className="home-cabecalho">
                     <div className="home-marca">
-                        <span className="home-logo" aria-hidden="true">✦</span>
+                        <span className="home-logo" aria-hidden="true">
+                            <Sparkles size={26} strokeWidth={2.5} />
+                        </span>
                         <span>
                             Mate<span className="home-marca-verde">lógica</span>
                         </span>
@@ -22,7 +33,6 @@ function Home({ onLogin, onCadastro }) {
 
                 <section className="home-hero">
                     <div className="home-texto">
-
                         <h1>
                             Aprender matemática pode ser{" "}
                             <span>divertido.</span>
@@ -52,7 +62,10 @@ function Home({ onLogin, onCadastro }) {
                         </div>
                     </div>
 
-                    <div className="home-ilustracao" aria-label="Ilustração de uma soma matemática">
+                    <div
+                        className="home-ilustracao"
+                        aria-label="Ilustração de uma soma matemática"
+                    >
                         <div className="home-operacao" aria-hidden="true">
                             <span className="home-numero home-numero-um">1</span>
                             <span className="home-sinal home-sinal-mais">+</span>
@@ -68,27 +81,39 @@ function Home({ onLogin, onCadastro }) {
                         </div>
 
                         <div className="home-ilustracao-rodape" aria-hidden="true">
-                            <span>✏️</span>
-                            <span>✦</span>
-                            <span>●</span>
+                            <Pencil size={35} strokeWidth={2.5} />
+                            <Sparkles size={35} strokeWidth={2.5} />
+                            <Circle size={30} strokeWidth={2.5} />
                         </div>
                     </div>
                 </section>
 
-                <section className="home-beneficios" aria-label="Benefícios da ferramenta">
+                <section
+                    className="home-beneficios"
+                    aria-label="Benefícios da ferramenta"
+                >
                     <article className="home-beneficio">
-                        <div className="home-beneficio-icone icone-azul" aria-hidden="true">
-                            🧠
+                        <div
+                            className="home-beneficio-icone icone-azul"
+                            aria-hidden="true"
+                        >
+                            <BrainCircuit size={29} strokeWidth={2.2} />
                         </div>
                         <div>
                             <h2>Pense com lógica</h2>
-                            <p>Resolva desafios em pequenos passos.</p>
+                            <p>
+                                Resolva desafios por meio da lógica
+                                de programação.
+                            </p>
                         </div>
                     </article>
 
                     <article className="home-beneficio">
-                        <div className="home-beneficio-icone icone-verde" aria-hidden="true">
-                            👣
+                        <div
+                            className="home-beneficio-icone icone-verde"
+                            aria-hidden="true"
+                        >
+                            <GraduationCap size={29} strokeWidth={2.2} />
                         </div>
                         <div>
                             <h2>No seu ritmo</h2>
@@ -97,8 +122,11 @@ function Home({ onLogin, onCadastro }) {
                     </article>
 
                     <article className="home-beneficio">
-                        <div className="home-beneficio-icone icone-amarelo" aria-hidden="true">
-                            ⭐
+                        <div
+                            className="home-beneficio-icone icone-amarelo"
+                            aria-hidden="true"
+                        >
+                            <Trophy size={29} strokeWidth={2.2} />
                         </div>
                         <div>
                             <h2>Veja sua evolução</h2>

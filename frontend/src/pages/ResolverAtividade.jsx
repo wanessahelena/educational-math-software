@@ -3,6 +3,16 @@ import { useCallback, useState } from "react";
 import { registrarTentativa } from "../services/api";
 import BlocklyWorkspace from "../components/BlocklyWorkspace";
 
+
+import {
+    ArrowLeft,
+    Puzzle,
+    Star,
+    Check,
+    CircleCheck
+} from "lucide-react";
+
+
 function ResolverAtividade({ usuario, atividade, onVoltar }) {
     const [resposta, setResposta] = useState("");
     const [resultado, setResultado] = useState(null);
@@ -60,7 +70,8 @@ function ResolverAtividade({ usuario, atividade, onVoltar }) {
                         className="resolucao-voltar"
                         onClick={onVoltar}
                     >
-                        ← Voltar às atividades
+                        <ArrowLeft size={18} aria-hidden="true" />
+                        Voltar às atividades
                     </button>
 
                     <h1>{atividade.titulo}</h1>
@@ -79,7 +90,7 @@ function ResolverAtividade({ usuario, atividade, onVoltar }) {
                                     className="resolucao-card-icone"
                                     aria-hidden="true"
                                 >
-                                    🧩
+                                    <Puzzle size={24} strokeWidth={2} />
                                 </span>
 
                                 <h2>Seu desafio</h2>
@@ -111,7 +122,7 @@ function ResolverAtividade({ usuario, atividade, onVoltar }) {
                                     className="resolucao-card-icone resolucao-icone-feedback"
                                     aria-hidden="true"
                                 >
-                                    ⭐
+                                    <Star size={24} strokeWidth={2} />
                                 </span>
 
                                 <h2>Como você está indo?</h2>
@@ -132,7 +143,8 @@ function ResolverAtividade({ usuario, atividade, onVoltar }) {
                                 <>
                                     {resultado.status === "correta" ? (
                                         <p className="resolucao-feedback-mensagem">
-                                            ✓ Parabéns! Sua resposta está correta!
+                                            <CircleCheck size={20} aria-hidden="true" />
+                                            Parabéns! Sua resposta está correta!
                                         </p>
                                     ) : (
                                         <p className="resolucao-feedback-mensagem">
@@ -181,9 +193,14 @@ function ResolverAtividade({ usuario, atividade, onVoltar }) {
                                     className="resolucao-verificar"
                                     disabled={enviando}
                                 >
-                                    {enviando
-                                        ? "Verificando..."
-                                        : "✓ Verificar resposta"}
+                                    {enviando ? (
+                                        "Verificando..."
+                                    ) : (
+                                        <>
+                                            <Check size={20} aria-hidden="true" />
+                                            Verificar resposta
+                                        </>
+                                    )}
                                 </button>
                             </form>
                         )}
