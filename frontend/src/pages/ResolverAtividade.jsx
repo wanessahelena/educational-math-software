@@ -1,15 +1,13 @@
+
 import { useCallback, useState } from "react";
 import { registrarTentativa } from "../services/api";
 import BlocklyWorkspace from "../components/BlocklyWorkspace";
 
-function ResolverAtividade({ usuario, atividade, onVoltar }){
-
+function ResolverAtividade({ usuario, atividade, onVoltar }) {
     const [resposta, setResposta] = useState("");
     const [resultado, setResultado] = useState(null);
     const [erro, setErro] = useState("");
-
     const [inicio] = useState(Date.now());
-
     const [enviando, setEnviando] = useState(false);
 
     const atualizarRespostaBlockly = useCallback((valor) => {
@@ -18,14 +16,16 @@ function ResolverAtividade({ usuario, atividade, onVoltar }){
         setErro("");
     }, []);
 
-    async function handleSubmit(event){
+    async function handleSubmit(event) {
         event.preventDefault();
 
         setResultado(null);
         setErro("");
 
-        if (!resposta.trim()){
-            setErro("Adicione um único bloco de resposta e informe a resposta final.");
+        if (!resposta.trim()) {
+            setErro(
+                "Adicione um único bloco de resposta e informe a resposta final."
+            );
             return;
         }
 
@@ -33,8 +33,9 @@ function ResolverAtividade({ usuario, atividade, onVoltar }){
             (Date.now() - inicio) / 1000
         );
 
-        try{
+        try {
             setEnviando(true);
+
             const tentativa = await registrarTentativa(
                 usuario.id_usuario,
                 atividade.id_atividade,
@@ -43,113 +44,152 @@ function ResolverAtividade({ usuario, atividade, onVoltar }){
             );
 
             setResultado(tentativa);
-        }catch (error) {
+        } catch (error) {
             setErro(error.message);
-        }finally {
+        } finally {
             setEnviando(false);
         }
     }
 
     return (
-        <main className="conteudo">
-            <section className="atividade-resolucao">
-                <h2 className="atividade-titulo">
-                    {atividade.titulo}
-                </h2>
+        <main className="pagina-resolucao">
+            <div className="resolucao-container">
+                <div className="resolucao-topo">
+                    <button
+                        type="button"
+                        className="resolucao-voltar"
+                        onClick={onVoltar}
+                    >
+                        ← Voltar às atividades
+                    </button>
 
-                <div className="atividade-layout">
-                    <div className="atividade-lateral">
-                        <div className="atividade-card">
-                            <h3>Desafio</h3>
+                    <h1>{atividade.titulo}</h1>
 
-                            <p className="atividade-enunciado">
+                    <p>
+                        Leia o desafio, organize seus blocos
+                        e descubra a resposta.
+                    </p>
+                </div>
+
+                <div className="resolucao-layout">
+                    <aside className="resolucao-lateral">
+                        <section className="resolucao-card resolucao-desafio">
+                            <div className="resolucao-card-cabecalho">
+                                <span
+                                    className="resolucao-card-icone"
+                                    aria-hidden="true"
+                                >
+                                    🧩
+                                </span>
+
+                                <h2>Seu desafio</h2>
+                            </div>
+
+                            <p className="resolucao-enunciado">
                                 {atividade.descricao}
                             </p>
 
-                            <span className="atividade-nivel">
+                            <span className="resolucao-nivel">
                                 Nível: {atividade.nivel}
                             </span>
-                        </div>
+                        </section>
 
-                        <div
-                            className={`atividade-card feedback-card ${
+                        <section
+                            className={`resolucao-card resolucao-feedback ${
                                 resultado
                                     ? resultado.status === "correta"
-                                        ? "feedback-correto"
-                                        : "feedback-incorreto"
+                                        ? "resolucao-feedback-correto"
+                                        : "resolucao-feedback-incorreto"
                                     : erro
-                                        ? "feedback-incorreto"
+                                        ? "resolucao-feedback-incorreto"
                                         : ""
                             }`}
+                            aria-live="polite"
                         >
-                            <h3>Feedback</h3>
+                            <div className="resolucao-card-cabecalho">
+                                <span
+                                    className="resolucao-card-icone resolucao-icone-feedback"
+                                    aria-hidden="true"
+                                >
+                                    ⭐
+                                </span>
+
+                                <h2>Como você está indo?</h2>
+                            </div>
 
                             {!resultado && !erro && (
                                 <p>
-                                    Monte sua resolução utilizando
-                                    os blocos ao lado.
+                                    Monte sua resolução usando os blocos
+                                    e clique em verificar quando terminar.
                                 </p>
                             )}
 
                             {erro && (
-                                <p>{erro}</p>
+                                <p role="alert">{erro}</p>
                             )}
 
                             {resultado && (
                                 <>
                                     {resultado.status === "correta" ? (
-                                        <p className="feedback-mensagem">
-                                            ✓ Parabéns! Sua resolução está correta!
+                                        <p className="resolucao-feedback-mensagem">
+                                            ✓ Parabéns! Sua resposta está correta!
                                         </p>
                                     ) : (
-                                        <p className="feedback-mensagem">
-                                            ✕ Ainda não está correto. Tente novamente!
+                                        <p className="resolucao-feedback-mensagem">
+                                            Ainda não está correto.
+                                            Você pode tentar novamente!
                                         </p>
                                     )}
 
-                                    <p className="feedback-tempo">
+                                    <p className="resolucao-feedback-tempo">
                                         Tempo gasto: {resultado.tempo_gasto} segundos
                                     </p>
                                 </>
                             )}
+                        </section>
+                    </aside>
+
+                    <section className="resolucao-area">
+                        <div className="resolucao-area-cabecalho">
+                            <div>
+                                <h2>Monte sua resolução</h2>
+                                <p>
+                                    Use os blocos disponíveis para organizar
+                                    seu raciocínio.
+                                </p>
+                            </div>
+
+                            <span className="resolucao-area-etapa">
+                                Passo a passo
+                            </span>
                         </div>
 
-                            <button
-                                type="button"
-                                className="botao-voltar"
-                                onClick={onVoltar}
-                            >
-                                Voltar para atividades
-                            </button>
-
-                    </div>
-
-                    <div className="atividade-blocos">
-                    
-                        <BlocklyWorkspace
-                            blocosPermitidos={atividade.blocos_permitidos}
-                            onRespostaChange={
-                                atualizarRespostaBlockly
-                            }
-                        />
+                        <div className="resolucao-workspace">
+                            <BlocklyWorkspace
+                                blocosPermitidos={atividade.blocos_permitidos}
+                                onRespostaChange={atualizarRespostaBlockly}
+                            />
+                        </div>
 
                         {resultado?.status !== "correta" && (
-                            <form onSubmit={handleSubmit}>
+                            <form
+                                className="resolucao-formulario"
+                                onSubmit={handleSubmit}
+                            >
                                 <button
                                     type="submit"
-                                    className="botao-verificar"
+                                    className="resolucao-verificar"
                                     disabled={enviando}
                                 >
                                     {enviando
                                         ? "Verificando..."
-                                        : "Verificar resolução"}
+                                        : "✓ Verificar resposta"}
                                 </button>
                             </form>
                         )}
-
-                    </div>
+                    </section>
                 </div>
-            </section>
+            </div>
         </main>
     );
 }
