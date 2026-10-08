@@ -1,5 +1,12 @@
 
-function MenuAluno({ pagina, onInicio, onAtividades, onProgresso, onSair }) {
+function MenuAluno({
+    pagina,
+    onInicio,
+    onAtividades,
+    onProgresso,
+    onPerfil,
+    onSair
+}) {
     return (
         <header className="menu-matelogica">
             <div className="menu-matelogica-container">
@@ -46,6 +53,15 @@ function MenuAluno({ pagina, onInicio, onAtividades, onProgresso, onSair }) {
                         aria-current={pagina === "progresso" ? "page" : undefined}
                     >
                         Meu progresso
+                    </button>
+
+                    <button
+                        type="button"
+                        className={pagina === "perfil" ? "menu-link-ativo" : ""}
+                        onClick={onPerfil}
+                        aria-current={pagina === "perfil" ? "page" : undefined}
+                    >
+                        Meu perfil
                     </button>
 
                     <button

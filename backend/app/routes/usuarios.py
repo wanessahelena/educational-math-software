@@ -29,6 +29,10 @@ class CadastroRequest(BaseModel):
     senha: str
     id_ano: int
 
+class AtualizarPerfilRequest(BaseModel):
+    nome: str | None = None
+    email: str | None = None
+    id_ano: int | None = None
 
 class LoginRequest(BaseModel):
     email: str
@@ -147,13 +151,15 @@ def consultar_progresso(
         )
 
     tentativas = (
-        db.query(Tentativa, Atividade)
+        db.query(Tentativa)
         .join(
             Atividade,
             Tentativa.id_atividade == Atividade.id_atividade
         )
-        .filter(Tentativa.id_usuario == id_usuario)
-        .order_by(Tentativa.data_tentativa.desc())
+        .filter(
+            Tentativa.id_usuario == id_usuario,
+            Atividade.id_ano == usuario.id_ano
+        )
         .all()
     )
 
@@ -196,7 +202,14 @@ def consultar_resumo_progresso(
 
     tentativas = (
         db.query(Tentativa)
-        .filter(Tentativa.id_usuario == id_usuario)
+        .join(
+            Atividade,
+            Tentativa.id_atividade == Atividade.id_atividade
+        )
+        .filter(
+            Tentativa.id_usuario == id_usuario,
+            Atividade.id_ano == usuario.id_ano
+        )
         .all()
     )
 
@@ -275,7 +288,10 @@ def consultar_desempenho_atividades(
             Atividade,
             Tentativa.id_atividade == Atividade.id_atividade
         )
-        .filter(Tentativa.id_usuario == id_usuario)
+        .filter(
+            Tentativa.id_usuario == id_usuario,
+            Atividade.id_ano == usuario.id_ano
+        )
         .all()
     )
 
@@ -325,5 +341,88 @@ def buscar_usuario(
             status_code=404,
             detail="Usuário não encontrado."
         )
+
+    return dados_publicos_usuario(usuario, db)
+
+
+@router.patch("/{id_usuario}")
+def atualizar_perfil(
+    id_usuario: int,
+    dados: AtualizarPerfilRequest,
+    db: Session = Depends(get_db),
+    usuario_atual: Usuario = Depends(obter_usuario_atual)
+):
+    if usuario_atual.id_usuario != id_usuario:
+        raise HTTPException(
+            status_code=403,
+            detail="Você não tem permissão para alterar este perfil."
+        )
+
+    usuario = (
+        db.query(Usuario)
+        .filter(Usuario.id_usuario == id_usuario)
+        .first()
+    )
+
+    if not usuario:
+        raise HTTPException(
+            status_code=404,
+            detail="Usuário não encontrado."
+        )
+
+    if dados.nome is not None:
+        nome = dados.nome.strip()
+
+        if not nome:
+            raise HTTPException(
+                status_code=422,
+                detail="O nome não pode estar vazio."
+            )
+
+        usuario.nome = nome
+
+    if dados.email is not None:
+        email = dados.email.strip()
+
+        if not email:
+            raise HTTPException(
+                status_code=422,
+                detail="O e-mail não pode estar vazio."
+            )
+
+        email_existente = (
+            db.query(Usuario)
+            .filter(
+                Usuario.email == email,
+                Usuario.id_usuario != id_usuario
+            )
+            .first()
+        )
+
+        if email_existente:
+            raise HTTPException(
+                status_code=409,
+                detail="Este e-mail já está cadastrado."
+            )
+
+        usuario.email = email
+
+    if dados.id_ano is not None:
+        ano_escolar = (
+            db.query(AnoEscolar)
+            .filter(AnoEscolar.id_ano == dados.id_ano)
+            .first()
+        )
+
+        if not ano_escolar:
+            raise HTTPException(
+                status_code=404,
+                detail="Ano escolar não encontrado."
+            )
+
+        usuario.id_ano = dados.id_ano
+
+    db.commit()
+    db.refresh(usuario)
 
     return dados_publicos_usuario(usuario, db)

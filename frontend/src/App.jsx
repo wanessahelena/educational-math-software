@@ -19,6 +19,8 @@ import ResolverAtividade from "./pages/ResolverAtividade";
 
 import Progresso from "./pages/Progresso";
 
+import Perfil from "./pages/Perfil";
+
 function App() {
     const [usuario, setUsuario] = useState(() => {
         try {
@@ -98,6 +100,38 @@ function App() {
         setPagina("home");
     }
 
+    async function atualizarPerfil(dadosAtualizados) {
+        const token = localStorage.getItem("token");
+
+        const resposta = await fetch(
+            `http://127.0.0.1:8000/usuarios/${usuario.id_usuario}`,
+            {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify(dadosAtualizados)
+            }
+        );
+
+        if (!resposta.ok) {
+            const erro = await resposta.json().catch(() => ({}));
+
+            throw new Error(
+                typeof erro.detail === "string"
+                    ? erro.detail
+                    : "Não foi possível atualizar o perfil."
+            );
+        }
+
+        const usuarioAtualizado = await resposta.json();
+
+        setUsuario(usuarioAtualizado);
+
+        return usuarioAtualizado;
+    }
+
     return (
         <div className="app">
 
@@ -116,6 +150,10 @@ function App() {
                 onProgresso={() => {
                     setAtividadeSelecionada(null);
                     setPagina("progresso");
+                }}
+                onPerfil={() => {
+                    setAtividadeSelecionada(null);
+                    setPagina("perfil");
                 }}
                 onSair={sair}
             />
@@ -155,6 +193,13 @@ function App() {
                 <Progresso
                     usuario={usuario}
                     onVoltar={() => setPagina("aluno")}
+                />
+            )}
+
+            {pagina === "perfil" && usuario && (
+                <Perfil
+                    usuario={usuario}
+                    onSalvar={atualizarPerfil}
                 />
             )}
 
