@@ -22,9 +22,6 @@ function Home({ onLogin, onCadastro }) {
 
                 <section className="home-hero">
                     <div className="home-texto">
-                        <span className="home-etiqueta">
-                            Olá! Que bom ver você 👋
-                        </span>
 
                         <h1>
                             Aprender matemática pode ser{" "}

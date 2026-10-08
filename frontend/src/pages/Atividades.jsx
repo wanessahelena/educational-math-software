@@ -72,9 +72,7 @@ function Atividades({ usuario, onResolver }) {
         <main className="pagina-atividades">
             <div className="atividades-container">
                 <header className="atividades-apresentacao">
-                    <span className="atividades-etiqueta">
-                        Vamos aprender! ✨
-                    </span>
+
 
                     <h1>
                         {conteudoAtual

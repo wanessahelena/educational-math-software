@@ -2095,3 +2095,256 @@ RESOLUÇÃO DE ATIVIDADES
         width: 100%;
     }
 }
+
+
+/* ========================================
+   MEU PROGRESSO - MATELÓGICA
+======================================== */
+
+.pagina-progresso {
+    min-height: 100vh;
+    padding: 45px 24px 80px;
+    background-color: #f4fbff;
+    background-image: radial-gradient(#c9dff1 1px, transparent 1px);
+    background-size: 21px 21px;
+    color: #20344f;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+}
+
+.progresso-container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.progresso-voltar {
+    margin-bottom: 28px;
+    padding: 12px 18px;
+    border: 2px solid #d7e6f1;
+    border-radius: 13px;
+    background: #fff;
+    color: #245e8c;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.progresso-cabecalho {
+    margin-bottom: 36px;
+}
+
+.progresso-etiqueta {
+    display: inline-block;
+    margin-bottom: 15px;
+    padding: 9px 16px;
+    border-radius: 30px;
+    background: #fff0c7;
+    color: #704b16;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.progresso-cabecalho h1 {
+    margin-bottom: 12px;
+    font-size: clamp(30px, 4vw, 42px);
+    line-height: 1.2;
+}
+
+.progresso-cabecalho > p {
+    color: #62758c;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.progresso-secao {
+    margin-bottom: 40px;
+}
+
+.progresso-secao-titulo {
+    margin-bottom: 20px;
+}
+
+.progresso-secao-titulo h2 {
+    margin-bottom: 8px;
+    font-size: 25px;
+}
+
+.progresso-secao-titulo p {
+    color: #62758c;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.progresso-indicadores {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.progresso-indicador {
+    min-width: 0;
+    padding: 25px;
+    border: 2px solid #d7e6f1;
+    border-radius: 22px;
+    background: #fff;
+    box-shadow: 0 4px 0 #dce8f0;
+}
+
+.progresso-indicador-icone {
+    display: grid;
+    place-items: center;
+    width: 49px;
+    height: 49px;
+    margin-bottom: 20px;
+    border-radius: 14px;
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.progresso-cor-azul {
+    background: #d8efff;
+    color: #338dce;
+}
+
+.progresso-cor-verde {
+    background: #def7e4;
+    color: #419452;
+}
+
+.progresso-cor-amarelo {
+    background: #fff0c7;
+    color: #ad7718;
+}
+
+.progresso-cor-coral {
+    background: #ffe1d9;
+    color: #d96854;
+}
+
+.progresso-indicador h3 {
+    margin-bottom: 12px;
+    color: #62758c;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.progresso-indicador-valor {
+    color: #20344f;
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.progresso-lista {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.progresso-atividade-card {
+    min-width: 0;
+    padding: 24px;
+    border: 2px solid #d7e6f1;
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 4px 0 #dce8f0;
+}
+
+.progresso-atividade-topo {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 22px;
+}
+
+.progresso-atividade-icone {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+    background: #d8efff;
+    font-size: 22px;
+}
+
+.progresso-atividade-topo h3 {
+    font-size: 18px;
+    line-height: 1.4;
+}
+
+.progresso-atividade-dados {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.progresso-atividade-dados span {
+    padding: 9px 12px;
+    border-radius: 10px;
+    background: #f4f8fc;
+    color: #62758c;
+    font-size: 13px;
+}
+
+.progresso-atividade-dados strong {
+    color: #20344f;
+}
+
+.progresso-vazio,
+.progresso-estado {
+    padding: 45px 24px;
+    border: 2px solid #d7e6f1;
+    border-radius: 22px;
+    background: #fff;
+    text-align: center;
+}
+
+.progresso-vazio > span {
+    display: block;
+    margin-bottom: 16px;
+    font-size: 42px;
+}
+
+.progresso-vazio h3,
+.progresso-estado h2 {
+    margin-bottom: 12px;
+    font-size: 21px;
+}
+
+.progresso-vazio p,
+.progresso-estado p {
+    max-width: 520px;
+    margin: 0 auto;
+    color: #62758c;
+    line-height: 1.7;
+}
+
+@media (max-width: 800px) {
+    .progresso-indicadores {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .progresso-lista {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 520px) {
+    .pagina-progresso {
+        padding: 30px 16px 55px;
+    }
+
+    .progresso-indicadores {
+        grid-template-columns: 1fr;
+    }
+
+    .progresso-indicador,
+    .progresso-atividade-card {
+        padding: 20px;
+    }
+
+    .progresso-indicador-valor {
+        font-size: 27px;
+    }
+}

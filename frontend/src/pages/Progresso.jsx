@@ -47,106 +47,174 @@ function Progresso({ usuario, onVoltar }) {
         };
     }, [usuario.id_usuario]);
 
-    if (carregando) {
-        return (
-            <main className="conteudo">
-                <p>Carregando seu progresso...</p>
-            </main>
-        );
-    }
-
-    if (erro) {
-        return (
-            <main className="conteudo">
-                <section className="boas-vindas">
-                    <h2>Meu progresso</h2>
-                    <p className="mensagem-erro">{erro}</p>
-                    <button onClick={onVoltar}>Voltar</button>
-                </section>
-            </main>
-        );
-    }
+    const indicadores = resumo
+        ? [
+              {
+                  titulo: "Atividades realizadas",
+                  valor: `${resumo.atividades_realizadas} / ${resumo.total_atividades}`,
+                  icone: "📚",
+                  cor: "azul",
+              },
+              {
+                  titulo: "Conclusão",
+                  valor: `${resumo.percentual_conclusao}%`,
+                  icone: "🏁",
+                  cor: "verde",
+              },
+              {
+                  titulo: "Total de tentativas",
+                  valor: resumo.total_tentativas,
+                  icone: "🧩",
+                  cor: "amarelo",
+              },
+              {
+                  titulo: "Respostas corretas",
+                  valor: resumo.total_corretas,
+                  icone: "✓",
+                  cor: "verde",
+              },
+              {
+                  titulo: "Respostas incorretas",
+                  valor: resumo.total_incorretas,
+                  icone: "↻",
+                  cor: "coral",
+              },
+              {
+                  titulo: "Precisão",
+                  valor: `${resumo.percentual_acerto}%`,
+                  icone: "🎯",
+                  cor: "azul",
+              },
+          ]
+        : [];
 
     return (
-        <main className="conteudo">
-            <section className="boas-vindas">
-                <h2>Meu progresso</h2>
-                <p>Acompanhe seu desempenho nas atividades.</p>
-
-                {resumo && (
-                    <div className="progresso-resumo">
-                        <div className="progresso-card">
-                            <h3>Atividades realizadas</h3>
-                            <p>
-                                {resumo.atividades_realizadas} /{" "}
-                                {resumo.total_atividades}
-                            </p>
-                        </div>
-
-                        <div className="progresso-card">
-                            <h3>Conclusão</h3>
-                            <p>{resumo.percentual_conclusao}%</p>
-                        </div>
-
-                        <div className="progresso-card">
-                            <h3>Total de tentativas</h3>
-                            <p>{resumo.total_tentativas}</p>
-                        </div>
-
-                        <div className="progresso-card">
-                            <h3>Respostas corretas</h3>
-                            <p>{resumo.total_corretas}</p>
-                        </div>
-
-                        <div className="progresso-card">
-                            <h3>Respostas incorretas</h3>
-                            <p>{resumo.total_incorretas}</p>
-                        </div>
-
-                        <div className="progresso-card">
-                            <h3>Precisão</h3>
-                            <p>{resumo.percentual_acerto}%</p>
-                        </div>
-                    </div>
-                )}
-
-                <h3>Desempenho por atividade</h3>
-
-                {atividades.length === 0 ? (
-                    <p>
-                        Você ainda não realizou nenhuma atividade.
-                        Quando começar a resolver os desafios,
-                        seu desempenho aparecerá aqui.
-                    </p>
-                ) : (
-                    <div className="lista-progresso">
-                        {atividades.map((atividade) => (
-                            <article
-                                className="progresso-atividade"
-                                key={atividade.id_atividade}
-                            >
-                                <h4>{atividade.titulo}</h4>
-
-                                <p>
-                                    Tentativas: {atividade.total_tentativas}
-                                </p>
-
-                                <p>
-                                    Acertos: {atividade.total_corretas}
-                                </p>
-
-                                <p>
-                                    Erros: {atividade.total_incorretas}
-                                </p>
-                            </article>
-                        ))}
-                    </div>
-                )}
-
-                <button onClick={onVoltar}>
-                    Voltar à área do aluno
+        <main className="pagina-progresso">
+            <div className="progresso-container">
+                <button
+                    type="button"
+                    className="progresso-voltar"
+                    onClick={onVoltar}
+                >
+                    ← Voltar ao início
                 </button>
-            </section>
+
+                <div className="progresso-cabecalho">
+
+                    <h1>Meu progresso</h1>
+
+                    <p>
+                        Veja tudo o que você já aprendeu
+                        e acompanhe suas conquistas.
+                    </p>
+                </div>
+
+                {carregando ? (
+                    <div className="progresso-estado">
+                        <p>Carregando suas conquistas...</p>
+                    </div>
+                ) : erro ? (
+                    <div className="progresso-estado" role="alert">
+                        <h2>Não foi possível carregar seu progresso</h2>
+                        <p>{erro}</p>
+                    </div>
+                ) : (
+                    <>
+                        {resumo && (
+                            <section className="progresso-secao">
+
+
+                                <div className="progresso-indicadores">
+                                    {indicadores.map((indicador) => (
+                                        <article
+                                            key={indicador.titulo}
+                                            className="progresso-indicador"
+                                        >
+                                            <span
+                                                className={`progresso-indicador-icone progresso-cor-${indicador.cor}`}
+                                                aria-hidden="true"
+                                            >
+                                                {indicador.icone}
+                                            </span>
+
+                                            <h3>{indicador.titulo}</h3>
+
+                                            <p className="progresso-indicador-valor">
+                                                {indicador.valor}
+                                            </p>
+                                        </article>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
+
+                        <section className="progresso-secao">
+                            <div className="progresso-secao-titulo">
+                                <h2>Desempenho por atividade</h2>
+                                <p>
+                                    Veja quantas vezes você tentou
+                                    e acertou cada desafio.
+                                </p>
+                            </div>
+
+                            {atividades.length === 0 ? (
+                                <div className="progresso-vazio">
+                                    <span aria-hidden="true">🌱</span>
+                                    <h3>Sua jornada está começando!</h3>
+                                    <p>
+                                        Você ainda não realizou nenhuma atividade.
+                                        Quando resolver seus primeiros desafios,
+                                        suas conquistas aparecerão aqui.
+                                    </p>
+                                </div>
+                            ) : (
+                                <div className="progresso-lista">
+                                    {atividades.map((atividade) => (
+                                        <article
+                                            className="progresso-atividade-card"
+                                            key={atividade.id_atividade}
+                                        >
+                                            <div className="progresso-atividade-topo">
+                                                <span
+                                                    className="progresso-atividade-icone"
+                                                    aria-hidden="true"
+                                                >
+                                                    🧩
+                                                </span>
+
+                                                <h3>{atividade.titulo}</h3>
+                                            </div>
+
+                                            <div className="progresso-atividade-dados">
+                                                <span>
+                                                    Tentativas:{" "}
+                                                    <strong>
+                                                        {atividade.total_tentativas}
+                                                    </strong>
+                                                </span>
+
+                                                <span>
+                                                    Acertos:{" "}
+                                                    <strong>
+                                                        {atividade.total_corretas}
+                                                    </strong>
+                                                </span>
+
+                                                <span>
+                                                    Erros:{" "}
+                                                    <strong>
+                                                        {atividade.total_incorretas}
+                                                    </strong>
+                                                </span>
+                                            </div>
+                                        </article>
+                                    ))}
+                                </div>
+                            )}
+                        </section>
+                    </>
+                )}
+            </div>
         </main>
     );
 }

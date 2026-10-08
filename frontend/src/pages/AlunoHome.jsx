@@ -9,9 +9,7 @@ function AlunoHome({ usuario, onAtividades, onProgresso }) {
 
                 <section className="painel-boas-vindas">
                     <div className="painel-saudacao">
-                        <span className="painel-etiqueta">
-                            Que bom ter você aqui! 👋
-                        </span>
+
 
                         <h1>
                             Olá, <span>{primeiroNome}!</span>
