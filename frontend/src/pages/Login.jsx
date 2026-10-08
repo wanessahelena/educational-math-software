@@ -26,44 +26,62 @@ function Login({ onLogin, onCadastro, onVoltar }) {
     return (
         <main className="pagina-autenticacao">
             <section className="cartao-autenticacao">
-                <button
-                    type="button"
-                    className="botao-voltar"
-                    onClick={onVoltar}
-                >
-                    ← Voltar
-                </button>
+                <div className="autenticacao-topo">
+                    <span className="autenticacao-icone" aria-hidden="true">
+                        ✦
+                    </span>
+                    <span className="autenticacao-marca">
+                        Mate<span>lógica</span>
+                    </span>
+                </div>
 
-                <h1>Entrar</h1>
-                <p>Faça login para continuar aprendendo matemática.</p>
+                <div className="autenticacao-apresentacao">
+                    <span className="autenticacao-etiqueta">
+                        Que bom ter você aqui!
+                    </span>
+                    <h1>Bem-vindo de volta!</h1>
+                    <p>
+                        Entre na sua conta para continuar
+                        aprendendo matemática.
+                    </p>
+                </div>
 
                 <form onSubmit={handleSubmit}>
-                    <label htmlFor="email">E-mail</label>
-                    <input
-                        id="email"
-                        type="email"
-                        value={email}
-                        onChange={(event) => setEmail(event.target.value)}
-                        placeholder="Digite seu e-mail"
-                        autoComplete="email"
-                        required
-                    />
+                    <div className="autenticacao-campo">
+                        <label htmlFor="login-email">E-mail</label>
+                        <input
+                            id="login-email"
+                            type="email"
+                            value={email}
+                            onChange={(event) => setEmail(event.target.value)}
+                            placeholder="Digite seu e-mail"
+                            autoComplete="email"
+                            required
+                        />
+                    </div>
 
-                    <label htmlFor="senha">Senha</label>
-                    <input
-                        id="senha"
-                        type="password"
-                        value={senha}
-                        onChange={(event) => setSenha(event.target.value)}
-                        placeholder="Digite sua senha"
-                        autoComplete="current-password"
-                        required
-                    />
+                    <div className="autenticacao-campo">
+                        <label htmlFor="login-senha">Senha</label>
+                        <input
+                            id="login-senha"
+                            type="password"
+                            value={senha}
+                            onChange={(event) => setSenha(event.target.value)}
+                            placeholder="Digite sua senha"
+                            autoComplete="current-password"
+                            required
+                        />
+                    </div>
 
-                    {erro && <p className="mensagem-erro">{erro}</p>}
+                    {erro && (
+                        <p className="mensagem-erro" role="alert">
+                            {erro}
+                        </p>
+                    )}
 
                     <button
                         type="submit"
+                        className="autenticacao-botao"
                         disabled={carregando}
                     >
                         {carregando ? "Entrando..." : "Entrar"}
@@ -71,11 +89,19 @@ function Login({ onLogin, onCadastro, onVoltar }) {
                 </form>
 
                 <p className="texto-cadastro">
-                    Ainda não tem cadastro?{" "}
+                    Ainda não tem uma conta?{" "}
                     <button type="button" onClick={onCadastro}>
-                        Criar cadastro
+                        Criar conta
                     </button>
                 </p>
+
+                <button
+                    type="button"
+                    className="autenticacao-voltar"
+                    onClick={onVoltar}
+                >
+                    ← Voltar ao início
+                </button>
             </section>
         </main>
     );

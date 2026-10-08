@@ -482,9 +482,9 @@ RESOLUÇÃO DE ATIVIDADES
 }
 
 
-/* ========================================
-   HOME - MATELÓGICA
-======================================== */
+/* ========================================================================================================================================================================================================
+                                                HOME - MATELÓGICA
+==================================================================================================================================================================================================*/
 
 .home {
     min-height: 100vh;
@@ -848,5 +848,195 @@ RESOLUÇÃO DE ATIVIDADES
 
     .home-beneficio {
         padding: 18px;
+    }
+}
+
+
+/* ========================================
+   LOGIN E CADASTRO - MATELÓGICA
+======================================== */
+
+.pagina-autenticacao {
+    min-height: 100vh;
+    padding: 48px 20px;
+    background-color: #f4fbff;
+    background-image: radial-gradient(#c9dff1 1px, transparent 1px);
+    background-size: 21px 21px;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+}
+
+.cartao-autenticacao {
+    max-width: 470px;
+    padding: 38px;
+    border: 2px solid #d7e6f1;
+    border-radius: 25px;
+    background: #fff;
+    box-shadow: 0 5px 0 #dce8f0;
+    color: #20344f;
+}
+
+.autenticacao-topo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 28px;
+}
+
+.autenticacao-icone {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #348dd0;
+    color: white;
+    font-size: 26px;
+}
+
+.autenticacao-marca {
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.autenticacao-marca span {
+    color: #4da55f;
+}
+
+.autenticacao-apresentacao {
+    text-align: center;
+}
+
+.autenticacao-etiqueta {
+    display: inline-block;
+    margin-bottom: 16px;
+    padding: 8px 15px;
+    border-radius: 30px;
+    background: #fff0c7;
+    color: #704b16;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.autenticacao-apresentacao h1 {
+    margin-bottom: 12px;
+    font-size: 30px;
+    line-height: 1.2;
+}
+
+.autenticacao-apresentacao p {
+    color: #62758c;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.cartao-autenticacao form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 30px;
+}
+
+.autenticacao-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.autenticacao-campo label {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.cartao-autenticacao .autenticacao-campo input,
+.cartao-autenticacao .autenticacao-campo select {
+    width: 100%;
+    min-height: 49px;
+    padding: 12px 14px;
+    border: 2px solid #d7e6f1;
+    border-radius: 12px;
+    background: #fbfdff;
+    color: #20344f;
+    font: inherit;
+    font-size: 15px;
+}
+
+.cartao-autenticacao .autenticacao-campo input:focus,
+.cartao-autenticacao .autenticacao-campo select:focus {
+    outline: 3px solid #b9e0fa;
+    border-color: #348dd0;
+}
+
+.cartao-autenticacao form .autenticacao-botao {
+    width: 100%;
+    min-height: 52px;
+    margin-top: 6px;
+    padding: 12px;
+    border: 0;
+    border-radius: 14px;
+    background: #348dd0;
+    box-shadow: 0 4px 0 #1d669e;
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.cartao-autenticacao form .autenticacao-botao:hover:not(:disabled) {
+    background: #277cbd;
+}
+
+.cartao-autenticacao .texto-cadastro {
+    margin-top: 28px;
+    color: #62758c;
+    font-size: 14px;
+}
+
+.cartao-autenticacao .texto-cadastro button {
+    color: #277cbd;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.autenticacao-voltar {
+    display: block;
+    margin: 24px auto 0;
+    padding: 8px;
+    border: 0;
+    background: transparent;
+    color: #62758c;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.autenticacao-observacao {
+    margin-top: 22px;
+    color: #62758c;
+    font-size: 13px;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.cartao-autenticacao .mensagem-erro {
+    padding: 12px;
+    border-radius: 10px;
+    background: #fff1f1;
+    color: #b42318;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+@media (max-width: 480px) {
+    .pagina-autenticacao {
+        padding: 24px 14px;
+    }
+
+    .cartao-autenticacao {
+        padding: 26px 20px;
+    }
+
+    .autenticacao-apresentacao h1 {
+        font-size: 26px;
     }
 }
