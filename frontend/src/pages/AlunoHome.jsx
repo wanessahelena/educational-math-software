@@ -1,26 +1,11 @@
 
-function AlunoHome({ usuario, onAtividades, onProgresso, onSair }) {
+function AlunoHome({ usuario, onAtividades, onProgresso }) {
     const primeiroNome = usuario.nome?.trim().split(/\s+/)[0] || "Estudante";
 
     return (
         <main className="painel-aluno">
             <div className="painel-container">
-                <header className="painel-cabecalho">
-                    <div className="painel-marca">
-                        <span className="painel-logo" aria-hidden="true">✦</span>
-                        <span>
-                            Mate<span className="painel-marca-verde">lógica</span>
-                        </span>
-                    </div>
 
-                    <button
-                        type="button"
-                        className="painel-sair"
-                        onClick={onSair}
-                    >
-                        Sair da conta
-                    </button>
-                </header>
 
                 <section className="painel-boas-vindas">
                     <div className="painel-saudacao">

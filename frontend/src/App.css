@@ -1365,3 +1365,383 @@ RESOLUÇÃO DE ATIVIDADES
         font-size: 23px;
     }
 }
+
+
+/* ========================================
+   CONTEÚDOS E ATIVIDADES - MATELÓGICA
+======================================== */
+
+.pagina-atividades {
+    min-height: 100vh;
+    padding: 55px 24px 80px;
+    background-color: #f4fbff;
+    background-image: radial-gradient(#c9dff1 1px, transparent 1px);
+    background-size: 21px 21px;
+    color: #20344f;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+}
+
+.atividades-container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.atividades-apresentacao {
+    margin-bottom: 45px;
+}
+
+.atividades-etiqueta {
+    display: inline-block;
+    margin-bottom: 18px;
+    padding: 9px 16px;
+    border-radius: 30px;
+    background: #fff0c7;
+    color: #704b16;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.atividades-apresentacao h1 {
+    margin-bottom: 12px;
+    font-size: clamp(32px, 4vw, 46px);
+    font-weight: 800;
+}
+
+.atividades-apresentacao > p {
+    max-width: 650px;
+    color: #62758c;
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+.atividades-ano {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 16px;
+    border-radius: 13px;
+    background: #e8f5ff;
+    color: #245e8c;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.atividades-secao-titulo {
+    margin-bottom: 25px;
+}
+
+.atividades-secao-titulo h2 {
+    margin-bottom: 8px;
+    font-size: 25px;
+}
+
+.atividades-secao-titulo p {
+    color: #62758c;
+    font-size: 15px;
+}
+
+.atividades-grade {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.atividades-cartao {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 285px;
+    padding: 28px;
+    border: 2px solid #d7e6f1;
+    border-radius: 23px;
+    background: white;
+    box-shadow: 0 5px 0 #dce8f0;
+}
+
+.atividades-icone {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 22px;
+    border-radius: 19px;
+    font-size: 32px;
+    font-weight: 800;
+}
+
+.atividades-cartao h3 {
+    margin-bottom: 12px;
+    font-size: 21px;
+    line-height: 1.3;
+}
+
+.atividades-cartao > p {
+    margin-bottom: 24px;
+    color: #62758c;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.atividades-botao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 46px;
+    margin-top: auto;
+    padding: 11px 18px;
+    border: 0;
+    border-radius: 13px;
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.atividades-botao:hover {
+    transform: translateY(-2px);
+}
+
+.atividades-cor-azul .atividades-icone {
+    background: #d8efff;
+    color: #348dd0;
+}
+
+.atividades-cor-azul .atividades-botao {
+    background: #348dd0;
+}
+
+.atividades-cor-verde .atividades-icone {
+    background: #def7e4;
+    color: #4da55f;
+}
+
+.atividades-cor-verde .atividades-botao {
+    background: #4da55f;
+}
+
+.atividades-cor-amarelo .atividades-icone {
+    background: #fff0c7;
+    color: #b78022;
+}
+
+.atividades-cor-amarelo .atividades-botao {
+    background: #b78022;
+}
+
+.atividades-cor-coral .atividades-icone {
+    background: #ffe2da;
+    color: #d66c55;
+}
+
+.atividades-cor-coral .atividades-botao {
+    background: #d66c55;
+}
+
+.atividades-cartao-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    margin-bottom: 22px;
+}
+
+.atividades-numero {
+    font-size: 14px;
+    font-weight: 800;
+    color: #348dd0;
+}
+
+.atividades-nivel {
+    padding: 7px 12px;
+    border-radius: 20px;
+    background: #fff0c7;
+    color: #704b16;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.atividades-voltar {
+    margin-bottom: 28px;
+    padding: 12px 18px;
+    border: 2px solid #d7e6f1;
+    border-radius: 13px;
+    background: white;
+    color: #245e8c;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.atividades-estado {
+    padding: 35px;
+    border: 2px solid #d7e6f1;
+    border-radius: 20px;
+    background: white;
+    color: #62758c;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.atividades-erro {
+    border-color: #f1b5b5;
+    background: #fff5f5;
+    color: #b42318;
+}
+
+@media (max-width: 900px) {
+    .atividades-grade {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .pagina-atividades {
+        padding: 35px 18px 55px;
+    }
+
+    .atividades-grade {
+        grid-template-columns: 1fr;
+    }
+
+    .atividades-cartao {
+        min-height: 250px;
+    }
+
+    .atividades-apresentacao {
+        margin-bottom: 35px;
+    }
+}
+
+
+/* ========================================
+   MENU COMPARTILHADO - MATELÓGICA
+======================================== */
+
+.menu-matelogica {
+    width: 100%;
+    background: #f4fbff;
+    border-bottom: 1px solid #d7e6f1;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+}
+
+.menu-matelogica-container {
+    max-width: 1148px;
+    margin: 0 auto;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.menu-matelogica-marca {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #20344f;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.7px;
+    white-space: nowrap;
+}
+
+.menu-matelogica-logo {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #348dd0;
+    color: #fff;
+    font-size: 26px;
+}
+
+.menu-matelogica-verde {
+    color: #4da55f;
+}
+
+.menu-matelogica-links {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.menu-matelogica-links button {
+    min-height: 42px;
+    padding: 10px 16px;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    background: transparent;
+    color: #62758c;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.menu-matelogica-links button:hover {
+    background: #e8f5ff;
+    color: #245e8c;
+}
+
+.menu-matelogica-links .menu-link-ativo {
+    background: #e8f5ff;
+    color: #245e8c;
+}
+
+.menu-matelogica-links .menu-matelogica-sair {
+    border-color: #d7e6f1;
+    background: #fff;
+    color: #62758c;
+}
+
+.menu-matelogica-links .menu-matelogica-sair:hover {
+    border-color: #348dd0;
+}
+
+@media (max-width: 700px) {
+    .menu-matelogica-container {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .menu-matelogica-links {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .menu-matelogica-container {
+        padding: 16px;
+    }
+
+    .menu-matelogica-marca {
+        font-size: 21px;
+    }
+
+    .menu-matelogica-links {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .menu-matelogica-links button {
+        width: 100%;
+        padding: 10px;
+        font-size: 13px;
+    }
+}
+
+/* Ajuste de espaçamento do painel do aluno */
+
+.painel-aluno {
+    padding-top: 1px;
+}
+
+.painel-boas-vindas {
+    margin-top: 35px;
+}

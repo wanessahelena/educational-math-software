@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import "./App.css";
 
-import Header from "./components/Header";
+import MenuAluno from "./components/MenuAluno";
 
 import Home from "./pages/Home";
 
@@ -100,38 +100,27 @@ function App() {
 
     return (
         <div className="app">
-            {pagina !== "home" && pagina !== "aluno" && <Header />}
 
-            {usuario && pagina !== "aluno" &&  (
-                <nav className="menu-aluno">
-                    <button
-                        onClick={() => {
-                            setAtividadeSelecionada(null);
-                            setPagina("aluno");
-                        }}
-                    >
-                        Início
-                    </button>
 
-                    <button
-                        onClick={() => setPagina("atividades")}
-                    >
-                        Atividades
-                    </button>
+        {usuario && (
+            <MenuAluno
+                pagina={pagina}
+                onInicio={() => {
+                    setAtividadeSelecionada(null);
+                    setPagina("aluno");
+                }}
+                onAtividades={() => {
+                    setAtividadeSelecionada(null);
+                    setPagina("atividades");
+                }}
+                onProgresso={() => {
+                    setAtividadeSelecionada(null);
+                    setPagina("progresso");
+                }}
+                onSair={sair}
+            />
+        )}
 
-                    <button
-                        onClick={() => setPagina("progresso")}
-                    >
-                        Meu progresso
-                    </button>
-
-                    <button
-                        onClick={sair}
-                    >
-                        Sair
-                    </button>
-                </nav>
-            )}
 
             {pagina === "home" && (
                 <Home
@@ -159,7 +148,6 @@ function App() {
                     usuario={usuario}
                     onAtividades={() => setPagina("atividades")}
                     onProgresso={() => setPagina("progresso")}
-                    onSair={sair}
                 />
             )}
 
