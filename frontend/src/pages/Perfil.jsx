@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { solicitarAlteracaoEmail } from "../services/api";
 
 import {
     UserRound,
@@ -13,7 +14,6 @@ import {
 
 function Perfil({ usuario, onSalvar, onAlterarSenha }) {
     const [nome, setNome] = useState(usuario.nome || "");
-    const [email, setEmail] = useState(usuario.email || "");
     const [idAno, setIdAno] = useState(usuario.id_ano || 1);
     const [salvando, setSalvando] = useState(false);
     const [mensagem, setMensagem] = useState("");
@@ -26,6 +26,12 @@ function Perfil({ usuario, onSalvar, onAlterarSenha }) {
     const [mostrarSenhaAtual, setMostrarSenhaAtual] = useState(false);
     const [mostrarNovaSenha, setMostrarNovaSenha] = useState(false);
     const [mostrarConfirmacao, setMostrarConfirmacao] = useState(false);
+    const [novoEmail, setNovoEmail] = useState("");
+    const [senhaEmail, setSenhaEmail] = useState("");
+    const [mostrarSenhaEmail, setMostrarSenhaEmail] = useState(false);
+    const [alterandoEmail, setAlterandoEmail] = useState(false);
+    const [erroEmail, setErroEmail] = useState("");
+    const [mensagemEmail, setMensagemEmail] = useState("");
 
     async function enviarFormulario(evento) {
         evento.preventDefault();
@@ -37,7 +43,6 @@ function Perfil({ usuario, onSalvar, onAlterarSenha }) {
         try {
             await onSalvar({
                 nome: nome.trim(),
-                email: email.trim(),
                 id_ano: Number(idAno)
             });
 
@@ -74,6 +79,29 @@ function Perfil({ usuario, onSalvar, onAlterarSenha }) {
             setErroSenha(erroAlteracao.message);
         } finally {
             setAlterandoSenha(false);
+        }
+    }
+
+    async function enviarAlteracaoEmail(evento) {
+        evento.preventDefault();
+
+        setErroEmail("");
+        setMensagemEmail("");
+        setAlterandoEmail(true);
+
+        try {
+            const dados = await solicitarAlteracaoEmail(
+                novoEmail.trim(),
+                senhaEmail
+            );
+
+            setMensagemEmail(dados.mensagem);
+            setNovoEmail("");
+            setSenhaEmail("");
+        } catch (erro) {
+            setErroEmail(erro.message);
+        } finally {
+            setAlterandoEmail(false);
         }
     }
 
@@ -114,12 +142,14 @@ function Perfil({ usuario, onSalvar, onAlterarSenha }) {
                     <input
                         id="perfil-email"
                         type="email"
-                        value={email}
-                        onChange={(evento) =>
-                            setEmail(evento.target.value)
-                        }
-                        required
+                        value={usuario.email || ""}
+                        readOnly
+                        aria-describedby="perfil-email-ajuda"
                     />
+
+                    <p id="perfil-email-ajuda">
+                        Para alterar seu e-mail, utilize a seção de alteração de e-mail.
+                    </p>
 
                     <label htmlFor="perfil-ano">
                         <GraduationCap size={18} aria-hidden="true" />
@@ -158,6 +188,89 @@ function Perfil({ usuario, onSalvar, onAlterarSenha }) {
                             )}
                         </button>
 
+                </form>
+            </section>
+
+            <section className="perfil-cartao">
+                <div className="perfil-apresentacao">
+                    <h2>Alterar e-mail</h2>
+                    <p>
+                        Informe o novo endereço e sua senha atual.
+                        Enviaremos um link para confirmar a alteração.
+                    </p>
+                </div>
+
+                <form
+                    className="perfil-formulario"
+                    onSubmit={enviarAlteracaoEmail}
+                >
+                    <label htmlFor="novo-email">
+                        <Mail size={18} aria-hidden="true" />
+                        Novo e-mail
+                    </label>
+
+                    <input
+                        id="novo-email"
+                        type="email"
+                        value={novoEmail}
+                        onChange={(evento) => setNovoEmail(evento.target.value)}
+                        placeholder="Digite o novo e-mail"
+                        autoComplete="email"
+                        required
+                    />
+
+                    <label htmlFor="senha-alteracao-email">
+                        <LockKeyhole size={18} aria-hidden="true" />
+                        Senha atual
+                    </label>
+
+                    <div className="campo-senha">
+                        <input
+                            id="senha-alteracao-email"
+                            type={mostrarSenhaEmail ? "text" : "password"}
+                            value={senhaEmail}
+                            onChange={(evento) => setSenhaEmail(evento.target.value)}
+                            autoComplete="current-password"
+                            required
+                        />
+
+                        <button
+                            type="button"
+                            className="botao-visualizar-senha"
+                            onClick={() => setMostrarSenhaEmail(!mostrarSenhaEmail)}
+                            aria-label={
+                                mostrarSenhaEmail
+                                    ? "Ocultar senha"
+                                    : "Mostrar senha"
+                            }
+                            aria-pressed={mostrarSenhaEmail}
+                        >
+                            {mostrarSenhaEmail ? (
+                                <EyeOff size={18} aria-hidden="true" />
+                            ) : (
+                                <Eye size={18} aria-hidden="true" />
+                            )}
+                        </button>
+                    </div>
+
+                    {erroEmail && (
+                        <p role="alert" className="mensagem-erro">
+                            {erroEmail}
+                        </p>
+                    )}
+
+                    {mensagemEmail && (
+                        <p role="status" className="mensagem-sucesso">
+                            {mensagemEmail}
+                        </p>
+                    )}
+
+                    <button type="submit" disabled={alterandoEmail}>
+                        <Mail size={18} aria-hidden="true" />
+                        {alterandoEmail
+                            ? "Enviando..."
+                            : "Solicitar alteração de e-mail"}
+                    </button>
                 </form>
             </section>
 

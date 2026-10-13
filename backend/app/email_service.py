@@ -76,3 +76,33 @@ def enviar_email_recuperacao_senha(destinatario: str, token: str):
         servidor.starttls(context=contexto)
         servidor.login(SMTP_EMAIL, SMTP_APP_PASSWORD)
         servidor.send_message(mensagem)
+        
+def enviar_email_alteracao_email(destinatario: str, token: str):
+    if not SMTP_EMAIL or not SMTP_APP_PASSWORD:
+        raise ValueError("Configurações de e-mail não encontradas.")
+
+    link = f"http://localhost:5173/confirmar-alteracao-email?token={token}"
+
+    mensagem = EmailMessage()
+    mensagem["Subject"] = "Confirmação de alteração de e-mail - Matelógica"
+    mensagem["From"] = SMTP_EMAIL
+    mensagem["To"] = destinatario
+
+    mensagem.set_content(
+        "Olá!\n\n"
+        "Recebemos uma solicitação para utilizar este endereço "
+        "de e-mail em uma conta do Matelógica.\n\n"
+        "Para confirmar a alteração, acesse o link abaixo:\n"
+        f"{link}\n\n"
+        "Este link é válido por 30 minutos.\n\n"
+        "Se você não solicitou essa alteração, ignore este e-mail.\n"
+        "O endereço de e-mail da conta permanecerá inalterado.\n\n"
+        "Equipe Matelógica"
+    )
+
+    contexto = ssl.create_default_context()
+
+    with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=15) as servidor:
+        servidor.starttls(context=contexto)
+        servidor.login(SMTP_EMAIL, SMTP_APP_PASSWORD)
+        servidor.send_message(mensagem)

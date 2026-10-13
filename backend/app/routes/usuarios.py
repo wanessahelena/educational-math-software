@@ -37,6 +37,16 @@ from app.models.token_recuperacao_senha import TokenRecuperacaoSenha
 
 from app.recuperacao_senha import calcular_hash_token_recuperacao
 
+from app.alteracao_email import criar_token_alteracao_email
+
+from app.email_service import enviar_email_alteracao_email
+
+from sqlalchemy.exc import IntegrityError
+
+from app.models.token_alteracao_email import TokenAlteracaoEmail
+
+from app.alteracao_email import calcular_hash_token_alteracao
+
 
 router = APIRouter(
     prefix="/usuarios",
@@ -71,6 +81,10 @@ class ReenviarVerificacaoRequest(BaseModel):
 class AlterarSenhaRequest(BaseModel):
     senha_atual: str
     nova_senha: str
+    
+class SolicitarAlteracaoEmailRequest(BaseModel):
+    novo_email: str
+    senha_atual: str
 
 def dados_publicos_usuario(usuario: Usuario, db: Session):
     ano_escolar = (
@@ -249,6 +263,87 @@ def redefinir_senha(
 
     return {"mensagem": "Senha redefinida com sucesso!"}
 
+
+@router.post("/confirmar-alteracao-email")
+def confirmar_alteracao_email(
+    token: str,
+    db: Session = Depends(get_db)
+):
+    token_hash = calcular_hash_token_alteracao(token)
+    agora = datetime.now(timezone.utc).replace(tzinfo=None)
+
+    registro = (
+        db.query(TokenAlteracaoEmail)
+        .filter(TokenAlteracaoEmail.token_hash == token_hash)
+        .with_for_update()
+        .first()
+    )
+
+    if (
+        not registro
+        or registro.utilizado_em is not None
+        or registro.expira_em <= agora
+    ):
+        raise HTTPException(
+            status_code=400,
+            detail="Link de confirmação inválido, expirado ou já utilizado."
+        )
+
+    usuario = (
+        db.query(Usuario)
+        .filter(Usuario.id_usuario == registro.id_usuario)
+        .with_for_update()
+        .first()
+    )
+
+    if not usuario:
+        raise HTTPException(
+            status_code=400,
+            detail="Solicitação de alteração de e-mail inválida."
+        )
+
+    email_existente = (
+        db.query(Usuario)
+        .filter(
+            Usuario.email == registro.novo_email,
+            Usuario.id_usuario != usuario.id_usuario
+        )
+        .first()
+    )
+
+    if email_existente:
+        raise HTTPException(
+            status_code=409,
+            detail="Este e-mail já está cadastrado."
+        )
+
+    usuario.email = registro.novo_email
+    usuario.email_verificado = True
+    usuario.versao_token += 1
+
+    registro.utilizado_em = agora
+
+    db.query(TokenAlteracaoEmail).filter(
+        TokenAlteracaoEmail.id_usuario == usuario.id_usuario,
+        TokenAlteracaoEmail.id_token != registro.id_token,
+        TokenAlteracaoEmail.utilizado_em.is_(None)
+    ).delete(synchronize_session=False)
+
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=409,
+            detail="Este e-mail já está cadastrado."
+        )
+
+    return {
+        "mensagem": (
+            "E-mail alterado com sucesso! "
+            "Entre novamente com seu novo endereço."
+        )
+    }
 
 @router.post("/login")
 def login(
@@ -594,6 +689,71 @@ def buscar_usuario(
         )
 
     return dados_publicos_usuario(usuario, db)
+
+
+@router.post("/solicitar-alteracao-email")
+def solicitar_alteracao_email(
+    dados: SolicitarAlteracaoEmailRequest,
+    db: Session = Depends(get_db),
+    usuario_atual: Usuario = Depends(obter_usuario_atual)
+):
+    novo_email = dados.novo_email.strip().lower()
+
+    if not novo_email or "@" not in novo_email:
+        raise HTTPException(
+            status_code=422,
+            detail="Informe um endereço de e-mail válido."
+        )
+
+    if novo_email == usuario_atual.email.strip().lower():
+        raise HTTPException(
+            status_code=422,
+            detail="O novo e-mail deve ser diferente do atual."
+        )
+
+    if not verificar_senha(
+        dados.senha_atual,
+        usuario_atual.senha_hash
+    ):
+        raise HTTPException(
+            status_code=400,
+            detail="Senha atual incorreta."
+        )
+
+    email_existente = (
+        db.query(Usuario)
+        .filter(Usuario.email == novo_email)
+        .first()
+    )
+
+    if email_existente:
+        raise HTTPException(
+            status_code=409,
+            detail="Este e-mail já está cadastrado."
+        )
+
+    token = criar_token_alteracao_email(
+        db,
+        usuario_atual.id_usuario,
+        novo_email
+    )
+
+    db.commit()
+
+    try:
+        enviar_email_alteracao_email(novo_email, token)
+    except Exception:
+        raise HTTPException(
+            status_code=503,
+            detail="Não foi possível enviar o e-mail de confirmação."
+        )
+
+    return {
+        "mensagem": (
+            "Enviamos um link de confirmação para o novo e-mail. "
+            "O endereço atual permanecerá válido até a confirmação."
+        )
+    }
 
 
 @router.patch("/{id_usuario}")
