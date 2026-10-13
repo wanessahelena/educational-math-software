@@ -18,7 +18,7 @@ function Home({ onLogin, onCadastro }) {
                             <Sparkles size={26} strokeWidth={2.5} />
                         </span>
                         <span>
-                            Mate<span className="home-marca-verde">lógica</span>
+                            Mat<span className="home-marca-verde">Lógica</span>
                         </span>
                     </div>
 

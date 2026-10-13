@@ -21,14 +21,14 @@ def enviar_email_verificacao(destinatario: str, token: str):
     link = f"http://localhost:5173/verificar-email?token={token}"
 
     mensagem = EmailMessage()
-    mensagem["Subject"] = "Confirme seu e-mail - Matelógica"
+    mensagem["Subject"] = "Confirme seu e-mail - MatLógica"
     mensagem["From"] = SMTP_EMAIL
     mensagem["To"] = destinatario
 
     mensagem.set_content(
         f"""Olá!
 
-Recebemos um cadastro no Matelógica utilizando este endereço de e-mail.
+Recebemos um cadastro no MatLógica utilizando este endereço de e-mail.
 
 Para confirmar seu e-mail, acesse o link abaixo:
 
@@ -38,7 +38,7 @@ Este link é válido por 30 minutos.
 
 Se você não realizou esse cadastro, ignore esta mensagem.
 
-Equipe Matelógica
+Equipe MatLógica
 """
     )
 
@@ -57,17 +57,17 @@ def enviar_email_recuperacao_senha(destinatario: str, token: str):
     link = f"http://localhost:5173/redefinir-senha?token={token}"
 
     mensagem = EmailMessage()
-    mensagem["Subject"] = "Recuperação de senha - Matelógica"
+    mensagem["Subject"] = "Recuperação de senha - MatLógica"
     mensagem["From"] = SMTP_EMAIL
     mensagem["To"] = destinatario
 
     mensagem.set_content(
         "Olá!\n\n"
-        "Recebemos uma solicitação para redefinir a senha da sua conta no Matelógica.\n\n"
+        "Recebemos uma solicitação para redefinir a senha da sua conta no MatLógica.\n\n"
         f"Acesse o link para criar uma nova senha:\n{link}\n\n"
         "Este link é válido por 30 minutos.\n\n"
         "Se você não solicitou a recuperação de senha, ignore este e-mail.\n\n"
-        "Equipe Matelógica"
+        "Equipe MatLógica"
     )
 
     contexto = ssl.create_default_context()
@@ -84,20 +84,20 @@ def enviar_email_alteracao_email(destinatario: str, token: str):
     link = f"http://localhost:5173/confirmar-alteracao-email?token={token}"
 
     mensagem = EmailMessage()
-    mensagem["Subject"] = "Confirmação de alteração de e-mail - Matelógica"
+    mensagem["Subject"] = "Confirmação de alteração de e-mail - MatLógica"
     mensagem["From"] = SMTP_EMAIL
     mensagem["To"] = destinatario
 
     mensagem.set_content(
         "Olá!\n\n"
         "Recebemos uma solicitação para utilizar este endereço "
-        "de e-mail em uma conta do Matelógica.\n\n"
+        "de e-mail em uma conta do MatLógica.\n\n"
         "Para confirmar a alteração, acesse o link abaixo:\n"
         f"{link}\n\n"
         "Este link é válido por 30 minutos.\n\n"
         "Se você não solicitou essa alteração, ignore este e-mail.\n"
         "O endereço de e-mail da conta permanecerá inalterado.\n\n"
-        "Equipe Matelógica"
+        "Equipe MatLógica"
     )
 
     contexto = ssl.create_default_context()

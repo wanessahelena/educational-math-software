@@ -82,7 +82,7 @@ function Cadastro({ onCadastro }) {
                     </span>
 
                     <span className="autenticacao-marca">
-                        Mate<span>lógica</span>
+                        Mat<span>Lógica</span>
                     </span>
                 </div>
 

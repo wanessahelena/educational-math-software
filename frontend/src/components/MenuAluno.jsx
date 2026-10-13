@@ -24,7 +24,7 @@ function MenuAluno({
                         <Sparkles size={26} strokeWidth={2.5} />
                     </span>
                     <span>
-                        Mate<span className="menu-matelogica-verde">lógica</span>
+                        Mat<span className="menu-matelogica-verde">Lógica</span>
                     </span>
                 </div>
 

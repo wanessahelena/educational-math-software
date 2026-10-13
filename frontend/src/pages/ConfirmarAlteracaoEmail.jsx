@@ -75,7 +75,7 @@ function ConfirmarAlteracaoEmail({ onLogin }) {
                         <MailCheck size={26} />
                     </span>
                     <span className="autenticacao-marca">
-                        Mate<span>lógica</span>
+                        Mat<span>Lógica</span>
                     </span>
                 </div>
 
