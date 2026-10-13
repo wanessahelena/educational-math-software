@@ -26,13 +26,14 @@ def verificar_senha(senha: str, senha_hash: str) -> bool:
     return password_hash.verify(senha, senha_hash)
 
 
-def criar_token_acesso(id_usuario: int) -> str:
+def criar_token_acesso(id_usuario: int, versao_token: int) -> str:
     expiracao = datetime.now(timezone.utc) + timedelta(
         minutes=ACCESS_TOKEN_EXPIRE_MINUTES
     )
 
     payload = {
         "sub": str(id_usuario),
+        "versao_token": versao_token,
         "exp": expiracao,
     }
 
@@ -43,7 +44,7 @@ def criar_token_acesso(id_usuario: int) -> str:
     )
 
 
-def verificar_token(token: str) -> int | None:
+def verificar_token(token: str) -> tuple[int, int] | None:
     try:
         payload = jwt.decode(
             token,
@@ -52,11 +53,16 @@ def verificar_token(token: str) -> int | None:
         )
 
         id_usuario = payload.get("sub")
+        versao_token = payload.get("versao_token")
 
-        if id_usuario is None:
+        if (
+            id_usuario is None
+            or type(versao_token) is not int
+            or versao_token < 0
+        ):
             return None
 
-        return int(id_usuario)
+        return int(id_usuario), versao_token
 
     except (JWTError, ValueError, TypeError):
         return None

@@ -1,11 +1,12 @@
 
 import { useState } from "react";
-import { Sparkles, ArrowLeft } from "lucide-react";
+import { Sparkles, ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { realizarLogin } from "../services/api";
 
 function Login({ onLogin, onCadastro, onVoltar }) {
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
+    const [mostrarSenha, setMostrarSenha] = useState(false);
     const [erro, setErro] = useState("");
     const [carregando, setCarregando] = useState(false);
 
@@ -60,15 +61,32 @@ function Login({ onLogin, onCadastro, onVoltar }) {
 
                     <div className="autenticacao-campo">
                         <label htmlFor="login-senha">Senha</label>
-                        <input
-                            id="login-senha"
-                            type="password"
-                            value={senha}
-                            onChange={(event) => setSenha(event.target.value)}
-                            placeholder="Digite sua senha"
-                            autoComplete="current-password"
-                            required
-                        />
+
+                        <div className="campo-senha">
+                            <input
+                                id="login-senha"
+                                type={mostrarSenha ? "text" : "password"}
+                                value={senha}
+                                onChange={(event) => setSenha(event.target.value)}
+                                placeholder="Digite sua senha"
+                                autoComplete="current-password"
+                                required
+                            />
+
+                            <button
+                                type="button"
+                                className="botao-visualizar-senha"
+                                onClick={() => setMostrarSenha(!mostrarSenha)}
+                                aria-label={mostrarSenha ? "Ocultar senha" : "Mostrar senha"}
+                                aria-pressed={mostrarSenha}
+                            >
+                                {mostrarSenha ? (
+                                    <EyeOff size={18} aria-hidden="true" />
+                                ) : (
+                                    <Eye size={18} aria-hidden="true" />
+                                )}
+                            </button>
+                        </div>
                     </div>
 
                     {erro && (

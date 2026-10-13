@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Eye, EyeOff } from "lucide-react";
 import {
     buscarAnosEscolares,
     cadastrarUsuario,
@@ -11,6 +11,9 @@ function Cadastro({ onCadastro }) {
     const [nome, setNome] = useState("");
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
+    const [confirmarSenha, setConfirmarSenha] = useState("");
+    const [mostrarSenha, setMostrarSenha] = useState(false);
+    const [mostrarConfirmacao, setMostrarConfirmacao] = useState(false);
     const [idAno, setIdAno] = useState("");
     const [erro, setErro] = useState("");
     const [carregando, setCarregando] = useState(false);
@@ -43,6 +46,16 @@ function Cadastro({ onCadastro }) {
         }
 
         setCarregando(true);
+
+        if (senha.length < 8) {
+            setErro("A senha deve ter pelo menos 8 caracteres.");
+            return;
+        }
+
+        if (senha !== confirmarSenha) {
+            setErro("As senhas não coincidem.");
+            return;
+        }
 
         try {
             const usuario = await cadastrarUsuario(
@@ -110,15 +123,69 @@ function Cadastro({ onCadastro }) {
 
                     <div className="autenticacao-campo">
                         <label htmlFor="cadastro-senha">Crie uma senha</label>
-                        <input
-                            id="cadastro-senha"
-                            type="password"
-                            value={senha}
-                            onChange={(event) => setSenha(event.target.value)}
-                            placeholder="Digite uma senha"
-                            autoComplete="new-password"
-                            required
-                        />
+
+                        <div className="campo-senha">
+                            <input
+                                id="cadastro-senha"
+                                type={mostrarSenha ? "text" : "password"}
+                                value={senha}
+                                onChange={(event) => setSenha(event.target.value)}
+                                placeholder="Mínimo de 8 caracteres"
+                                autoComplete="new-password"
+                                minLength={8}
+                                required
+                            />
+
+                            <button
+                                type="button"
+                                className="botao-visualizar-senha"
+                                onClick={() => setMostrarSenha(!mostrarSenha)}
+                                aria-label={mostrarSenha ? "Ocultar senha" : "Mostrar senha"}
+                                aria-pressed={mostrarSenha}
+                            >
+                                {mostrarSenha ? (
+                                    <EyeOff size={18} aria-hidden="true" />
+                                ) : (
+                                    <Eye size={18} aria-hidden="true" />
+                                )}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="autenticacao-campo">
+                        <label htmlFor="cadastro-confirmar-senha">
+                            Confirme sua senha
+                        </label>
+
+                        <div className="campo-senha">
+                            <input
+                                id="cadastro-confirmar-senha"
+                                type={mostrarConfirmacao ? "text" : "password"}
+                                value={confirmarSenha}
+                                onChange={(event) => setConfirmarSenha(event.target.value)}
+                                placeholder="Digite a senha novamente"
+                                autoComplete="new-password"
+                                required
+                            />
+
+                            <button
+                                type="button"
+                                className="botao-visualizar-senha"
+                                onClick={() => setMostrarConfirmacao(!mostrarConfirmacao)}
+                                aria-label={
+                                    mostrarConfirmacao
+                                        ? "Ocultar confirmação de senha"
+                                        : "Mostrar confirmação de senha"
+                                }
+                                aria-pressed={mostrarConfirmacao}
+                            >
+                                {mostrarConfirmacao ? (
+                                    <EyeOff size={18} aria-hidden="true" />
+                                ) : (
+                                    <Eye size={18} aria-hidden="true" />
+                                )}
+                            </button>
+                        </div>
                     </div>
 
                     <div className="autenticacao-campo">

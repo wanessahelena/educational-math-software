@@ -14,13 +14,15 @@ def obter_usuario_atual(
     credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
     db: Session = Depends(get_db)
 ):
-    id_usuario = verificar_token(credentials.credentials)
+    dados_token = verificar_token(credentials.credentials)
 
-    if id_usuario is None:
+    if dados_token is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token inválido ou expirado."
         )
+
+    id_usuario, versao_token = dados_token
 
     usuario = (
         db.query(Usuario)
@@ -32,6 +34,12 @@ def obter_usuario_atual(
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Usuário não encontrado."
+        )
+
+    if usuario.versao_token != versao_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Sessão expirada. Faça login novamente."
         )
 
     return usuario
