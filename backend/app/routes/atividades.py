@@ -111,6 +111,7 @@ def cadastrar_atividade(
         descricao=dados.descricao,
         nivel=dados.nivel,
         resposta_esperada=dados.resposta_esperada,
+        imagem_url=dados.imagem_url,
         id_ano=dados.id_ano,
         blocos_permitidos=dados.blocos_permitidos
     )
