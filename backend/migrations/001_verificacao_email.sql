@@ -1,0 +1,17 @@
+ALTER TABLE usuario
+ADD COLUMN IF NOT EXISTS versao_token INTEGER NOT NULL DEFAULT 0;
+
+ALTER TABLE usuario
+ADD COLUMN IF NOT EXISTS email_verificado BOOLEAN NOT NULL DEFAULT FALSE;
+
+CREATE TABLE IF NOT EXISTS token_verificacao_email (
+    id_token SERIAL PRIMARY KEY,
+    id_usuario INTEGER NOT NULL
+        REFERENCES usuario(id_usuario) ON DELETE CASCADE,
+    token_hash VARCHAR(64) NOT NULL UNIQUE,
+    expira_em TIMESTAMP NOT NULL,
+    utilizado_em TIMESTAMP NULL
+);
+
+ALTER TABLE token_verificacao_email
+ADD COLUMN IF NOT EXISTS criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;

@@ -1,7 +1,10 @@
 
 import { useState } from "react";
+
+
 import { Sparkles, ArrowLeft, Eye, EyeOff } from "lucide-react";
-import { realizarLogin } from "../services/api";
+
+import { realizarLogin, reenviarEmailVerificacao } from "../services/api";
 
 function Login({ onLogin, onCadastro, onVoltar }) {
     const [email, setEmail] = useState("");
@@ -9,6 +12,8 @@ function Login({ onLogin, onCadastro, onVoltar }) {
     const [mostrarSenha, setMostrarSenha] = useState(false);
     const [erro, setErro] = useState("");
     const [carregando, setCarregando] = useState(false);
+    const [reenviando, setReenviando] = useState(false);
+    const [mensagemReenvio, setMensagemReenvio] = useState("");
 
     async function handleSubmit(event) {
         event.preventDefault();
@@ -22,6 +27,27 @@ function Login({ onLogin, onCadastro, onVoltar }) {
             setErro(error.message);
         } finally {
             setCarregando(false);
+        }
+    }
+
+    async function handleReenviarEmail() {
+        setErro("");
+        setMensagemReenvio("");
+
+        if (!email.trim()) {
+            setErro("Digite seu e-mail para solicitar um novo link.");
+            return;
+        }
+
+        setReenviando(true);
+
+        try {
+            const dados = await reenviarEmailVerificacao(email.trim());
+            setMensagemReenvio(dados.mensagem);
+        } catch (error) {
+            setErro(error.message);
+        } finally {
+            setReenviando(false);
         }
     }
 
@@ -94,6 +120,23 @@ function Login({ onLogin, onCadastro, onVoltar }) {
                             {erro}
                         </p>
                     )}
+
+                    {mensagemReenvio && (
+                        <p className="mensagem-sucesso" role="status">
+                            {mensagemReenvio}
+                        </p>
+                    )}
+
+                    <button
+                        type="button"
+                        className="autenticacao-reenviar"
+                        onClick={handleReenviarEmail}
+                        disabled={reenviando}
+                    >
+                        {reenviando
+                            ? "Enviando..."
+                            : "Reenviar e-mail de confirmação"}
+                    </button>
 
                     <button
                         type="submit"

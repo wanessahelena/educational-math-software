@@ -16,6 +16,19 @@ from app.security import (
 
 from app.auth import obter_usuario_atual
 
+from app.email_verificacao import (
+    criar_token_verificacao,
+    pode_reenviar_verificacao,
+)
+
+from app.email_service import enviar_email_verificacao
+
+from datetime import datetime, timezone
+
+from app.models.token_verificacao_email import TokenVerificacaoEmail
+
+from app.email_verificacao import calcular_hash_token
+
 
 router = APIRouter(
     prefix="/usuarios",
@@ -37,6 +50,9 @@ class AtualizarPerfilRequest(BaseModel):
 class LoginRequest(BaseModel):
     email: str
     senha: str
+
+class ReenviarVerificacaoRequest(BaseModel):
+    email: str
 
 class AlterarSenhaRequest(BaseModel):
     senha_atual: str
@@ -101,8 +117,24 @@ def cadastrar_usuario(
     )
 
     db.add(novo_usuario)
+    db.flush()
+
+    token = criar_token_verificacao(db, novo_usuario.id_usuario)
+
     db.commit()
     db.refresh(novo_usuario)
+
+    try:
+        enviar_email_verificacao(novo_usuario.email, token)
+    except Exception:
+        #CADASTRO PERMANECE SALVO PARA PERMITIR O REENVIO POSTERIORMENTE
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                "Cadastro realizado, mas não foi possível enviar "
+                "o e-mail de confirmação. Tente novamente mais tarde."
+            )
+        )
 
     return dados_publicos_usuario(novo_usuario, db)
 
@@ -126,6 +158,12 @@ def login(
             status_code=401,
             detail="E-mail ou senha incorretos."
         )
+    
+    if not usuario.email_verificado:
+        raise HTTPException(
+            status_code=403,
+            detail="Confirme seu e-mail antes de entrar. Verifique sua caixa de entrada."
+    )
 
     token = criar_token_acesso(
         usuario.id_usuario,
@@ -137,7 +175,97 @@ def login(
         "token_type": "bearer",
         "usuario": dados_publicos_usuario(usuario, db)
     }
+    
 
+
+@router.post("/reenviar-verificacao")
+def reenviar_verificacao(
+    dados: ReenviarVerificacaoRequest,
+    db: Session = Depends(get_db)
+):
+    mensagem = {
+        "mensagem": (
+            "Se o e-mail estiver cadastrado e ainda não confirmado, "
+            "você receberá um novo link de confirmação."
+        )
+    }
+
+    email = dados.email.strip().lower()
+
+    usuario = (
+        db.query(Usuario)
+        .filter(Usuario.email == email)
+        .first()
+    )
+
+    if not usuario or usuario.email_verificado:
+        return mensagem
+
+    if not pode_reenviar_verificacao(db, usuario.id_usuario):
+        return mensagem
+
+    token = criar_token_verificacao(db, usuario.id_usuario)
+    db.commit()
+
+    try:
+        enviar_email_verificacao(usuario.email, token)
+    except Exception:
+        # O token permanece salvo para permitir nova tentativa posterior.
+        raise HTTPException(
+            status_code=503,
+            detail="Não foi possível enviar o e-mail. Tente novamente mais tarde."
+        )
+
+    return mensagem
+
+
+@router.post("/verificar-email")
+def verificar_email(
+    token: str,
+    db: Session = Depends(get_db)
+):
+    token_hash = calcular_hash_token(token)
+
+    registro = (
+        db.query(TokenVerificacaoEmail)
+        .filter(
+            TokenVerificacaoEmail.token_hash == token_hash
+        )
+        .first()
+    )
+
+    if not registro or registro.utilizado_em is not None:
+        raise HTTPException(
+            status_code=400,
+            detail="Link de confirmação inválido ou já utilizado."
+        )
+
+    agora = datetime.now(timezone.utc).replace(tzinfo=None)
+
+    if registro.expira_em < agora:
+        raise HTTPException(
+            status_code=400,
+            detail="O link de confirmação expirou."
+        )
+
+    usuario = (
+        db.query(Usuario)
+        .filter(Usuario.id_usuario == registro.id_usuario)
+        .first()
+    )
+
+    if not usuario:
+        raise HTTPException(
+            status_code=404,
+            detail="Usuário não encontrado."
+        )
+
+    usuario.email_verificado = True
+    registro.utilizado_em = agora
+
+    db.commit()
+
+    return {"mensagem": "E-mail confirmado com sucesso!"}
 
 @router.get("/{id_usuario}/progresso")
 def consultar_progresso(
@@ -417,7 +545,11 @@ def atualizar_perfil(
                 detail="Este e-mail já está cadastrado."
             )
 
-        usuario.email = email
+        if email != usuario.email:
+            raise HTTPException(
+                status_code=403,
+                detail="A alteração de e-mail ainda não está disponível."
+        )
 
     if dados.id_ano is not None:
         ano_escolar = (
