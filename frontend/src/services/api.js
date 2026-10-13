@@ -213,3 +213,52 @@ export async function reenviarEmailVerificacao(email) {
 
     return dados;
 }
+
+export async function solicitarRecuperacaoSenha(email) {
+    const resposta = await fetch(
+        `${API_URL}/usuarios/solicitar-recuperacao-senha`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email }),
+        }
+    );
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+        throw new Error(
+            dados.detail || "Não foi possível solicitar a recuperação de senha."
+        );
+    }
+
+    return dados;
+}
+
+export async function redefinirSenha(token, novaSenha) {
+    const resposta = await fetch(
+        `${API_URL}/usuarios/redefinir-senha`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                token,
+                nova_senha: novaSenha,
+            }),
+        }
+    );
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+        throw new Error(
+            dados.detail || "Não foi possível redefinir a senha."
+        );
+    }
+
+    return dados;
+}

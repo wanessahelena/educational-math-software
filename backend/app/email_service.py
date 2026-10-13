@@ -48,3 +48,31 @@ Equipe Matelógica
         servidor.starttls(context=contexto)
         servidor.login(SMTP_EMAIL, SMTP_APP_PASSWORD)
         servidor.send_message(mensagem)
+        
+        
+def enviar_email_recuperacao_senha(destinatario: str, token: str):
+    if not SMTP_EMAIL or not SMTP_APP_PASSWORD:
+        raise ValueError("Configurações de e-mail não encontradas.")
+
+    link = f"http://localhost:5173/redefinir-senha?token={token}"
+
+    mensagem = EmailMessage()
+    mensagem["Subject"] = "Recuperação de senha - Matelógica"
+    mensagem["From"] = SMTP_EMAIL
+    mensagem["To"] = destinatario
+
+    mensagem.set_content(
+        "Olá!\n\n"
+        "Recebemos uma solicitação para redefinir a senha da sua conta no Matelógica.\n\n"
+        f"Acesse o link para criar uma nova senha:\n{link}\n\n"
+        "Este link é válido por 30 minutos.\n\n"
+        "Se você não solicitou a recuperação de senha, ignore este e-mail.\n\n"
+        "Equipe Matelógica"
+    )
+
+    contexto = ssl.create_default_context()
+
+    with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=15) as servidor:
+        servidor.starttls(context=contexto)
+        servidor.login(SMTP_EMAIL, SMTP_APP_PASSWORD)
+        servidor.send_message(mensagem)

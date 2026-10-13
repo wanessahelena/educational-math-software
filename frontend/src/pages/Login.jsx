@@ -6,7 +6,7 @@ import { Sparkles, ArrowLeft, Eye, EyeOff } from "lucide-react";
 
 import { realizarLogin, reenviarEmailVerificacao } from "../services/api";
 
-function Login({ onLogin, onCadastro, onVoltar }) {
+function Login({ onLogin, onCadastro, onVoltar, onEsqueciSenha }) {
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const [mostrarSenha, setMostrarSenha] = useState(false);
@@ -113,6 +113,15 @@ function Login({ onLogin, onCadastro, onVoltar }) {
                                 )}
                             </button>
                         </div>
+                    </div>
+
+                    <div className="autenticacao-recuperar">
+                        <button
+                            type="button"
+                            onClick={onEsqueciSenha}
+                        >
+                            Esqueci minha senha?
+                        </button>
                     </div>
 
                     {erro && (
