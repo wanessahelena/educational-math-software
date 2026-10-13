@@ -21,6 +21,8 @@ import Progresso from "./pages/Progresso";
 
 import Perfil from "./pages/Perfil";
 
+import VerificarEmail from "./pages/VerificarEmail";
+
 function App() {
     const [usuario, setUsuario] = useState(() => {
         try {
@@ -41,9 +43,13 @@ function App() {
         }
     });
 
-    const [pagina, setPagina] = useState(
-        usuario ? "aluno" : "home"
-    );
+    const [pagina, setPagina] = useState(() => {
+        if (window.location.pathname === "/verificar-email") {
+            return "verificar-email";
+        }
+
+        return usuario ? "aluno" : "home";
+    });
 
     const [atividadeSelecionada, setAtividadeSelecionada] = useState(null);
 
@@ -170,6 +176,15 @@ function App() {
 
     return (
         <div className="app">
+
+        {pagina === "verificar-email" && (
+            <VerificarEmail
+                onLogin={() => {
+                    window.history.replaceState({}, "", "/");
+                    setPagina("login");
+                }}
+            />
+        )}
 
 
         {usuario && (

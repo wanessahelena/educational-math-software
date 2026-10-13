@@ -190,3 +190,26 @@ export async function buscarDesempenhoAtividades(idUsuario) {
 
     return dados;
 }
+
+export async function reenviarEmailVerificacao(email) {
+    const resposta = await fetch(
+        `${API_URL}/usuarios/reenviar-verificacao`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email }),
+        }
+    );
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+        throw new Error(
+            dados.detail || "Não foi possível solicitar o reenvio."
+        );
+    }
+
+    return dados;
+}
