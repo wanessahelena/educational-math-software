@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey, Integer, String
+from sqlalchemy import Boolean, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database import Base
@@ -24,9 +24,23 @@ class Usuario(Base):
         nullable = False
     )
     
+    email_verificado: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=False,
+        server_default="false"
+    )
+    
     senha_hash: Mapped[str] = mapped_column(
         String(255),
         nullable = False
+    )
+    
+    versao_token: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+        default=0,
+        server_default="0"
     )
     
     id_ano: Mapped[int] = mapped_column(

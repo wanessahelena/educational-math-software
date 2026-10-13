@@ -1,4 +1,6 @@
+
 from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -6,6 +8,44 @@ from app.models.usuario import Usuario
 from app.models.ano_escolar import AnoEscolar
 from app.models.tentativa import Tentativa
 from app.models.atividade import Atividade
+from app.security import (
+    gerar_hash_senha,
+    verificar_senha,
+    criar_token_acesso,
+)
+
+from app.auth import obter_usuario_atual
+
+from app.email_verificacao import (
+    criar_token_verificacao,
+    pode_reenviar_verificacao,
+)
+
+from app.email_service import enviar_email_verificacao
+
+from datetime import datetime, timezone
+
+from app.models.token_verificacao_email import TokenVerificacaoEmail
+
+from app.email_verificacao import calcular_hash_token
+
+from app.recuperacao_senha import criar_token_recuperacao
+
+from app.email_service import enviar_email_recuperacao_senha
+
+from app.models.token_recuperacao_senha import TokenRecuperacaoSenha
+
+from app.recuperacao_senha import calcular_hash_token_recuperacao
+
+from app.alteracao_email import criar_token_alteracao_email
+
+from app.email_service import enviar_email_alteracao_email
+
+from sqlalchemy.exc import IntegrityError
+
+from app.models.token_alteracao_email import TokenAlteracaoEmail
+
+from app.alteracao_email import calcular_hash_token_alteracao
 
 
 router = APIRouter(
@@ -14,17 +54,68 @@ router = APIRouter(
 )
 
 
-@router.post("/")
-def cadastrar_usuario(
-    nome: str,
-    email: str,
-    senha_hash: str,
-    id_ano: int,
-    db: Session = Depends(get_db)
-):
+class CadastroRequest(BaseModel):
+    nome: str
+    email: str
+    senha: str
+    id_ano: int
+
+class AtualizarPerfilRequest(BaseModel):
+    nome: str | None = None
+    email: str | None = None
+    id_ano: int | None = None
+
+class LoginRequest(BaseModel):
+    email: str
+    senha: str
+
+class SolicitarRecuperacaoSenhaRequest(BaseModel):
+    email: str
+    
+class RedefinirSenhaRequest(BaseModel):
+    token: str
+    nova_senha: str
+class ReenviarVerificacaoRequest(BaseModel):
+    email: str
+
+class AlterarSenhaRequest(BaseModel):
+    senha_atual: str
+    nova_senha: str
+    
+class SolicitarAlteracaoEmailRequest(BaseModel):
+    novo_email: str
+    senha_atual: str
+
+def dados_publicos_usuario(usuario: Usuario, db: Session):
     ano_escolar = (
         db.query(AnoEscolar)
-        .filter(AnoEscolar.id_ano == id_ano)
+        .filter(AnoEscolar.id_ano == usuario.id_ano)
+        .first()
+    )
+
+    return {
+        "id_usuario": usuario.id_usuario,
+        "nome": usuario.nome,
+        "email": usuario.email,
+        "id_ano": usuario.id_ano,
+        "ano_escolar": ano_escolar.nome if ano_escolar else None
+    }
+
+
+@router.post("/")
+def cadastrar_usuario(
+    dados: CadastroRequest,
+    db: Session = Depends(get_db)
+):
+    if len(dados.senha) < 8:
+        raise HTTPException(
+            status_code=422,
+            detail="A senha deve ter pelo menos 8 caracteres."
+        )
+    
+    ano_escolar = (
+        db.query(AnoEscolar)
+        .filter(AnoEscolar.id_ano == dados.id_ano)
         .first()
     )
 
@@ -36,7 +127,7 @@ def cadastrar_usuario(
 
     usuario_existente = (
         db.query(Usuario)
-        .filter(Usuario.email == email)
+        .filter(Usuario.email == dados.email)
         .first()
     )
 
@@ -47,23 +138,352 @@ def cadastrar_usuario(
         )
 
     novo_usuario = Usuario(
-        nome=nome,
-        email=email,
-        senha_hash=senha_hash,
-        id_ano=id_ano
+        nome=dados.nome,
+        email=dados.email,
+        senha_hash=gerar_hash_senha(dados.senha),
+        id_ano=dados.id_ano
     )
 
     db.add(novo_usuario)
+    db.flush()
+
+    token = criar_token_verificacao(db, novo_usuario.id_usuario)
+
     db.commit()
     db.refresh(novo_usuario)
 
-    return novo_usuario
+    try:
+        enviar_email_verificacao(novo_usuario.email, token)
+    except Exception:
+        #CADASTRO PERMANECE SALVO PARA PERMITIR O REENVIO POSTERIORMENTE
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                "Cadastro realizado, mas não foi possível enviar "
+                "o e-mail de confirmação. Tente novamente mais tarde."
+            )
+        )
+
+    return dados_publicos_usuario(novo_usuario, db)
+
+
+
+@router.post("/solicitar-recuperacao-senha")
+def solicitar_recuperacao_senha(
+    dados: SolicitarRecuperacaoSenhaRequest,
+    db: Session = Depends(get_db)
+):
+    mensagem = {
+        "mensagem": (
+            "Se o e-mail estiver cadastrado, "
+            "você receberá um link para redefinir sua senha."
+        )
+    }
+
+    email = dados.email.strip().lower()
+
+    usuario = (
+        db.query(Usuario)
+        .filter(Usuario.email == email)
+        .first()
+    )
+
+    if not usuario or not usuario.email_verificado:
+        return mensagem
+
+    token = criar_token_recuperacao(db, usuario.id_usuario)
+    db.commit()
+
+    try:
+        enviar_email_recuperacao_senha(usuario.email, token)
+    except Exception:
+        raise HTTPException(
+            status_code=503,
+            detail="Não foi possível enviar o e-mail. Tente novamente mais tarde."
+        )
+
+    return mensagem
+
+
+
+@router.post("/redefinir-senha")
+def redefinir_senha(
+    dados: RedefinirSenhaRequest,
+    db: Session = Depends(get_db)
+):
+    if len(dados.nova_senha) < 8:
+        raise HTTPException(
+            status_code=422,
+            detail="A nova senha deve ter pelo menos 8 caracteres."
+        )
+
+    token_hash = calcular_hash_token_recuperacao(dados.token)
+    agora = datetime.now(timezone.utc).replace(tzinfo=None)
+
+    registro = (
+        db.query(TokenRecuperacaoSenha)
+        .filter(TokenRecuperacaoSenha.token_hash == token_hash)
+        .with_for_update()
+        .first()
+    )
+
+    if (
+        not registro
+        or registro.utilizado_em is not None
+        or registro.expira_em <= agora
+    ):
+        raise HTTPException(
+            status_code=400,
+            detail="Link de recuperação inválido, expirado ou já utilizado."
+        )
+
+    usuario = (
+        db.query(Usuario)
+        .filter(Usuario.id_usuario == registro.id_usuario)
+        .first()
+    )
+
+    if not usuario:
+        raise HTTPException(
+            status_code=400,
+            detail="Link de recuperação inválido."
+        )
+
+    usuario.senha_hash = gerar_hash_senha(dados.nova_senha)
+    usuario.versao_token += 1
+    registro.utilizado_em = agora
+
+    db.query(TokenRecuperacaoSenha).filter(
+        TokenRecuperacaoSenha.id_usuario == usuario.id_usuario,
+        TokenRecuperacaoSenha.id_token != registro.id_token,
+        TokenRecuperacaoSenha.utilizado_em.is_(None)
+    ).delete(synchronize_session=False)
+
+    db.commit()
+
+    return {"mensagem": "Senha redefinida com sucesso!"}
+
+
+@router.post("/confirmar-alteracao-email")
+def confirmar_alteracao_email(
+    token: str,
+    db: Session = Depends(get_db)
+):
+    token_hash = calcular_hash_token_alteracao(token)
+    agora = datetime.now(timezone.utc).replace(tzinfo=None)
+
+    registro = (
+        db.query(TokenAlteracaoEmail)
+        .filter(TokenAlteracaoEmail.token_hash == token_hash)
+        .with_for_update()
+        .first()
+    )
+
+    if (
+        not registro
+        or registro.utilizado_em is not None
+        or registro.expira_em <= agora
+    ):
+        raise HTTPException(
+            status_code=400,
+            detail="Link de confirmação inválido, expirado ou já utilizado."
+        )
+
+    usuario = (
+        db.query(Usuario)
+        .filter(Usuario.id_usuario == registro.id_usuario)
+        .with_for_update()
+        .first()
+    )
+
+    if not usuario:
+        raise HTTPException(
+            status_code=400,
+            detail="Solicitação de alteração de e-mail inválida."
+        )
+
+    email_existente = (
+        db.query(Usuario)
+        .filter(
+            Usuario.email == registro.novo_email,
+            Usuario.id_usuario != usuario.id_usuario
+        )
+        .first()
+    )
+
+    if email_existente:
+        raise HTTPException(
+            status_code=409,
+            detail="Este e-mail já está cadastrado."
+        )
+
+    usuario.email = registro.novo_email
+    usuario.email_verificado = True
+    usuario.versao_token += 1
+
+    registro.utilizado_em = agora
+
+    db.query(TokenAlteracaoEmail).filter(
+        TokenAlteracaoEmail.id_usuario == usuario.id_usuario,
+        TokenAlteracaoEmail.id_token != registro.id_token,
+        TokenAlteracaoEmail.utilizado_em.is_(None)
+    ).delete(synchronize_session=False)
+
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=409,
+            detail="Este e-mail já está cadastrado."
+        )
+
+    return {
+        "mensagem": (
+            "E-mail alterado com sucesso! "
+            "Entre novamente com seu novo endereço."
+        )
+    }
+
+@router.post("/login")
+def login(
+    dados: LoginRequest,
+    db: Session = Depends(get_db)
+):
+    usuario = (
+        db.query(Usuario)
+        .filter(Usuario.email == dados.email)
+        .first()
+    )
+
+    if not usuario or not verificar_senha(
+        dados.senha,
+        usuario.senha_hash
+    ):
+        raise HTTPException(
+            status_code=401,
+            detail="E-mail ou senha incorretos."
+        )
+    
+    if not usuario.email_verificado:
+        raise HTTPException(
+            status_code=403,
+            detail="Confirme seu e-mail antes de entrar. Verifique sua caixa de entrada."
+    )
+
+    token = criar_token_acesso(
+        usuario.id_usuario,
+        usuario.versao_token
+    )
+
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "usuario": dados_publicos_usuario(usuario, db)
+    }
+    
+
+
+@router.post("/reenviar-verificacao")
+def reenviar_verificacao(
+    dados: ReenviarVerificacaoRequest,
+    db: Session = Depends(get_db)
+):
+    mensagem = {
+        "mensagem": (
+            "Se o e-mail estiver cadastrado e ainda não confirmado, "
+            "você receberá um novo link de confirmação."
+        )
+    }
+
+    email = dados.email.strip().lower()
+
+    usuario = (
+        db.query(Usuario)
+        .filter(Usuario.email == email)
+        .first()
+    )
+
+    if not usuario or usuario.email_verificado:
+        return mensagem
+
+    if not pode_reenviar_verificacao(db, usuario.id_usuario):
+        return mensagem
+
+    token = criar_token_verificacao(db, usuario.id_usuario)
+    db.commit()
+
+    try:
+        enviar_email_verificacao(usuario.email, token)
+    except Exception:
+        # O token permanece salvo para permitir nova tentativa posterior.
+        raise HTTPException(
+            status_code=503,
+            detail="Não foi possível enviar o e-mail. Tente novamente mais tarde."
+        )
+
+    return mensagem
+
+
+@router.post("/verificar-email")
+def verificar_email(
+    token: str,
+    db: Session = Depends(get_db)
+):
+    token_hash = calcular_hash_token(token)
+
+    registro = (
+        db.query(TokenVerificacaoEmail)
+        .filter(
+            TokenVerificacaoEmail.token_hash == token_hash
+        )
+        .first()
+    )
+
+    if not registro or registro.utilizado_em is not None:
+        raise HTTPException(
+            status_code=400,
+            detail="Link de confirmação inválido ou já utilizado."
+        )
+
+    agora = datetime.now(timezone.utc).replace(tzinfo=None)
+
+    if registro.expira_em < agora:
+        raise HTTPException(
+            status_code=400,
+            detail="O link de confirmação expirou."
+        )
+
+    usuario = (
+        db.query(Usuario)
+        .filter(Usuario.id_usuario == registro.id_usuario)
+        .first()
+    )
+
+    if not usuario:
+        raise HTTPException(
+            status_code=404,
+            detail="Usuário não encontrado."
+        )
+
+    usuario.email_verificado = True
+    registro.utilizado_em = agora
+
+    db.commit()
+
+    return {"mensagem": "E-mail confirmado com sucesso!"}
 
 @router.get("/{id_usuario}/progresso")
 def consultar_progresso(
     id_usuario: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    usuario_atual: Usuario = Depends(obter_usuario_atual)
 ):
+    if usuario_atual.id_usuario != id_usuario:
+        raise HTTPException(
+            status_code=403,
+            detail="Você não tem permissão para acessar estes dados."
+        )
     usuario = (
         db.query(Usuario)
         .filter(Usuario.id_usuario == id_usuario)
@@ -77,13 +497,15 @@ def consultar_progresso(
         )
 
     tentativas = (
-        db.query(Tentativa, Atividade)
+        db.query(Tentativa)
         .join(
             Atividade,
             Tentativa.id_atividade == Atividade.id_atividade
         )
-        .filter(Tentativa.id_usuario == id_usuario)
-        .order_by(Tentativa.data_tentativa.desc())
+        .filter(
+            Tentativa.id_usuario == id_usuario,
+            Atividade.id_ano == usuario.id_ano
+        )
         .all()
     )
 
@@ -99,12 +521,19 @@ def consultar_progresso(
         }
         for tentativa, atividade in tentativas
     ]
-    
+
+
 @router.get("/{id_usuario}/progresso/resumo")
 def consultar_resumo_progresso(
     id_usuario: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    usuario_atual: Usuario = Depends(obter_usuario_atual)
 ):
+    if usuario_atual.id_usuario != id_usuario:
+        raise HTTPException(
+            status_code=403,
+            detail="Você não tem permissão para acessar estes dados."
+        )
     usuario = (
         db.query(Usuario)
         .filter(Usuario.id_usuario == id_usuario)
@@ -119,32 +548,40 @@ def consultar_resumo_progresso(
 
     tentativas = (
         db.query(Tentativa)
-        .filter(Tentativa.id_usuario == id_usuario)
+        .join(
+            Atividade,
+            Tentativa.id_atividade == Atividade.id_atividade
+        )
+        .filter(
+            Tentativa.id_usuario == id_usuario,
+            Atividade.id_ano == usuario.id_ano
+        )
         .all()
     )
 
     total_tentativas = len(tentativas)
-    
+
     atividades_realizadas = len(
         {tentativa.id_atividade for tentativa in tentativas}
     )
-    
+
     total_atividades = (
         db.query(Atividade)
         .filter(Atividade.id_ano == usuario.id_ano)
         .count()
     )
-    
+
     percentual_conclusao = (
         (atividades_realizadas / total_atividades) * 100
         if total_atividades > 0
         else 0
     )
-    
+
     total_corretas = sum(
         1 for tentativa in tentativas
         if tentativa.status == "correta"
     )
+
     total_incorretas = sum(
         1 for tentativa in tentativas
         if tentativa.status == "incorreta"
@@ -166,13 +603,19 @@ def consultar_resumo_progresso(
         "total_incorretas": total_incorretas,
         "percentual_acerto": round(percentual_acerto, 2)
     }
-    
-    
+
+
 @router.get("/{id_usuario}/progresso/atividades")
 def consultar_desempenho_atividades(
     id_usuario: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    usuario_atual: Usuario = Depends(obter_usuario_atual)
 ):
+    if usuario_atual.id_usuario != id_usuario:
+        raise HTTPException(
+            status_code=403,
+            detail="Você não tem permissão para acessar estes dados."
+        )
     usuario = (
         db.query(Usuario)
         .filter(Usuario.id_usuario == id_usuario)
@@ -191,7 +634,10 @@ def consultar_desempenho_atividades(
             Atividade,
             Tentativa.id_atividade == Atividade.id_atividade
         )
-        .filter(Tentativa.id_usuario == id_usuario)
+        .filter(
+            Tentativa.id_usuario == id_usuario,
+            Atividade.id_ano == usuario.id_ano
+        )
         .all()
     )
 
@@ -208,7 +654,6 @@ def consultar_desempenho_atividades(
             }
 
         item = desempenho[atividade.id_atividade]
-
         item["total_tentativas"] += 1
 
         if tentativa.status == "correta":
@@ -218,11 +663,19 @@ def consultar_desempenho_atividades(
 
     return list(desempenho.values())
 
+
 @router.get("/{id_usuario}")
 def buscar_usuario(
     id_usuario: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    usuario_atual: Usuario = Depends(obter_usuario_atual)
 ):
+    if usuario_atual.id_usuario != id_usuario:
+        raise HTTPException(
+            status_code=403,
+            detail="Você não tem permissão para acessar estes dados."
+        )
+
     usuario = (
         db.query(Usuario)
         .filter(Usuario.id_usuario == id_usuario)
@@ -235,16 +688,200 @@ def buscar_usuario(
             detail="Usuário não encontrado."
         )
 
-    ano_escolar = (
-        db.query(AnoEscolar)
-        .filter(AnoEscolar.id_ano == usuario.id_ano)
+    return dados_publicos_usuario(usuario, db)
+
+
+@router.post("/solicitar-alteracao-email")
+def solicitar_alteracao_email(
+    dados: SolicitarAlteracaoEmailRequest,
+    db: Session = Depends(get_db),
+    usuario_atual: Usuario = Depends(obter_usuario_atual)
+):
+    novo_email = dados.novo_email.strip().lower()
+
+    if not novo_email or "@" not in novo_email:
+        raise HTTPException(
+            status_code=422,
+            detail="Informe um endereço de e-mail válido."
+        )
+
+    if novo_email == usuario_atual.email.strip().lower():
+        raise HTTPException(
+            status_code=422,
+            detail="O novo e-mail deve ser diferente do atual."
+        )
+
+    if not verificar_senha(
+        dados.senha_atual,
+        usuario_atual.senha_hash
+    ):
+        raise HTTPException(
+            status_code=400,
+            detail="Senha atual incorreta."
+        )
+
+    email_existente = (
+        db.query(Usuario)
+        .filter(Usuario.email == novo_email)
         .first()
     )
 
+    if email_existente:
+        raise HTTPException(
+            status_code=409,
+            detail="Este e-mail já está cadastrado."
+        )
+
+    token = criar_token_alteracao_email(
+        db,
+        usuario_atual.id_usuario,
+        novo_email
+    )
+
+    db.commit()
+
+    try:
+        enviar_email_alteracao_email(novo_email, token)
+    except Exception:
+        raise HTTPException(
+            status_code=503,
+            detail="Não foi possível enviar o e-mail de confirmação."
+        )
+
     return {
-        "id_usuario": usuario.id_usuario,
-        "nome": usuario.nome,
-        "email": usuario.email,
-        "id_ano": usuario.id_ano,
-        "ano_escolar": ano_escolar.nome if ano_escolar else None
+        "mensagem": (
+            "Enviamos um link de confirmação para o novo e-mail. "
+            "O endereço atual permanecerá válido até a confirmação."
+        )
     }
+
+
+@router.patch("/{id_usuario}")
+def atualizar_perfil(
+    id_usuario: int,
+    dados: AtualizarPerfilRequest,
+    db: Session = Depends(get_db),
+    usuario_atual: Usuario = Depends(obter_usuario_atual)
+):
+    if usuario_atual.id_usuario != id_usuario:
+        raise HTTPException(
+            status_code=403,
+            detail="Você não tem permissão para alterar este perfil."
+        )
+
+    usuario = (
+        db.query(Usuario)
+        .filter(Usuario.id_usuario == id_usuario)
+        .first()
+    )
+
+    if not usuario:
+        raise HTTPException(
+            status_code=404,
+            detail="Usuário não encontrado."
+        )
+
+    if dados.nome is not None:
+        nome = dados.nome.strip()
+
+        if not nome:
+            raise HTTPException(
+                status_code=422,
+                detail="O nome não pode estar vazio."
+            )
+
+        usuario.nome = nome
+
+    if dados.email is not None:
+        email = dados.email.strip()
+
+        if not email:
+            raise HTTPException(
+                status_code=422,
+                detail="O e-mail não pode estar vazio."
+            )
+
+        email_existente = (
+            db.query(Usuario)
+            .filter(
+                Usuario.email == email,
+                Usuario.id_usuario != id_usuario
+            )
+            .first()
+        )
+
+        if email_existente:
+            raise HTTPException(
+                status_code=409,
+                detail="Este e-mail já está cadastrado."
+            )
+
+        if email != usuario.email:
+            raise HTTPException(
+                status_code=403,
+                detail="A alteração de e-mail ainda não está disponível."
+        )
+
+    if dados.id_ano is not None:
+        ano_escolar = (
+            db.query(AnoEscolar)
+            .filter(AnoEscolar.id_ano == dados.id_ano)
+            .first()
+        )
+
+        if not ano_escolar:
+            raise HTTPException(
+                status_code=404,
+                detail="Ano escolar não encontrado."
+            )
+
+        usuario.id_ano = dados.id_ano
+
+    db.commit()
+    db.refresh(usuario)
+
+    return dados_publicos_usuario(usuario, db)
+
+@router.patch("/{id_usuario}/senha")
+def alterar_senha(
+    id_usuario: int,
+    dados: AlterarSenhaRequest,
+    db: Session = Depends(get_db),
+    usuario_atual: Usuario = Depends(obter_usuario_atual)
+):
+    if usuario_atual.id_usuario != id_usuario:
+        raise HTTPException(
+            status_code=403,
+            detail="Você não tem permissão para alterar esta senha."
+        )
+
+    if not verificar_senha(
+        dados.senha_atual,
+        usuario_atual.senha_hash
+    ):
+        raise HTTPException(
+            status_code=400,
+            detail="Senha atual incorreta."
+        )
+
+    if len(dados.nova_senha) < 8:
+        raise HTTPException(
+            status_code=422,
+            detail="A nova senha deve ter pelo menos 8 caracteres."
+        )
+
+    if verificar_senha(
+        dados.nova_senha,
+        usuario_atual.senha_hash
+    ):
+        raise HTTPException(
+            status_code=422,
+            detail="A nova senha deve ser diferente da senha atual."
+        )
+
+    usuario_atual.senha_hash = gerar_hash_senha(dados.nova_senha)
+    usuario_atual.versao_token += 1
+
+    db.commit()
+
+    return {"mensagem": "Senha alterada com sucesso."}

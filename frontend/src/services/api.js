@@ -1,0 +1,295 @@
+const API_URL = "http://127.0.0.1:8000";
+
+function obterCabecalhoAutenticacao() {
+    const token = localStorage.getItem("token");
+
+    return token
+        ? { Authorization: `Bearer ${token}` }
+        : {};
+}
+
+function verificarSessaoExpirada(resposta) {
+    if (resposta.status === 401) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("usuario");
+
+        window.dispatchEvent(new Event("sessao-expirada"));
+
+        throw new Error(
+            "Sua sessão expirou. Faça login novamente."
+        );
+    }
+}
+
+export async function buscarAnosEscolares() {
+    const resposta = await fetch(`${API_URL}/anos-escolares/`);
+
+    if (!resposta.ok) {
+        throw new Error("Erro ao buscar anos escolares.");
+    }
+
+    return await resposta.json();
+}
+
+export async function buscarConteudosPorAno(idAno) {
+    const resposta = await fetch(
+        `${API_URL}/anos-escolares/${idAno}/conteudos`
+    );
+
+    if (!resposta.ok) {
+        throw new Error(
+            "Não foi possível carregar os conteúdos matemáticos."
+        );
+    }
+
+    return await resposta.json();
+}
+
+
+export async function cadastrarUsuario(nome, email, senha, idAno) {
+    const resposta = await fetch(`${API_URL}/usuarios/`, {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+        nome,
+        email,
+        senha,
+        id_ano: Number(idAno),
+        }),
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+        throw new Error(dados.detail || "Erro ao cadastrar usuário.");
+    }
+
+    return dados;
+}
+
+export async function buscarAtividadesPorAno(idAno) {
+    const resposta = await fetch(
+        `${API_URL}/atividades/ano/${idAno}`
+    );
+
+    if (resposta.status === 404) {
+        return [];
+    }
+
+    if (!resposta.ok) {
+        throw new Error("Erro ao buscar atividades.");
+    }
+
+    return await resposta.json();
+}
+
+export async function registrarTentativa(
+    idUsuario,
+    idAtividade,
+    respostaAluno,
+    tempoGasto
+) {
+    const parametros = new URLSearchParams({
+        id_usuario: idUsuario,
+        id_atividade: idAtividade,
+        resposta_aluno: respostaAluno,
+    });
+
+    if (tempoGasto !== null && tempoGasto !== undefined) {
+        parametros.append("tempo_gasto", tempoGasto);
+    }
+
+    const resposta = await fetch(
+        `${API_URL}/tentativas/?${parametros.toString()}`,
+        {
+            method: "POST",
+            headers: {
+                ...obterCabecalhoAutenticacao(),
+            },
+        }
+    );
+
+    verificarSessaoExpirada(resposta);
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+        throw new Error(
+            dados.detail || "Erro ao registrar tentativa."
+        );
+    }
+
+    return dados;
+}
+
+export async function realizarLogin(email, senha) {
+    const resposta = await fetch(`${API_URL}/usuarios/login`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, senha }),
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+        throw new Error(
+            dados.detail || "Não foi possível realizar o login."
+        );
+    }
+
+    localStorage.setItem("token", dados.access_token);
+
+    return dados.usuario;
+}
+
+
+export async function buscarResumoProgresso(idUsuario) {
+    const resposta = await fetch(
+        `${API_URL}/usuarios/${idUsuario}/progresso/resumo`,
+        {
+            headers: {
+                ...obterCabecalhoAutenticacao(),
+            },
+        }
+    );
+
+    verificarSessaoExpirada(resposta);
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+        throw new Error(
+            dados.detail || "Erro ao buscar resumo do progresso."
+        );
+    }
+
+    return dados;
+}
+
+export async function buscarDesempenhoAtividades(idUsuario) {
+    const resposta = await fetch(
+        `${API_URL}/usuarios/${idUsuario}/progresso/atividades`,
+        {
+            headers: {
+                ...obterCabecalhoAutenticacao(),
+            },
+        }
+    );
+
+    verificarSessaoExpirada(resposta);
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+        throw new Error(
+            dados.detail ||
+            "Erro ao buscar desempenho das atividades."
+        );
+    }
+
+    return dados;
+}
+
+export async function reenviarEmailVerificacao(email) {
+    const resposta = await fetch(
+        `${API_URL}/usuarios/reenviar-verificacao`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email }),
+        }
+    );
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+        throw new Error(
+            dados.detail || "Não foi possível solicitar o reenvio."
+        );
+    }
+
+    return dados;
+}
+
+export async function solicitarRecuperacaoSenha(email) {
+    const resposta = await fetch(
+        `${API_URL}/usuarios/solicitar-recuperacao-senha`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email }),
+        }
+    );
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+        throw new Error(
+            dados.detail || "Não foi possível solicitar a recuperação de senha."
+        );
+    }
+
+    return dados;
+}
+
+export async function redefinirSenha(token, novaSenha) {
+    const resposta = await fetch(
+        `${API_URL}/usuarios/redefinir-senha`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                token,
+                nova_senha: novaSenha,
+            }),
+        }
+    );
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+        throw new Error(
+            dados.detail || "Não foi possível redefinir a senha."
+        );
+    }
+
+    return dados;
+}
+
+export async function solicitarAlteracaoEmail(novoEmail, senhaAtual) {
+    const token = localStorage.getItem("token");
+
+    const resposta = await fetch(
+        `${API_URL}/usuarios/solicitar-alteracao-email`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                novo_email: novoEmail,
+                senha_atual: senhaAtual
+            })
+        }
+    );
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+        throw new Error(
+            typeof dados.detail === "string"
+                ? dados.detail
+                : "Não foi possível solicitar a alteração de e-mail."
+        );
+    }
+
+    return dados;
+}

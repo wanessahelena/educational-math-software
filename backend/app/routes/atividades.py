@@ -4,7 +4,9 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.atividade import Atividade
 from app.models.ano_escolar import AnoEscolar
+from app.models.conteudo_matematico import ConteudoMatematico
 
+from app.schemas.atividade import AtividadeCreate, AtividadeResponse
 
 router = APIRouter(
     prefix="/atividades",
@@ -12,7 +14,11 @@ router = APIRouter(
 )
 
 
-@router.get("/")
+@router.get(
+    "/",
+    response_model=list[AtividadeResponse]
+)
+
 def listar_atividades(db: Session = Depends(get_db)):
     return (
         db.query(Atividade)
@@ -21,7 +27,11 @@ def listar_atividades(db: Session = Depends(get_db)):
     )
 
 
-@router.get("/ano/{id_ano}")
+@router.get(
+    "/ano/{id_ano}",
+    response_model=list[AtividadeResponse]
+)
+
 def listar_atividades_por_ano(
     id_ano: int,
     db: Session = Depends(get_db)
@@ -42,18 +52,18 @@ def listar_atividades_por_ano(
     return atividades
 
 
-@router.post("/")
+@router.post(
+    "/",
+    response_model=AtividadeResponse,
+    status_code=201
+)
 def cadastrar_atividade(
-    titulo: str,
-    descricao: str,
-    nivel: str,
-    resposta_esperada: str,
-    id_ano: int,
+    dados: AtividadeCreate,
     db: Session = Depends(get_db)
 ):
     ano_escolar = (
         db.query(AnoEscolar)
-        .filter(AnoEscolar.id_ano == id_ano)
+        .filter(AnoEscolar.id_ano == dados.id_ano)
         .first()
     )
 
@@ -63,13 +73,49 @@ def cadastrar_atividade(
             detail="Ano escolar não encontrado."
         )
 
+    conteudos = []
+
+    if dados.ids_conteudos:
+        conteudos = (
+            db.query(ConteudoMatematico)
+            .filter(
+                ConteudoMatematico.id_conteudo.in_(
+                    dados.ids_conteudos
+                )
+            )
+            .all()
+        )
+
+        ids_encontrados = {
+            conteudo.id_conteudo
+            for conteudo in conteudos
+        }
+
+        ids_inexistentes = (
+            set(dados.ids_conteudos)
+            - ids_encontrados
+        )
+
+        if ids_inexistentes:
+            raise HTTPException(
+                status_code=404,
+                detail=(
+                    "Conteúdo(s) matemático(s) "
+                    f"não encontrado(s): "
+                    f"{sorted(ids_inexistentes)}"
+                )
+            )
+
     nova_atividade = Atividade(
-        titulo=titulo,
-        descricao=descricao,
-        nivel=nivel,
-        resposta_esperada=resposta_esperada,
-        id_ano=id_ano
+        titulo=dados.titulo,
+        descricao=dados.descricao,
+        nivel=dados.nivel,
+        resposta_esperada=dados.resposta_esperada,
+        id_ano=dados.id_ano,
+        blocos_permitidos=dados.blocos_permitidos
     )
+
+    nova_atividade.conteudos = conteudos
 
     db.add(nova_atividade)
     db.commit()
@@ -78,7 +124,11 @@ def cadastrar_atividade(
     return nova_atividade
 
 
-@router.get("/{id_atividade}")
+@router.get(
+    "/{id_atividade}",
+    response_model=AtividadeResponse
+)
+
 def buscar_atividade(
     id_atividade: int,
     db: Session = Depends(get_db)

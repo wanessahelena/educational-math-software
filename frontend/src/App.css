@@ -1,0 +1,2676 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+.app {
+    min-height: 100vh;
+}
+
+.pagina-autenticacao {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+}
+
+.cartao-autenticacao {
+    width: 100%;
+    max-width: 420px;
+    padding: 32px;
+    border-radius: 16px;
+    background: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.cartao-autenticacao h1 {
+    margin-bottom: 8px;
+}
+
+.cartao-autenticacao form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.cartao-autenticacao input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.cartao-autenticacao form button {
+    margin-top: 12px;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #2563eb;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.cartao-autenticacao button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.botao-voltar,
+.texto-cadastro button {
+    border: none;
+    background: none;
+    color: #2563eb;
+    cursor: pointer;
+}
+
+.botao-voltar {
+    margin-bottom: 20px;
+}
+
+.texto-cadastro {
+    margin-top: 24px;
+    text-align: center;
+}
+
+.mensagem-erro {
+    color: #dc2626;
+    font-size: 14px;
+}
+
+.progresso-resumo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+}
+
+.progresso-card {
+    padding: 20px;
+    border-radius: 12px;
+    background: #eff6ff;
+    text-align: center;
+}
+
+.progresso-card h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.progresso-card p {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2563eb;
+}
+
+.lista-progresso {
+    display: grid;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.progresso-atividade {
+    padding: 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    text-align: left;
+}
+
+.progresso-atividade h4 {
+    margin-bottom: 10px;
+}
+
+.progresso-atividade p {
+    margin: 5px 0;
+}
+
+/* ========================================
+RESOLUÇÃO DE ATIVIDADES
+======================================== */
+
+.atividade-resolucao {
+    width: 100%;
+}
+
+.atividade-titulo {
+    margin-bottom: 24px;
+}
+
+.atividade-layout {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.atividade-lateral {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.atividade-card {
+    padding: 20px;
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+.atividade-card h3 {
+    font-size: 1.3rem;
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+.atividade-card p {
+    line-height: 1;
+}
+
+.atividade-nivel {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 0.5rem;
+}
+
+.atividade-blocos {
+    min-width: 0;
+    padding: 20px;
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+.atividade-blocos h3 {
+    margin-top: 0;
+}
+
+.atividade-blocos form {
+    margin-top: 12px;
+}
+
+/* Responsividade */
+@media (max-width: 800px) {
+    .atividade-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.atividade-titulo {
+    font-size: 2rem;
+    line-height: 1.2;
+}
+
+.atividade-card {
+    padding: 24px;
+}
+
+.atividade-card h3 {
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+.atividade-card p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+.atividade-nivel {
+    font-size: 1.05rem;
+}
+
+.atividade-blocos > div > h3 {
+    font-size: 1.5rem;
+}
+
+.atividade-blocos > div > p {
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+.blocklyText {
+    font-size: 14px !important;
+}
+
+.botao-verificar,
+.botao-secundario,
+.botao-voltar {
+    min-height: 40px;
+    padding: 8px 16px;
+    border-radius: 7px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.botao-secundario {
+    margin-top: 12px;
+}
+
+.botao-verificar {
+    margin-top: 8px;
+}
+
+.botao-voltar {
+    width: 100%;
+}
+
+.atividade-enunciado {
+    font-size: 1.3rem !important;
+    font-weight: 500;
+    line-height: 1.6;
+    margin: 16px 0;
+}
+
+.feedback-card {
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.feedback-correto {
+    border: 2px solid #2e9d50;
+    background-color: #f0faf3;
+}
+
+.feedback-incorreto {
+    border: 2px solid #d9534f;
+    background-color: #fff5f5;
+}
+
+.feedback-mensagem {
+    font-weight: 600;
+}
+
+.feedback-tempo {
+    font-size: 0.9rem !important;
+    margin-bottom: 0;
+}
+
+/* Conteúdos matemáticos */
+
+.card-conteudo {
+    background-color: #f8f9fc;
+    border: 1px solid #e0e3e8;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 16px 0;
+    text-align: center;
+}
+
+.card-conteudo h3 {
+    margin: 0 0 10px;
+}
+
+.card-conteudo p {
+    margin: 0 0 16px;
+    line-height: 1.5;
+}
+
+.card-conteudo button {
+    margin: 0;
+}
+
+
+/* Tela inicial do aluno */
+
+.aluno-apresentacao {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+    text-align: center;
+}
+
+.aluno-apresentacao h2 {
+    margin: 0;
+}
+
+.aluno-mensagem {
+    margin: 0;
+    line-height: 1.6;
+}
+
+.aluno-ano {
+    margin: 8px 0 0;
+    padding: 10px 18px;
+    background-color: #f3f4f6;
+    border-radius: 8px;
+    line-height: 1.5;
+}
+
+/* Botões da página inicial */
+
+.home-acoes {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.home-acoes button {
+    margin: 0;
+    min-height: 42px;
+    padding: 10px 20px;
+}
+
+@media (max-width: 480px) {
+    .home-acoes {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .home-acoes button {
+        width: 100%;
+    }
+}
+
+
+/* ========================================================================================================================================================================================================
+                                                HOME - MATELÓGICA
+==================================================================================================================================================================================================*/
+
+.home {
+    min-height: 100vh;
+    padding: 0 24px 70px;
+    color: #20344f;
+    background-color: #f4fbff;
+    background-image: radial-gradient(#c9dff1 1px, transparent 1px);
+    background-size: 21px 21px;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+}
+
+.home-container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.home-cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 0;
+}
+
+.home-marca {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.7px;
+}
+
+.home-logo {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #348dd0;
+    color: #fff;
+    font-size: 26px;
+}
+
+.home-marca-verde {
+    color: #4da55f;
+}
+
+.home-entrar-topo {
+    padding: 12px 28px;
+    border: 2px solid #d7e6f1;
+    border-radius: 17px;
+    background: #fff;
+    color: #20344f;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.home-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 65px;
+    padding: 70px 0 55px;
+}
+
+.home-texto {
+    max-width: 520px;
+}
+
+.home-etiqueta {
+    display: inline-block;
+    margin-bottom: 24px;
+    padding: 9px 16px;
+    border-radius: 30px;
+    background: #fff0c7;
+    color: #704b16;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.home-texto h1 {
+    margin-bottom: 22px;
+    font-size: clamp(36px, 4vw, 54px);
+    line-height: 1.13;
+    letter-spacing: -1.8px;
+    font-weight: 800;
+}
+
+.home-texto h1 span {
+    color: #348dd0;
+}
+
+.home-texto > p {
+    max-width: 450px;
+    color: #62758c;
+    font-size: 18px;
+    line-height: 1.55;
+}
+
+.home .home-acoes {
+    display: flex;
+    justify-content: flex-start;
+    gap: 14px;
+    margin-top: 32px;
+}
+
+.home .home-botao {
+    min-height: 54px;
+    padding: 14px 26px;
+    border: 0;
+    border-radius: 17px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.2s;
+}
+
+.home .home-botao:hover,
+.home-entrar-topo:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.04);
+}
+
+.home .home-botao-azul {
+    background: #348dd0;
+    box-shadow: 0 4px 0 #1d669e;
+}
+
+.home .home-botao-verde {
+    background: #4da55f;
+    box-shadow: 0 4px 0 #307a42;
+}
+
+/* Ilustração matemática */
+
+.home-ilustracao {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 440px;
+    padding: 30px;
+    border: 2px solid #d5e5f1;
+    border-radius: 25px;
+    background: #fff;
+    box-shadow: 0 5px 0 #dce8f0;
+}
+
+.home-operacao {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.home-numero {
+    font-size: clamp(60px, 7vw, 100px);
+    line-height: 1.2;
+    font-weight: 900;
+    letter-spacing: -5px;
+}
+
+.home-numero-um {
+    color: #78b9f1;
+    transform: rotate(-8deg);
+}
+
+.home-numero-dois {
+    color: #ffcf49;
+    transform: rotate(6deg);
+}
+
+.home-numero-tres {
+    color: #66c8cc;
+    transform: rotate(-5deg);
+}
+
+.home-sinal {
+    font-size: clamp(40px, 5vw, 65px);
+    font-weight: 900;
+}
+
+.home-sinal-mais {
+    color: #80c77c;
+}
+
+.home-sinal-igual {
+    color: #ff957e;
+}
+
+.home-cubos {
+    display: flex;
+    gap: 14px;
+    margin-top: 30px;
+}
+
+.home-cubo {
+    display: grid;
+    place-items: center;
+    width: 70px;
+    height: 70px;
+    border-radius: 16px;
+    color: #fff;
+    font-size: 34px;
+    font-weight: 800;
+    box-shadow: inset -6px -7px 0 rgba(0, 0, 0, 0.08);
+}
+
+.home-cubo-azul {
+    background: #78b9f1;
+    transform: rotate(-8deg);
+}
+
+.home-cubo-verde {
+    background: #80c77c;
+    transform: rotate(5deg);
+}
+
+.home-cubo-amarelo {
+    background: #ffcf49;
+    transform: rotate(-5deg);
+}
+
+.home-ilustracao-rodape {
+    display: flex;
+    align-items: center;
+    gap: 35px;
+    margin-top: 35px;
+    color: #ff987f;
+    font-size: 38px;
+}
+
+/* Benefícios */
+
+.home-beneficios {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.home-beneficio {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 125px;
+    padding: 22px;
+    border: 2px solid #d7e6f1;
+    border-radius: 23px;
+    background: #fff;
+    box-shadow: 0 4px 0 #dce8f0;
+}
+
+.home-beneficio-icone {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    border-radius: 18px;
+    font-size: 27px;
+}
+
+.icone-azul {
+    background: #d8efff;
+}
+
+.icone-verde {
+    background: #def7e4;
+}
+
+.icone-amarelo {
+    background: #fff0c7;
+}
+
+.home-beneficio h2 {
+    margin-bottom: 7px;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.home-beneficio p {
+    color: #62758c;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Responsividade */
+
+@media (max-width: 900px) {
+    .home-hero {
+        grid-template-columns: 1fr;
+        gap: 35px;
+        padding-top: 45px;
+    }
+
+    .home-texto {
+        max-width: 100%;
+    }
+
+    .home-ilustracao {
+        min-height: 340px;
+    }
+
+    .home-beneficios {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .home {
+        padding: 0 18px 45px;
+    }
+
+    .home-marca {
+        font-size: 20px;
+    }
+
+    .home-entrar-topo {
+        padding: 10px 17px;
+    }
+
+    .home-texto h1 {
+        font-size: 38px;
+        letter-spacing: -1px;
+    }
+
+    .home-texto > p {
+        font-size: 16px;
+    }
+
+    .home .home-acoes {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .home .home-botao {
+        width: 100%;
+    }
+
+    .home-ilustracao {
+        min-height: 270px;
+        padding: 15px;
+    }
+
+    .home-numero {
+        font-size: 55px;
+    }
+
+    .home-sinal {
+        font-size: 35px;
+    }
+
+    .home-cubo {
+        width: 50px;
+        height: 50px;
+        font-size: 25px;
+    }
+
+    .home-beneficio {
+        padding: 18px;
+    }
+}
+
+
+/* ========================================
+   LOGIN E CADASTRO - MATELÓGICA
+======================================== */
+
+.pagina-autenticacao {
+    min-height: 100vh;
+    padding: 48px 20px;
+    background-color: #f4fbff;
+    background-image: radial-gradient(#c9dff1 1px, transparent 1px);
+    background-size: 21px 21px;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+}
+
+.cartao-autenticacao {
+    max-width: 470px;
+    padding: 38px;
+    border: 2px solid #d7e6f1;
+    border-radius: 25px;
+    background: #fff;
+    box-shadow: 0 5px 0 #dce8f0;
+    color: #20344f;
+}
+
+.autenticacao-topo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 28px;
+}
+
+.autenticacao-icone {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #348dd0;
+    color: white;
+    font-size: 26px;
+}
+
+.autenticacao-marca {
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.autenticacao-marca span {
+    color: #4da55f;
+}
+
+.autenticacao-apresentacao {
+    text-align: center;
+}
+
+.autenticacao-etiqueta {
+    display: inline-block;
+    margin-bottom: 16px;
+    padding: 8px 15px;
+    border-radius: 30px;
+    background: #fff0c7;
+    color: #704b16;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.autenticacao-apresentacao h1 {
+    margin-bottom: 12px;
+    font-size: 30px;
+    line-height: 1.2;
+}
+
+.autenticacao-apresentacao p {
+    color: #62758c;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.cartao-autenticacao form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 30px;
+}
+
+.autenticacao-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.autenticacao-campo label {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.cartao-autenticacao .autenticacao-campo input,
+.cartao-autenticacao .autenticacao-campo select {
+    width: 100%;
+    min-height: 49px;
+    padding: 12px 14px;
+    border: 2px solid #d7e6f1;
+    border-radius: 12px;
+    background: #fbfdff;
+    color: #20344f;
+    font: inherit;
+    font-size: 15px;
+}
+
+.cartao-autenticacao .autenticacao-campo input:focus,
+.cartao-autenticacao .autenticacao-campo select:focus {
+    outline: 3px solid #b9e0fa;
+    border-color: #348dd0;
+}
+
+.cartao-autenticacao form .autenticacao-botao {
+    width: 100%;
+    min-height: 52px;
+    margin-top: 6px;
+    padding: 12px;
+    border: 0;
+    border-radius: 14px;
+    background: #348dd0;
+    box-shadow: 0 4px 0 #1d669e;
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.cartao-autenticacao form .autenticacao-botao:hover:not(:disabled) {
+    background: #277cbd;
+}
+
+.cartao-autenticacao .texto-cadastro {
+    margin-top: 28px;
+    color: #62758c;
+    font-size: 14px;
+}
+
+.cartao-autenticacao .texto-cadastro button {
+    color: #277cbd;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.autenticacao-voltar {
+    display: block;
+    margin: 24px auto 0;
+    padding: 8px;
+    border: 0;
+    background: transparent;
+    color: #62758c;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.autenticacao-observacao {
+    margin-top: 22px;
+    color: #62758c;
+    font-size: 13px;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.cartao-autenticacao .mensagem-erro {
+    padding: 12px;
+    border-radius: 10px;
+    background: #fff1f1;
+    color: #b42318;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+@media (max-width: 480px) {
+    .pagina-autenticacao {
+        padding: 24px 14px;
+    }
+
+    .cartao-autenticacao {
+        padding: 26px 20px;
+    }
+
+    .autenticacao-apresentacao h1 {
+        font-size: 26px;
+    }
+}
+
+
+/* ========================================
+   PAINEL DO ALUNO - MATELÓGICA
+======================================== */
+
+.painel-aluno {
+    min-height: 100vh;
+    padding: 0 24px 70px;
+    background-color: #f4fbff;
+    background-image: radial-gradient(#c9dff1 1px, transparent 1px);
+    background-size: 21px 21px;
+    color: #20344f;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+}
+
+.painel-container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.painel-cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 0;
+}
+
+.painel-marca {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.7px;
+}
+
+.painel-logo {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #348dd0;
+    color: white;
+    font-size: 26px;
+}
+
+.painel-marca-verde {
+    color: #4da55f;
+}
+
+.painel-sair {
+    padding: 12px 22px;
+    border: 2px solid #d7e6f1;
+    border-radius: 16px;
+    background: white;
+    color: #62758c;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.painel-sair:hover {
+    border-color: #348dd0;
+    color: #20344f;
+}
+
+/* Saudação */
+
+.painel-boas-vindas {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    min-height: 270px;
+    margin-top: 65px;
+    padding: 42px 50px;
+    border: 2px solid #d7e6f1;
+    border-radius: 26px;
+    background: #fff;
+    box-shadow: 0 5px 0 #dce8f0;
+}
+
+.painel-saudacao {
+    max-width: 600px;
+}
+
+.painel-etiqueta {
+    display: inline-block;
+    margin-bottom: 18px;
+    padding: 9px 16px;
+    border-radius: 30px;
+    background: #fff0c7;
+    color: #704b16;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.painel-saudacao h1 {
+    margin-bottom: 12px;
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 1.2;
+    font-weight: 800;
+}
+
+.painel-saudacao h1 span {
+    color: #348dd0;
+}
+
+.painel-saudacao > p {
+    color: #62758c;
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+.painel-ano {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 24px;
+    padding: 12px 18px;
+    border-radius: 14px;
+    background: #e8f5ff;
+    color: #245e8c;
+    font-size: 15px;
+}
+
+.painel-decoracao {
+    position: relative;
+    flex-shrink: 0;
+    width: 240px;
+    height: 180px;
+}
+
+.painel-simbolo {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    width: 75px;
+    height: 75px;
+    border-radius: 20px;
+    color: #fff;
+    font-size: 52px;
+    font-weight: 800;
+    box-shadow: inset -6px -7px 0 rgba(0, 0, 0, 0.08);
+}
+
+.painel-simbolo-um {
+    top: 5px;
+    left: 20px;
+    background: #78b9f1;
+    transform: rotate(-10deg);
+}
+
+.painel-simbolo-dois {
+    top: 20px;
+    right: 10px;
+    background: #ffcf49;
+    transform: rotate(10deg);
+}
+
+.painel-simbolo-tres {
+    bottom: 5px;
+    left: 55px;
+    background: #80c77c;
+    transform: rotate(8deg);
+}
+
+.painel-simbolo-quatro {
+    bottom: 0;
+    right: 0;
+    background: #ff957e;
+    transform: rotate(-8deg);
+}
+
+/* Opções */
+
+.painel-opcoes {
+    margin-top: 55px;
+}
+
+.painel-secao-titulo {
+    margin-bottom: 25px;
+}
+
+.painel-secao-titulo h2 {
+    margin-bottom: 8px;
+    font-size: 27px;
+    font-weight: 800;
+}
+
+.painel-secao-titulo p {
+    color: #62758c;
+    font-size: 16px;
+}
+
+.painel-cartoes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.painel-cartao {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 285px;
+    padding: 32px;
+    border: 2px solid #d7e6f1;
+    border-radius: 24px;
+    background: white;
+    box-shadow: 0 5px 0 #dce8f0;
+}
+
+.painel-cartao-icone {
+    display: grid;
+    place-items: center;
+    width: 65px;
+    height: 65px;
+    margin-bottom: 22px;
+    border-radius: 19px;
+    font-size: 32px;
+}
+
+.painel-icone-azul {
+    background: #d8efff;
+}
+
+.painel-icone-verde {
+    background: #def7e4;
+}
+
+.painel-cartao h3 {
+    margin-bottom: 12px;
+    font-size: 23px;
+    font-weight: 800;
+}
+
+.painel-cartao p {
+    max-width: 370px;
+    margin-bottom: 25px;
+    color: #62758c;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.painel-botao {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    min-height: 48px;
+    margin-top: auto;
+    padding: 12px 22px;
+    border: 0;
+    border-radius: 14px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.painel-botao:hover {
+    transform: translateY(-2px);
+}
+
+.painel-botao-azul {
+    background: #348dd0;
+    box-shadow: 0 4px 0 #1d669e;
+}
+
+.painel-botao-verde {
+    background: #4da55f;
+    box-shadow: 0 4px 0 #307a42;
+}
+
+/* Responsividade */
+
+@media (max-width: 800px) {
+    .painel-boas-vindas {
+        margin-top: 35px;
+        padding: 32px;
+    }
+
+    .painel-decoracao {
+        display: none;
+    }
+
+    .painel-cartoes {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .painel-aluno {
+        padding: 0 18px 45px;
+    }
+
+    .painel-marca {
+        font-size: 20px;
+    }
+
+    .painel-sair {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+
+    .painel-boas-vindas {
+        padding: 26px 22px;
+    }
+
+    .painel-saudacao h1 {
+        font-size: 32px;
+    }
+
+    .painel-cartao {
+        padding: 24px;
+    }
+
+    .painel-secao-titulo h2 {
+        font-size: 23px;
+    }
+}
+
+
+/* ========================================
+   CONTEÚDOS E ATIVIDADES - MATELÓGICA
+======================================== */
+
+.pagina-atividades {
+    min-height: 100vh;
+    padding: 55px 24px 80px;
+    background-color: #f4fbff;
+    background-image: radial-gradient(#c9dff1 1px, transparent 1px);
+    background-size: 21px 21px;
+    color: #20344f;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+}
+
+.atividades-container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.atividades-apresentacao {
+    margin-bottom: 45px;
+}
+
+.atividades-etiqueta {
+    display: inline-block;
+    margin-bottom: 18px;
+    padding: 9px 16px;
+    border-radius: 30px;
+    background: #fff0c7;
+    color: #704b16;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.atividades-apresentacao h1 {
+    margin-bottom: 12px;
+    font-size: clamp(32px, 4vw, 46px);
+    font-weight: 800;
+}
+
+.atividades-apresentacao > p {
+    max-width: 650px;
+    color: #62758c;
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+.atividades-ano {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 16px;
+    border-radius: 13px;
+    background: #e8f5ff;
+    color: #245e8c;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.atividades-secao-titulo {
+    margin-bottom: 25px;
+}
+
+.atividades-secao-titulo h2 {
+    margin-bottom: 8px;
+    font-size: 25px;
+}
+
+.atividades-secao-titulo p {
+    color: #62758c;
+    font-size: 15px;
+}
+
+.atividades-grade {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.atividades-cartao {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 285px;
+    padding: 28px;
+    border: 2px solid #d7e6f1;
+    border-radius: 23px;
+    background: white;
+    box-shadow: 0 5px 0 #dce8f0;
+}
+
+.atividades-icone {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 22px;
+    border-radius: 19px;
+    font-size: 32px;
+    font-weight: 800;
+}
+
+.atividades-cartao h3 {
+    margin-bottom: 12px;
+    font-size: 21px;
+    line-height: 1.3;
+}
+
+.atividades-cartao > p {
+    margin-bottom: 24px;
+    color: #62758c;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.atividades-botao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 46px;
+    margin-top: auto;
+    padding: 11px 18px;
+    border: 0;
+    border-radius: 13px;
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.atividades-botao:hover {
+    transform: translateY(-2px);
+}
+
+.atividades-cor-azul .atividades-icone {
+    background: #d8efff;
+    color: #348dd0;
+}
+
+.atividades-cor-azul .atividades-botao {
+    background: #348dd0;
+}
+
+.atividades-cor-verde .atividades-icone {
+    background: #def7e4;
+    color: #4da55f;
+}
+
+.atividades-cor-verde .atividades-botao {
+    background: #4da55f;
+}
+
+.atividades-cor-amarelo .atividades-icone {
+    background: #fff0c7;
+    color: #b78022;
+}
+
+.atividades-cor-amarelo .atividades-botao {
+    background: #b78022;
+}
+
+.atividades-cor-coral .atividades-icone {
+    background: #ffe2da;
+    color: #d66c55;
+}
+
+.atividades-cor-coral .atividades-botao {
+    background: #d66c55;
+}
+
+.atividades-cartao-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    margin-bottom: 22px;
+}
+
+.atividades-numero {
+    font-size: 14px;
+    font-weight: 800;
+    color: #348dd0;
+}
+
+.atividades-nivel {
+    padding: 7px 12px;
+    border-radius: 20px;
+    background: #fff0c7;
+    color: #704b16;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.atividades-voltar {
+    margin-bottom: 28px;
+    padding: 12px 18px;
+    border: 2px solid #d7e6f1;
+    border-radius: 13px;
+    background: white;
+    color: #245e8c;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.atividades-estado {
+    padding: 35px;
+    border: 2px solid #d7e6f1;
+    border-radius: 20px;
+    background: white;
+    color: #62758c;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.atividades-erro {
+    border-color: #f1b5b5;
+    background: #fff5f5;
+    color: #b42318;
+}
+
+@media (max-width: 900px) {
+    .atividades-grade {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .pagina-atividades {
+        padding: 35px 18px 55px;
+    }
+
+    .atividades-grade {
+        grid-template-columns: 1fr;
+    }
+
+    .atividades-cartao {
+        min-height: 250px;
+    }
+
+    .atividades-apresentacao {
+        margin-bottom: 35px;
+    }
+}
+
+
+/* ========================================
+   MENU COMPARTILHADO - MATELÓGICA
+======================================== */
+
+.menu-matelogica {
+    width: 100%;
+    background: #f4fbff;
+    border-bottom: 1px solid #d7e6f1;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+}
+
+.menu-matelogica-container {
+    max-width: 1148px;
+    margin: 0 auto;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.menu-matelogica-marca {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #20344f;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.7px;
+    white-space: nowrap;
+}
+
+.menu-matelogica-logo {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #348dd0;
+    color: #fff;
+    font-size: 26px;
+}
+
+.menu-matelogica-verde {
+    color: #4da55f;
+}
+
+.menu-matelogica-links {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.menu-matelogica-links button {
+    min-height: 42px;
+    padding: 10px 16px;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    background: transparent;
+    color: #62758c;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.menu-matelogica-links button:hover {
+    background: #e8f5ff;
+    color: #245e8c;
+}
+
+.menu-matelogica-links .menu-link-ativo {
+    background: #e8f5ff;
+    color: #245e8c;
+}
+
+.menu-matelogica-links .menu-matelogica-sair {
+    border-color: #d7e6f1;
+    background: #fff;
+    color: #62758c;
+}
+
+.menu-matelogica-links .menu-matelogica-sair:hover {
+    border-color: #348dd0;
+}
+
+@media (max-width: 700px) {
+    .menu-matelogica-container {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .menu-matelogica-links {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .menu-matelogica-container {
+        padding: 16px;
+    }
+
+    .menu-matelogica-marca {
+        font-size: 21px;
+    }
+
+    .menu-matelogica-links {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .menu-matelogica-links button {
+        width: 100%;
+        padding: 10px;
+        font-size: 13px;
+    }
+}
+
+/* Ajuste de espaçamento do painel do aluno */
+
+.painel-aluno {
+    padding-top: 1px;
+}
+
+.painel-boas-vindas {
+    margin-top: 35px;
+}
+
+
+/* ========================================
+   RESOLUÇÃO DE ATIVIDADES - MATELÓGICA
+======================================== */
+
+.pagina-resolucao {
+    min-height: 100vh;
+    padding: 45px 24px 80px;
+    background-color: #f4fbff;
+    background-image: radial-gradient(#c9dff1 1px, transparent 1px);
+    background-size: 21px 21px;
+    color: #20344f;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+}
+
+.resolucao-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.resolucao-topo {
+    margin-bottom: 32px;
+}
+
+.resolucao-voltar {
+    display: block;
+    margin-bottom: 26px;
+    padding: 12px 18px;
+    border: 2px solid #d7e6f1;
+    border-radius: 13px;
+    background: #fff;
+    color: #245e8c;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.resolucao-etiqueta {
+    display: inline-block;
+    margin-bottom: 15px;
+    padding: 9px 16px;
+    border-radius: 30px;
+    background: #fff0c7;
+    color: #704b16;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.resolucao-topo h1 {
+    margin-bottom: 12px;
+    font-size: clamp(30px, 4vw, 42px);
+    line-height: 1.2;
+}
+
+.resolucao-topo > p {
+    color: #62758c;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.resolucao-layout {
+    display: grid;
+    grid-template-columns: 340px minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+}
+
+.resolucao-lateral {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+}
+
+.resolucao-card,
+.resolucao-area {
+    border: 2px solid #d7e6f1;
+    border-radius: 24px;
+    background: #fff;
+    box-shadow: 0 5px 0 #dce8f0;
+}
+
+.resolucao-card {
+    padding: 26px;
+}
+
+.resolucao-card-cabecalho {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.resolucao-card-icone {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: #d8efff;
+    font-size: 24px;
+}
+
+.resolucao-card-cabecalho h2 {
+    font-size: 19px;
+    line-height: 1.3;
+}
+
+.resolucao-enunciado {
+    margin-bottom: 24px;
+    color: #20344f;
+    font-size: 18px;
+    line-height: 1.7;
+}
+
+.resolucao-nivel {
+    display: inline-block;
+    padding: 8px 13px;
+    border-radius: 20px;
+    background: #fff0c7;
+    color: #704b16;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.resolucao-feedback p {
+    color: #62758c;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.resolucao-icone-feedback {
+    background: #fff0c7;
+}
+
+.resolucao-feedback-correto {
+    border-color: #83cb91;
+    background: #f2fcf4;
+}
+
+.resolucao-feedback-incorreto {
+    border-color: #f0b4a7;
+    background: #fff7f4;
+}
+
+.resolucao-feedback .resolucao-feedback-mensagem {
+    margin-bottom: 12px;
+    color: #20344f;
+    font-weight: 700;
+}
+
+.resolucao-feedback .resolucao-feedback-tempo {
+    font-size: 13px;
+}
+
+.resolucao-area {
+    min-width: 0;
+    padding: 26px;
+}
+
+.resolucao-area-cabecalho {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.resolucao-area-cabecalho h2 {
+    margin-bottom: 8px;
+    font-size: 23px;
+}
+
+.resolucao-area-cabecalho p {
+    color: #62758c;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.resolucao-area-etapa {
+    flex-shrink: 0;
+    padding: 9px 13px;
+    border-radius: 20px;
+    background: #def7e4;
+    color: #307a42;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.resolucao-workspace {
+    min-width: 0;
+    overflow: hidden;
+    border: 2px solid #d7e6f1;
+    border-radius: 16px;
+    background: #f8fcff;
+}
+
+.resolucao-formulario {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 24px;
+}
+
+.resolucao-verificar {
+    min-height: 50px;
+    padding: 12px 24px;
+    border: 0;
+    border-radius: 14px;
+    background: #4da55f;
+    box-shadow: 0 4px 0 #307a42;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.resolucao-verificar:hover:not(:disabled) {
+    background: #419452;
+}
+
+.resolucao-verificar:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+@media (max-width: 900px) {
+    .resolucao-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .resolucao-lateral {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .pagina-resolucao {
+        padding: 30px 16px 55px;
+    }
+
+    .resolucao-lateral {
+        grid-template-columns: 1fr;
+    }
+
+    .resolucao-card,
+    .resolucao-area {
+        padding: 20px;
+    }
+
+    .resolucao-area-cabecalho {
+        flex-direction: column;
+    }
+
+    .resolucao-formulario {
+        justify-content: stretch;
+    }
+
+    .resolucao-verificar {
+        width: 100%;
+    }
+}
+
+
+/* ========================================
+   ÁREA DE BLOCOS - MATELÓGICA
+======================================== */
+
+.blockly-painel {
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    background: #fff;
+}
+
+.blockly-instrucoes {
+    padding: 18px 20px;
+    border-bottom: 2px solid #d7e6f1;
+    background: #f4fbff;
+}
+
+.blockly-instrucoes h3 {
+    margin: 0 0 8px;
+    color: #20344f;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.blockly-instrucoes p {
+    margin: 0;
+    color: #62758c;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.blockly-container {
+    width: 100%;
+    position: relative;
+}
+
+.blockly-rodape {
+    display: flex;
+    justify-content: flex-end;
+    padding: 16px 20px;
+    border-top: 2px solid #d7e6f1;
+    background: #f8fcff;
+}
+
+.blockly-limpar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 43px;
+    padding: 10px 18px;
+    border: 2px solid #d7e6f1;
+    border-radius: 12px;
+    background: #fff;
+    color: #245e8c;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.blockly-limpar:hover {
+    background: #e8f5ff;
+    border-color: #a8cce6;
+}
+
+.blockly-limpar:focus-visible {
+    outline: 3px solid #a8cce6;
+    outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+    .blockly-instrucoes {
+        padding: 16px;
+    }
+
+    .blockly-rodape {
+        padding: 14px 16px;
+    }
+
+    .blockly-limpar {
+        width: 100%;
+    }
+}
+
+
+/* ========================================
+   MEU PROGRESSO - MATELÓGICA
+======================================== */
+
+.pagina-progresso {
+    min-height: 100vh;
+    padding: 45px 24px 80px;
+    background-color: #f4fbff;
+    background-image: radial-gradient(#c9dff1 1px, transparent 1px);
+    background-size: 21px 21px;
+    color: #20344f;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+}
+
+.progresso-container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.progresso-voltar {
+    margin-bottom: 28px;
+    padding: 12px 18px;
+    border: 2px solid #d7e6f1;
+    border-radius: 13px;
+    background: #fff;
+    color: #245e8c;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.progresso-cabecalho {
+    margin-bottom: 36px;
+}
+
+.progresso-etiqueta {
+    display: inline-block;
+    margin-bottom: 15px;
+    padding: 9px 16px;
+    border-radius: 30px;
+    background: #fff0c7;
+    color: #704b16;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.progresso-cabecalho h1 {
+    margin-bottom: 12px;
+    font-size: clamp(30px, 4vw, 42px);
+    line-height: 1.2;
+}
+
+.progresso-cabecalho > p {
+    color: #62758c;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.progresso-secao {
+    margin-bottom: 40px;
+}
+
+.progresso-secao-titulo {
+    margin-bottom: 20px;
+}
+
+.progresso-secao-titulo h2 {
+    margin-bottom: 8px;
+    font-size: 25px;
+}
+
+.progresso-secao-titulo p {
+    color: #62758c;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.progresso-indicadores {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.progresso-indicador {
+    min-width: 0;
+    padding: 25px;
+    border: 2px solid #d7e6f1;
+    border-radius: 22px;
+    background: #fff;
+    box-shadow: 0 4px 0 #dce8f0;
+}
+
+.progresso-indicador-icone {
+    display: grid;
+    place-items: center;
+    width: 49px;
+    height: 49px;
+    margin-bottom: 20px;
+    border-radius: 14px;
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.progresso-cor-azul {
+    background: #d8efff;
+    color: #338dce;
+}
+
+.progresso-cor-verde {
+    background: #def7e4;
+    color: #419452;
+}
+
+.progresso-cor-amarelo {
+    background: #fff0c7;
+    color: #ad7718;
+}
+
+.progresso-cor-coral {
+    background: #ffe1d9;
+    color: #d96854;
+}
+
+.progresso-indicador h3 {
+    margin-bottom: 12px;
+    color: #62758c;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.progresso-indicador-valor {
+    color: #20344f;
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.progresso-lista {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.progresso-atividade-card {
+    min-width: 0;
+    padding: 24px;
+    border: 2px solid #d7e6f1;
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 4px 0 #dce8f0;
+}
+
+.progresso-atividade-topo {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 22px;
+}
+
+.progresso-atividade-icone {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+    background: #d8efff;
+    font-size: 22px;
+}
+
+.progresso-atividade-topo h3 {
+    font-size: 20px;
+    line-height: 1.4;
+}
+
+.progresso-atividade-dados {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.progresso-atividade-dados span {
+    padding: 11px 15px;
+    border-radius: 10px;
+    background: #f4f8fc;
+    color: #62758c;
+    font-size: 16px;
+}
+
+.progresso-atividade-dados strong {
+    color: #20344f;
+}
+
+.progresso-vazio,
+.progresso-estado {
+    padding: 45px 24px;
+    border: 2px solid #d7e6f1;
+    border-radius: 22px;
+    background: #fff;
+    text-align: center;
+}
+
+.progresso-vazio > span {
+    display: block;
+    margin-bottom: 16px;
+    font-size: 42px;
+}
+
+.progresso-vazio h3,
+.progresso-estado h2 {
+    margin-bottom: 12px;
+    font-size: 21px;
+}
+
+.progresso-vazio p,
+.progresso-estado p {
+    max-width: 520px;
+    margin: 0 auto;
+    color: #62758c;
+    line-height: 1.7;
+}
+
+@media (max-width: 800px) {
+    .progresso-indicadores {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .progresso-lista {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 520px) {
+    .pagina-progresso {
+        padding: 30px 16px 55px;
+    }
+
+    .progresso-indicadores {
+        grid-template-columns: 1fr;
+    }
+
+    .progresso-indicador,
+    .progresso-atividade-card {
+        padding: 20px;
+    }
+
+    .progresso-indicador-valor {
+        font-size: 27px;
+    }
+}
+
+/* ========================================
+   PERFIL DO ALUNO - MATELÓGICA
+======================================== */
+
+/* Página Meu perfil - Matelógica */
+
+.perfil-pagina {
+    min-height: calc(100vh - 80px);
+    padding: 55px 24px 80px;
+    background-color: #f4fbff;
+    background-image: radial-gradient(#c9dff1 1px, transparent 1px);
+    background-size: 21px 21px;
+    color: #20344f;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+}
+
+.perfil-cartao {
+    width: 100%;
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 38px;
+    border: 2px solid #d7e6f1;
+    border-radius: 25px;
+    background: #fff;
+    box-shadow: 0 5px 0 #dce8f0;
+}
+
+.perfil-apresentacao {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.perfil-apresentacao h1 {
+    margin-bottom: 12px;
+    font-size: clamp(28px, 4vw, 36px);
+    font-weight: 800;
+}
+
+.perfil-apresentacao p {
+    color: #62758c;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.perfil-formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.perfil-formulario label {
+    margin-top: 10px;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.perfil-formulario input,
+.perfil-formulario select {
+    width: 100%;
+    min-height: 50px;
+    padding: 12px 15px;
+    border: 2px solid #d7e6f1;
+    border-radius: 13px;
+    background: #fbfdff;
+    color: #20344f;
+    font: inherit;
+    font-size: 16px;
+}
+
+.perfil-formulario input:focus,
+.perfil-formulario select:focus {
+    outline: 3px solid #b9e0fa;
+    border-color: #348dd0;
+}
+
+.perfil-formulario button[type="submit"] {
+    width: 100%;
+    min-height: 52px;
+    margin-top: 24px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 14px;
+    background: #348dd0;
+    box-shadow: 0 4px 0 #1d669e;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.perfil-formulario button[type="submit"]:hover:not(:disabled) {
+    background: #277cbd;
+    transform: translateY(-2px);
+}
+
+.perfil-formulario button[type="submit"]:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.perfil-formulario [role="status"],
+.perfil-formulario [role="alert"] {
+    padding: 13px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.perfil-formulario [role="status"] {
+    background: #def7e4;
+    color: #307a42;
+}
+
+.perfil-formulario [role="alert"] {
+    background: #fff1f1;
+    color: #b42318;
+}
+
+@media (max-width: 600px) {
+    .perfil-pagina {
+        padding: 30px 16px 55px;
+    }
+
+    .perfil-cartao {
+        padding: 26px 20px;
+    }
+
+    .perfil-apresentacao h1 {
+        font-size: 28px;
+    }
+}
+
+
+/* Ícones Lucide - Home */
+
+.home-logo,
+.home-beneficio-icone {
+    display: grid;
+    place-items: center;
+}
+
+.home-ilustracao-rodape svg {
+    flex-shrink: 0;
+}
+
+
+/* ========================================
+   ÍCONES DO MENU - MATELÓGICA
+======================================== */
+
+.menu-matelogica-logo {
+    display: grid;
+    place-items: center;
+}
+
+.menu-matelogica-links button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.menu-matelogica-links button svg {
+    flex-shrink: 0;
+}
+
+
+/* ========================================
+   ÍCONES DO LOGIN - MATELÓGICA
+======================================== */
+
+.autenticacao-icone {
+    display: grid;
+    place-items: center;
+}
+
+.autenticacao-voltar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.autenticacao-voltar svg {
+    flex-shrink: 0;
+}
+
+
+/* ========================================
+   ÍCONES DA PÁGINA INICIAL DO ALUNO
+======================================== */
+
+.painel-ano {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.painel-cartao-icone {
+    display: grid;
+    place-items: center;
+}
+
+.painel-botao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.painel-botao svg,
+.painel-ano svg {
+    flex-shrink: 0;
+}
+
+
+/* ========================================
+   ÍCONES DA PÁGINA DE ATIVIDADES
+======================================== */
+
+.atividades-ano {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.atividades-icone {
+    display: grid;
+    place-items: center;
+}
+
+.atividades-botao,
+.atividades-voltar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.atividades-botao svg,
+.atividades-voltar svg,
+.atividades-ano svg {
+    flex-shrink: 0;
+}
+
+
+/* ========================================
+   ÍCONES DA RESOLUÇÃO DE ATIVIDADES
+======================================== */
+
+.resolucao-voltar,
+.resolucao-verificar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.resolucao-card-icone {
+    display: grid;
+    place-items: center;
+}
+
+.resolucao-feedback-mensagem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.resolucao-voltar svg,
+.resolucao-verificar svg,
+.resolucao-feedback-mensagem svg {
+    flex-shrink: 0;
+}
+
+
+/* ========================================
+   ÍCONES DA PÁGINA DE PROGRESSO
+======================================== */
+
+.progresso-voltar {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.progresso-indicador-icone,
+.progresso-atividade-icone {
+    display: grid;
+    place-items: center;
+}
+
+.progresso-vazio > span {
+    display: inline-grid;
+    place-items: center;
+}
+
+.progresso-voltar svg,
+.progresso-indicador-icone svg,
+.progresso-atividade-icone svg {
+    flex-shrink: 0;
+}
+
+
+/* ========================================
+   ÍCONES DA PÁGINA DE PERFIL
+======================================== */
+
+.perfil-formulario label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.perfil-formulario label svg {
+    flex-shrink: 0;
+    color: #338dce;
+}
+
+.perfil-formulario button[type="submit"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.perfil-formulario button[type="submit"] svg {
+    flex-shrink: 0;
+}
+
+/* Mostrar e ocultar senha */
+
+.campo-senha {
+    position: relative;
+    width: 100%;
+}
+
+.campo-senha input {
+    width: 100%;
+    padding-right: 48px;
+}
+
+.campo-senha .botao-visualizar-senha {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 30px;
+    height: 30px;
+    padding: 0;
+
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    color: #64748b;
+    cursor: pointer;
+}
+
+.campo-senha .botao-visualizar-senha:hover {
+    background: transparent;
+    box-shadow: none;
+    color: #2563eb;
+}
+
+.campo-senha .botao-visualizar-senha:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
+.cartao-autenticacao form button.autenticacao-reenviar {
+    display: block;
+    width: 100%;
+    margin: 12px 0 20px;
+    padding: 8px;
+    background: transparent;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    color: #2878b9;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.cartao-autenticacao form button.autenticacao-reenviar:hover {
+    background: transparent;
+    color: #174f85;
+    box-shadow: none;
+}
+
+.autenticacao-reenviar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.mensagem-sucesso {
+    margin-top: 12px;
+    color: #237447;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.autenticacao-recuperar {
+    display: flex;
+    justify-content: flex-end;
+    margin: 4px 0 12px;
+}
+
+.cartao-autenticacao form .autenticacao-recuperar button {
+    width: auto;
+    padding: 4px 0;
+    background: transparent;
+    border: none;
+    color: #2563eb;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.cartao-autenticacao form .autenticacao-recuperar button:hover {
+    background: transparent;
+    color: #1d4ed8;
+    text-decoration: underline;
+}
