@@ -10,6 +10,7 @@ class AtividadeCreate(BaseModel):
     descricao: str
     nivel: str
     resposta_esperada: str
+    imagem_url: str | None = None
     id_ano: int
     blocos_permitidos: list[
         Literal[
@@ -30,6 +31,7 @@ class AtividadeResponse(BaseModel):
     descricao: str
     nivel: str
     resposta_esperada: str | None
+    imagem_url: str | None = None
     id_ano: int
     blocos_permitidos: list[str]
     conteudos: list[ConteudoResponse]

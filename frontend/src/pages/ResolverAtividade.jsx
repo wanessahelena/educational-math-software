@@ -100,9 +100,19 @@ function ResolverAtividade({ usuario, atividade, onVoltar }) {
                                 {atividade.descricao}
                             </p>
 
+                            {atividade.imagem_url && (
+                                <img
+                                    src={atividade.imagem_url}
+                                    alt={`Ilustração da atividade: ${atividade.titulo}`}
+                                    className="resolucao-imagem"
+                                    loading="lazy"
+                                />
+                            )}
+
                             <span className="resolucao-nivel">
                                 Nível: {atividade.nivel}
                             </span>
+
                         </section>
 
                         <section
