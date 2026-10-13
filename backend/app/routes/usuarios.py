@@ -29,6 +29,14 @@ from app.models.token_verificacao_email import TokenVerificacaoEmail
 
 from app.email_verificacao import calcular_hash_token
 
+from app.recuperacao_senha import criar_token_recuperacao
+
+from app.email_service import enviar_email_recuperacao_senha
+
+from app.models.token_recuperacao_senha import TokenRecuperacaoSenha
+
+from app.recuperacao_senha import calcular_hash_token_recuperacao
+
 
 router = APIRouter(
     prefix="/usuarios",
@@ -51,6 +59,12 @@ class LoginRequest(BaseModel):
     email: str
     senha: str
 
+class SolicitarRecuperacaoSenhaRequest(BaseModel):
+    email: str
+    
+class RedefinirSenhaRequest(BaseModel):
+    token: str
+    nova_senha: str
 class ReenviarVerificacaoRequest(BaseModel):
     email: str
 
@@ -137,6 +151,103 @@ def cadastrar_usuario(
         )
 
     return dados_publicos_usuario(novo_usuario, db)
+
+
+
+@router.post("/solicitar-recuperacao-senha")
+def solicitar_recuperacao_senha(
+    dados: SolicitarRecuperacaoSenhaRequest,
+    db: Session = Depends(get_db)
+):
+    mensagem = {
+        "mensagem": (
+            "Se o e-mail estiver cadastrado, "
+            "você receberá um link para redefinir sua senha."
+        )
+    }
+
+    email = dados.email.strip().lower()
+
+    usuario = (
+        db.query(Usuario)
+        .filter(Usuario.email == email)
+        .first()
+    )
+
+    if not usuario or not usuario.email_verificado:
+        return mensagem
+
+    token = criar_token_recuperacao(db, usuario.id_usuario)
+    db.commit()
+
+    try:
+        enviar_email_recuperacao_senha(usuario.email, token)
+    except Exception:
+        raise HTTPException(
+            status_code=503,
+            detail="Não foi possível enviar o e-mail. Tente novamente mais tarde."
+        )
+
+    return mensagem
+
+
+
+@router.post("/redefinir-senha")
+def redefinir_senha(
+    dados: RedefinirSenhaRequest,
+    db: Session = Depends(get_db)
+):
+    if len(dados.nova_senha) < 8:
+        raise HTTPException(
+            status_code=422,
+            detail="A nova senha deve ter pelo menos 8 caracteres."
+        )
+
+    token_hash = calcular_hash_token_recuperacao(dados.token)
+    agora = datetime.now(timezone.utc).replace(tzinfo=None)
+
+    registro = (
+        db.query(TokenRecuperacaoSenha)
+        .filter(TokenRecuperacaoSenha.token_hash == token_hash)
+        .with_for_update()
+        .first()
+    )
+
+    if (
+        not registro
+        or registro.utilizado_em is not None
+        or registro.expira_em <= agora
+    ):
+        raise HTTPException(
+            status_code=400,
+            detail="Link de recuperação inválido, expirado ou já utilizado."
+        )
+
+    usuario = (
+        db.query(Usuario)
+        .filter(Usuario.id_usuario == registro.id_usuario)
+        .first()
+    )
+
+    if not usuario:
+        raise HTTPException(
+            status_code=400,
+            detail="Link de recuperação inválido."
+        )
+
+    usuario.senha_hash = gerar_hash_senha(dados.nova_senha)
+    usuario.versao_token += 1
+    registro.utilizado_em = agora
+
+    db.query(TokenRecuperacaoSenha).filter(
+        TokenRecuperacaoSenha.id_usuario == usuario.id_usuario,
+        TokenRecuperacaoSenha.id_token != registro.id_token,
+        TokenRecuperacaoSenha.utilizado_em.is_(None)
+    ).delete(synchronize_session=False)
+
+    db.commit()
+
+    return {"mensagem": "Senha redefinida com sucesso!"}
 
 
 @router.post("/login")

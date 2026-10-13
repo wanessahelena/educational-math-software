@@ -6,3 +6,4 @@ from app.models.atividade_conteudo import atividade_conteudo
 from app.models.atividade import Atividade
 from app.models.tentativa import Tentativa
 from app.models.token_verificacao_email import TokenVerificacaoEmail
+from app.models.token_recuperacao_senha import TokenRecuperacaoSenha

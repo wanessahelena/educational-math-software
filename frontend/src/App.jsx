@@ -23,6 +23,10 @@ import Perfil from "./pages/Perfil";
 
 import VerificarEmail from "./pages/VerificarEmail";
 
+import EsqueciSenha from "./pages/EsqueciSenha";
+
+import RedefinirSenha from "./pages/RedefinirSenha";
+
 function App() {
     const [usuario, setUsuario] = useState(() => {
         try {
@@ -46,6 +50,10 @@ function App() {
     const [pagina, setPagina] = useState(() => {
         if (window.location.pathname === "/verificar-email") {
             return "verificar-email";
+        }
+
+        if (window.location.pathname === "/redefinir-senha") {
+            return "redefinir-senha";
         }
 
         return usuario ? "aluno" : "home";
@@ -186,6 +194,18 @@ function App() {
             />
         )}
 
+        {pagina === "redefinir-senha" && (
+            <RedefinirSenha
+                onLogin={() => {
+                    window.history.replaceState({}, "", "/");
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("usuario");
+                    setUsuario(null);
+                    setPagina("login");
+                }}
+            />
+        )}
+
 
         {usuario && (
             <MenuAluno
@@ -223,6 +243,13 @@ function App() {
                     onLogin={finalizarLogin}
                     onCadastro={() => setPagina("cadastro")}
                     onVoltar={() => setPagina("home")}
+                    onEsqueciSenha={() => setPagina("esqueci-senha")}
+                />
+            )}
+
+            {pagina === "esqueci-senha" && (
+                <EsqueciSenha
+                    onVoltar={() => setPagina("login")}
                 />
             )}
 

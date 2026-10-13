@@ -2651,3 +2651,26 @@ RESOLUÇÃO DE ATIVIDADES
     font-size: 14px;
     line-height: 1.5;
 }
+
+.autenticacao-recuperar {
+    display: flex;
+    justify-content: flex-end;
+    margin: 4px 0 12px;
+}
+
+.cartao-autenticacao form .autenticacao-recuperar button {
+    width: auto;
+    padding: 4px 0;
+    background: transparent;
+    border: none;
+    color: #2563eb;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.cartao-autenticacao form .autenticacao-recuperar button:hover {
+    background: transparent;
+    color: #1d4ed8;
+    text-decoration: underline;
+}
