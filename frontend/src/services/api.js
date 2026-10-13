@@ -262,3 +262,34 @@ export async function redefinirSenha(token, novaSenha) {
 
     return dados;
 }
+
+export async function solicitarAlteracaoEmail(novoEmail, senhaAtual) {
+    const token = localStorage.getItem("token");
+
+    const resposta = await fetch(
+        `${API_URL}/usuarios/solicitar-alteracao-email`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                novo_email: novoEmail,
+                senha_atual: senhaAtual
+            })
+        }
+    );
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+        throw new Error(
+            typeof dados.detail === "string"
+                ? dados.detail
+                : "Não foi possível solicitar a alteração de e-mail."
+        );
+    }
+
+    return dados;
+}

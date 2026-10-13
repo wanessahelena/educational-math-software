@@ -27,6 +27,8 @@ import EsqueciSenha from "./pages/EsqueciSenha";
 
 import RedefinirSenha from "./pages/RedefinirSenha";
 
+import ConfirmarAlteracaoEmail from "./pages/ConfirmarAlteracaoEmail";
+
 function App() {
     const [usuario, setUsuario] = useState(() => {
         try {
@@ -54,6 +56,10 @@ function App() {
 
         if (window.location.pathname === "/redefinir-senha") {
             return "redefinir-senha";
+        }
+
+        if (window.location.pathname === "/confirmar-alteracao-email") {
+            return "confirmar-alteracao-email";
         }
 
         return usuario ? "aluno" : "home";
@@ -201,6 +207,19 @@ function App() {
                     localStorage.removeItem("token");
                     localStorage.removeItem("usuario");
                     setUsuario(null);
+                    setPagina("login");
+                }}
+            />
+        )}
+
+        {pagina === "confirmar-alteracao-email" && (
+            <ConfirmarAlteracaoEmail
+                onLogin={() => {
+                    window.history.replaceState({}, "", "/");
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("usuario");
+                    setUsuario(null);
+                    setAtividadeSelecionada(null);
                     setPagina("login");
                 }}
             />
