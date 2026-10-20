@@ -40,12 +40,15 @@ function Cadastro({ onCadastro }) {
         event.preventDefault();
         setErro("");
 
-        if (!nome.trim() || !email.trim() || !senha || !idAno) {
+        if (!nome.trim() || !email.trim() || !senha || !confirmarSenha || !idAno) {
             setErro("Preencha todos os campos.");
             return;
         }
 
-        setCarregando(true);
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+            setErro("Digite um e-mail válido. Exemplo: nome@exemplo.com");
+            return;
+        }
 
         if (senha.length < 8) {
             setErro("A senha deve ter pelo menos 8 caracteres.");
@@ -56,6 +59,8 @@ function Cadastro({ onCadastro }) {
             setErro("As senhas não coincidem.");
             return;
         }
+
+        setCarregando(true);
 
         try {
             const usuario = await cadastrarUsuario(
@@ -94,7 +99,7 @@ function Cadastro({ onCadastro }) {
                     </p>
                 </div>
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} noValidate>
                     <div className="autenticacao-campo">
                         <label htmlFor="cadastro-nome">Seu nome</label>
                         <input
