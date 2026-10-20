@@ -6,6 +6,7 @@ import BlocklyWorkspace from "../components/BlocklyWorkspace";
 
 import {
     ArrowLeft,
+    ArrowRight,
     Puzzle,
     Star,
     Check,
@@ -13,7 +14,17 @@ import {
 } from "lucide-react";
 
 
-function ResolverAtividade({ usuario, atividade, onVoltar }) {
+function ResolverAtividade({
+    usuario,
+    atividade,
+    onVoltar,
+    atividadeAnterior,
+    proximaAtividade,
+    posicaoAtual,
+    totalAtividades,
+    onAnterior,
+    onProxima
+}) {
     const [resposta, setResposta] = useState("");
     const [resultado, setResultado] = useState(null);
     const [erro, setErro] = useState("");
@@ -167,6 +178,37 @@ function ResolverAtividade({ usuario, atividade, onVoltar }) {
                                         Tempo gasto: {resultado.tempo_gasto} segundos
                                     </p>
                                 </>
+                            )}
+                        </section>
+                        <section className="resolucao-card resolucao-navegacao">
+                            <h2>Navegar entre desafios</h2>
+
+                            <div className="resolucao-navegacao-botoes">
+                                <button
+                                    type="button"
+                                    className="resolucao-navegacao-botao"
+                                    onClick={onAnterior}
+                                    disabled={!atividadeAnterior}
+                                >
+                                    <ArrowLeft size={18} aria-hidden="true" />
+                                    Anterior
+                                </button>
+
+                                <button
+                                    type="button"
+                                    className="resolucao-navegacao-botao"
+                                    onClick={onProxima}
+                                    disabled={!proximaAtividade}
+                                >
+                                    Próxima
+                                    <ArrowRight size={18} aria-hidden="true" />
+                                </button>
+                            </div>
+
+                            {posicaoAtual !== null && (
+                                <p className="resolucao-navegacao-posicao">
+                                    Desafio {posicaoAtual} de {totalAtividades}
+                                </p>
                             )}
                         </section>
                     </aside>

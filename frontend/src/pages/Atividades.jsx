@@ -15,6 +15,8 @@ import {
     buscarConteudosPorAno,
 } from "../services/api";
 
+import { useNavigate, useParams } from "react-router-dom";
+
 const coresConteudos = [
     "azul",
     "verde",
@@ -25,9 +27,15 @@ const coresConteudos = [
 const iconesConteudos = ["+", "−", "×", "÷", "123", "½", "0,5", "regua", "◇", "▥", "%", "R$"];
 
 function Atividades({ usuario, onResolver }) {
+    const navigate = useNavigate();
+    const { idConteudo } = useParams();
+
+    const conteudoSelecionado = idConteudo
+        ? Number(idConteudo)
+        : null;
+
     const [atividades, setAtividades] = useState([]);
     const [conteudos, setConteudos] = useState([]);
-    const [conteudoSelecionado, setConteudoSelecionado] = useState(null);
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState("");
 
@@ -37,8 +45,6 @@ function Atividades({ usuario, onResolver }) {
         async function carregarDados() {
             setCarregando(true);
             setErro("");
-            setConteudoSelecionado(null);
-
             try {
                 const [respostaAtividades, respostaConteudos] =
                     await Promise.all([
@@ -159,9 +165,7 @@ function Atividades({ usuario, onResolver }) {
                                                         type="button"
                                                         className="atividades-botao"
                                                         onClick={() =>
-                                                            setConteudoSelecionado(
-                                                                conteudo.id_conteudo
-                                                            )
+                                                            navigate(`/atividades/conteudo/${conteudo.id_conteudo}`)
                                                         }
                                                     >
                                                         Ver atividades
@@ -178,7 +182,7 @@ function Atividades({ usuario, onResolver }) {
                                 <button
                                     type="button"
                                     className="atividades-voltar"
-                                    onClick={() => setConteudoSelecionado(null)}
+                                    onClick={() => navigate("/atividades")}
                                 >
                                     <ArrowLeft size={18} aria-hidden="true" />
                                     Voltar aos conteúdos
@@ -222,7 +226,7 @@ function Atividades({ usuario, onResolver }) {
                                                     <button
                                                         type="button"
                                                         className="atividades-botao"
-                                                        onClick={() => onResolver(atividade)}
+                                                        onClick={() => onResolver(atividade, conteudoSelecionado)}
                                                     >
                                                         Resolver atividade
                                                         <ArrowRight size={18} aria-hidden="true" />
