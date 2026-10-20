@@ -2683,3 +2683,64 @@ RESOLUÇÃO DE ATIVIDADES
     color: #1d4ed8;
     text-decoration: underline;
 }
+
+/* Navegação entre desafios */
+
+.resolucao-navegacao {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.resolucao-navegacao h2 {
+    margin: 0;
+}
+
+.resolucao-navegacao-botoes {
+    display: flex;
+    gap: 12px;
+}
+
+.resolucao-navegacao-botao {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: #2563eb;
+    color: white;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.resolucao-navegacao-botao:hover:not(:disabled) {
+    background-color: #1d4ed8;
+}
+
+.resolucao-navegacao-botao:disabled {
+    background-color: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
+}
+
+.resolucao-navegacao-posicao {
+    margin: 0;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+@media (max-width: 480px) {
+    .resolucao-navegacao-botoes {
+        flex-wrap: wrap;
+    }
+
+    .resolucao-navegacao-botao {
+        min-width: 110px;
+    }
+}

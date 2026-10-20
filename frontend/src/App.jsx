@@ -1,6 +1,16 @@
 
 import { useEffect, useState } from "react";
 
+import {
+    Navigate,
+    Route,
+    Routes,
+    useNavigate,
+    useParams,
+    useSearchParams
+} from "react-router-dom";
+
+
 import "./App.css";
 
 import MenuAluno from "./components/MenuAluno";
@@ -29,7 +39,149 @@ import RedefinirSenha from "./pages/RedefinirSenha";
 
 import ConfirmarAlteracaoEmail from "./pages/ConfirmarAlteracaoEmail";
 
+import { buscarAtividadesPorAno } from "./services/api";
+
+function RotaResolverAtividade({ usuario, onVoltar }) {
+    const navigate = useNavigate();
+    const { id } = useParams();
+
+    const [searchParams] = useSearchParams();
+    const idConteudo = Number(searchParams.get("conteudo"));
+
+    const [atividade, setAtividade] = useState(null);
+    const [carregando, setCarregando] = useState(true);
+    const [erro, setErro] = useState("");
+    const [atividadesDoConteudo, setAtividadesDoConteudo] = useState([]);
+
+    useEffect(() => {
+        let ativo = true;
+
+        async function carregarAtividade() {
+
+            setCarregando(true);
+            setErro("");
+            setAtividade(null);
+            setAtividadesDoConteudo([]);
+
+            try {
+                const atividades = await buscarAtividadesPorAno(
+                    usuario.id_ano
+                );
+
+                const atividadeEncontrada = atividades.find(
+                    (item) => item.id_atividade === Number(id)
+                );
+
+                if (!ativo) return;
+
+                if (!atividadeEncontrada) {
+                    setErro("Atividade não encontrada.");
+                    return;
+                }
+
+                const atividadesFiltradas = atividades.filter((item) =>
+                    item.conteudos?.some(
+                        (conteudo) => conteudo.id_conteudo === idConteudo
+                    )
+                );
+
+                setAtividadesDoConteudo(atividadesFiltradas);
+                setAtividade(atividadeEncontrada);
+
+            }catch (error) {
+                if (ativo) {
+                    setErro(error.message);
+                }
+            } finally {
+                if (ativo) {
+                    setCarregando(false);
+                }
+            }
+        }
+
+        carregarAtividade();
+
+        return () => {
+            ativo = false;
+        };
+    }, [id, idConteudo, usuario.id_ano]);
+
+    if (carregando) {
+        return <p role="status">Carregando atividade...</p>;
+    }
+
+    if (erro) {
+        return (
+            <div role="alert">
+                <p>{erro}</p>
+                <button type="button" onClick={onVoltar}>
+                    Voltar às atividades
+                </button>
+            </div>
+        );
+    }
+
+    if (!atividade) {
+        return null;
+    }
+
+    const indiceAtual = atividadesDoConteudo.findIndex(
+    (item) => item.id_atividade === atividade.id_atividade
+    );
+
+    const atividadeAnterior =
+        indiceAtual > 0
+            ? atividadesDoConteudo[indiceAtual - 1]
+            : null;
+
+    const proximaAtividade =
+        indiceAtual >= 0 &&
+        indiceAtual < atividadesDoConteudo.length - 1
+            ? atividadesDoConteudo[indiceAtual + 1]
+            : null;
+
+    return (
+        <ResolverAtividade
+            key={atividade.id_atividade}
+            usuario={usuario}
+            atividade={atividade}
+            onVoltar={onVoltar}
+            atividadeAnterior={atividadeAnterior}
+            proximaAtividade={proximaAtividade}
+            posicaoAtual={indiceAtual >= 0 ? indiceAtual + 1 : null}
+            totalAtividades={atividadesDoConteudo.length}
+            onAnterior={() => {
+                if (atividadeAnterior) {
+                    navigate(
+                        `/atividades/${atividadeAnterior.id_atividade}?conteudo=${idConteudo}`,
+                        { replace: true }
+                    );
+                }
+            }}
+            onProxima={() => {
+                if (proximaAtividade) {
+                    navigate(
+                        `/atividades/${proximaAtividade.id_atividade}?conteudo=${idConteudo}`,
+                        { replace: true }
+                    );
+                }
+            }}
+        />
+    );
+}
+
+function RotaProtegida({ usuario, children }) {
+    if (!usuario) {
+        return <Navigate to="/login" replace />;
+    }
+
+    return children;
+}
+
 function App() {
+
+    const navigate = useNavigate();
+
     const [usuario, setUsuario] = useState(() => {
         try {
             const token = localStorage.getItem("token");
@@ -49,23 +201,6 @@ function App() {
         }
     });
 
-    const [pagina, setPagina] = useState(() => {
-        if (window.location.pathname === "/verificar-email") {
-            return "verificar-email";
-        }
-
-        if (window.location.pathname === "/redefinir-senha") {
-            return "redefinir-senha";
-        }
-
-        if (window.location.pathname === "/confirmar-alteracao-email") {
-            return "confirmar-alteracao-email";
-        }
-
-        return usuario ? "aluno" : "home";
-    });
-
-    const [atividadeSelecionada, setAtividadeSelecionada] = useState(null);
 
     useEffect(() => {
         if (usuario) {
@@ -76,49 +211,46 @@ function App() {
     }, [usuario]);
 
     useEffect(() => {
-    function tratarSessaoExpirada() {
-        setUsuario(null);
-        setAtividadeSelecionada(null);
-        setPagina("login");
-    }
+        function tratarSessaoExpirada() {
+            setUsuario(null);
+            navigate("/login", { replace: true });
+        }
 
-    window.addEventListener(
-        "sessao-expirada",
-        tratarSessaoExpirada
-    );
-
-    return () => {
-        window.removeEventListener(
+        window.addEventListener(
             "sessao-expirada",
             tratarSessaoExpirada
         );
-    };
-}, []);
+
+        return () => {
+            window.removeEventListener(
+                "sessao-expirada",
+                tratarSessaoExpirada
+            );
+        };
+    }, [navigate]);
 
     function finalizarCadastro() {
         setUsuario(null);
-        setAtividadeSelecionada(null);
-        setPagina("login");
+        navigate("/login", { replace: true });
     }
 
     function finalizarLogin(usuarioAutenticado) {
         setUsuario(usuarioAutenticado);
-        setPagina("aluno");
+        navigate("/aluno", { replace: true });
     }
 
-    function selecionarAtividade(atividade) {
-        setAtividadeSelecionada(atividade);
-        setPagina("resolver");
+    function selecionarAtividade(atividade, idConteudo) {
+        navigate(
+            `/atividades/${atividade.id_atividade}?conteudo=${idConteudo}`
+        );
     }
 
-    function sair() {
-        localStorage.removeItem("token");
-        localStorage.removeItem("usuario");
+function sair() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("usuario");
 
-        setUsuario(null);
-        setAtividadeSelecionada(null);
-        setPagina("home");
-    }
+    window.location.replace("/");
+}
 
     async function atualizarPerfil(dadosAtualizados) {
         const token = localStorage.getItem("token");
@@ -182,141 +314,198 @@ function App() {
         localStorage.removeItem("usuario");
 
         setUsuario(null);
-        setAtividadeSelecionada(null);
-        setPagina("login");
+        navigate("/login", { replace: true });
 
         return resposta.json();
     }
 
-    return (
+        return (
         <div className="app">
-
-        {pagina === "verificar-email" && (
-            <VerificarEmail
-                onLogin={() => {
-                    window.history.replaceState({}, "", "/");
-                    setPagina("login");
-                }}
-            />
-        )}
-
-        {pagina === "redefinir-senha" && (
-            <RedefinirSenha
-                onLogin={() => {
-                    window.history.replaceState({}, "", "/");
-                    localStorage.removeItem("token");
-                    localStorage.removeItem("usuario");
-                    setUsuario(null);
-                    setPagina("login");
-                }}
-            />
-        )}
-
-        {pagina === "confirmar-alteracao-email" && (
-            <ConfirmarAlteracaoEmail
-                onLogin={() => {
-                    window.history.replaceState({}, "", "/");
-                    localStorage.removeItem("token");
-                    localStorage.removeItem("usuario");
-                    setUsuario(null);
-                    setAtividadeSelecionada(null);
-                    setPagina("login");
-                }}
-            />
-        )}
-
-
-        {usuario && (
-            <MenuAluno
-                pagina={pagina}
-                onInicio={() => {
-                    setAtividadeSelecionada(null);
-                    setPagina("aluno");
-                }}
-                onAtividades={() => {
-                    setAtividadeSelecionada(null);
-                    setPagina("atividades");
-                }}
-                onProgresso={() => {
-                    setAtividadeSelecionada(null);
-                    setPagina("progresso");
-                }}
-                onPerfil={() => {
-                    setAtividadeSelecionada(null);
-                    setPagina("perfil");
-                }}
-                onSair={sair}
-            />
-        )}
-
-
-            {pagina === "home" && (
-                <Home
-                    onLogin={() => setPagina("login")}
-                    onCadastro={() => setPagina("cadastro")}
+            {usuario && (
+                <MenuAluno
+                    pagina={
+                        window.location.pathname.startsWith("/atividades")
+                            ? "atividades"
+                            : window.location.pathname.replace("/", "")
+                    }
+                    onInicio={() => navigate("/aluno")}
+                    onAtividades={() => navigate("/atividades")}
+                    onProgresso={() => navigate("/progresso")}
+                    onPerfil={() => navigate("/perfil")}
+                    onSair={sair}
                 />
             )}
 
-            {pagina === "login" && (
-                <Login
-                    onLogin={finalizarLogin}
-                    onCadastro={() => setPagina("cadastro")}
-                    onVoltar={() => setPagina("home")}
-                    onEsqueciSenha={() => setPagina("esqueci-senha")}
+            <Routes>
+                <Route
+                    path="/"
+                    element={
+                        usuario
+                            ? <Navigate to="/aluno" replace />
+                            : (
+                                <Home
+                                    onLogin={() => navigate("/login")}
+                                    onCadastro={() => navigate("/cadastro")}
+                                />
+                            )
+                    }
                 />
-            )}
 
-            {pagina === "esqueci-senha" && (
-                <EsqueciSenha
-                    onVoltar={() => setPagina("login")}
+                <Route
+                    path="/login"
+                    element={
+                        usuario
+                            ? <Navigate to="/aluno" replace />
+                            : (
+                                <Login
+                                    onLogin={finalizarLogin}
+                                    onCadastro={() => navigate("/cadastro")}
+                                    onVoltar={() => navigate("/")}
+                                    onEsqueciSenha={() => navigate("/esqueci-senha")}
+                                />
+                            )
+                    }
                 />
-            )}
 
-            {pagina === "cadastro" && (
-                <Cadastro
-                    onCadastro={finalizarCadastro}
+                <Route
+                    path="/cadastro"
+                    element={
+                        usuario
+                            ? <Navigate to="/aluno" replace />
+                            : <Cadastro onCadastro={finalizarCadastro} />
+                    }
                 />
-            )}
 
-            {pagina === "aluno" && usuario && (
-                <AlunoHome
-                    usuario={usuario}
-                    onAtividades={() => setPagina("atividades")}
-                    onProgresso={() => setPagina("progresso")}
+                <Route
+                    path="/esqueci-senha"
+                    element={
+                        <EsqueciSenha
+                            onVoltar={() => navigate("/login")}
+                        />
+                    }
                 />
-            )}
 
-            {pagina === "progresso" && usuario && (
-                <Progresso
-                    usuario={usuario}
-                    onVoltar={() => setPagina("aluno")}
+                <Route
+                    path="/verificar-email"
+                    element={
+                        <VerificarEmail
+                            onLogin={() => navigate("/login", { replace: true })}
+                        />
+                    }
                 />
-            )}
 
-            {pagina === "perfil" && usuario && (
-                <Perfil
-                    usuario={usuario}
-                    onSalvar={atualizarPerfil}
-                    onAlterarSenha={alterarSenha}
+                <Route
+                    path="/redefinir-senha"
+                    element={
+                        <RedefinirSenha
+                            onLogin={() => {
+                                localStorage.removeItem("token");
+                                localStorage.removeItem("usuario");
+                                setUsuario(null);
+                                navigate("/login", { replace: true });
+                            }}
+                        />
+                    }
                 />
-            )}
 
-            {pagina === "atividades" && usuario && (
-                <Atividades
-                    usuario={usuario}
-                    onResolver={selecionarAtividade}
+                <Route
+                    path="/confirmar-alteracao-email"
+                    element={
+                        <ConfirmarAlteracaoEmail
+                            onLogin={() => {
+                                localStorage.removeItem("token");
+                                localStorage.removeItem("usuario");
+                                setUsuario(null);
+                                navigate("/login", { replace: true });
+                            }}
+                        />
+                    }
                 />
-            )}
 
-            {pagina === "resolver" &&
-                usuario &&
-                atividadeSelecionada && (
-                    <ResolverAtividade
-                        usuario={usuario}
-                        atividade={atividadeSelecionada}
-                        onVoltar={() => setPagina("atividades")}
-                    />
-                )}
+                <Route
+                    path="/aluno"
+                    element={
+                        <RotaProtegida usuario={usuario}>
+                            <AlunoHome
+                                usuario={usuario}
+                                onAtividades={() => navigate("/atividades")}
+                                onProgresso={() => navigate("/progresso")}
+                            />
+                        </RotaProtegida>
+                    }
+                />
+
+                <Route
+                    path="/progresso"
+                    element={
+                        <RotaProtegida usuario={usuario}>
+                            <Progresso
+                                usuario={usuario}
+                                onVoltar={() => navigate("/aluno")}
+                            />
+                        </RotaProtegida>
+                    }
+                />
+
+                <Route
+                    path="/perfil"
+                    element={
+                        <RotaProtegida usuario={usuario}>
+                            <Perfil
+                                usuario={usuario}
+                                onSalvar={atualizarPerfil}
+                                onAlterarSenha={alterarSenha}
+                            />
+                        </RotaProtegida>
+                    }
+                />
+
+                <Route
+                    path="/atividades"
+                    element={
+                        <RotaProtegida usuario={usuario}>
+                            <Atividades
+                                usuario={usuario}
+                                onResolver={selecionarAtividade}
+                            />
+                        </RotaProtegida>
+                    }
+                />
+
+                <Route
+                    path="/atividades/conteudo/:idConteudo"
+                    element={
+                        <RotaProtegida usuario={usuario}>
+                            <Atividades
+                                usuario={usuario}
+                                onResolver={selecionarAtividade}
+                            />
+                        </RotaProtegida>
+                    }
+                />
+
+                <Route
+                    path="/atividades/:id"
+                    element={
+                        <RotaProtegida usuario={usuario}>
+                            <RotaResolverAtividade
+                                usuario={usuario}
+                                onVoltar={() => navigate("/atividades")}
+                            />
+                        </RotaProtegida>
+                    }
+                />
+
+                <Route
+                    path="*"
+                    element={
+                        <Navigate
+                            to={usuario ? "/aluno" : "/"}
+                            replace
+                        />
+                    }
+                />
+            </Routes>
         </div>
     );
 }
